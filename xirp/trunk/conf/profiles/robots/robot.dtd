@@ -1,0 +1,134 @@
+<!--
+	==========================================================================
+	Xirp 2: eXtendable interface for robotic purposes.
+	==========================================================================
+	
+	Copyright (C) 2005-2007, by Authors and Contributors listed in CREDITS.txt
+ 	
+	All rights reserved. This program and the accompanying materials
+	are made available under the terms of the Common Public License v1.0
+	which accompanies this distribution, and is available at:
+	
+				http://www.opensource.org/licenses/cpl1.0.php
+
+	Original Author:  Matthias Gernand [matthias.gernand AT gmx.de]
+	Contributor(s): 
+-->
+<!-- Structure of <robot> -->
+<!ELEMENT robot (robotspecs,actuators,powersource+,sensorgroup*,communicationspecification,multimedia?,plugins?)>
+<!ATTLIST robot name CDATA #REQUIRED>
+<!ATTLIST robot type (WHEEL|WALK|FLY|OTHER) #REQUIRED>
+<!ATTLIST robot complete (true|false) #REQUIRED>
+
+<!-- Measurements of the torso -->
+<!ELEMENT robotspecs (height,width,length,weight)>
+
+<!-- The height of the robot -->
+<!ELEMENT height (#PCDATA)> 
+<!ATTLIST height unit (MILLIMETER|CENTIMETER|DECIMETER|METER) #REQUIRED>
+
+<!-- The width of the robot -->
+<!ELEMENT width (#PCDATA)>
+<!ATTLIST width unit (MILLIMETER|CENTIMETER|DECIMETER|METER) #REQUIRED>
+
+<!-- The length of the robot -->
+<!ELEMENT length (#PCDATA)>
+<!ATTLIST length unit (MILLIMETER|CENTIMETER|DECIMETER|METER) #REQUIRED>
+
+<!-- The weight of the robot -->
+<!ELEMENT weight (#PCDATA)>
+<!ATTLIST weight unit (GRAM|KILOGRAM|TON) #REQUIRED>
+
+<!-- Actuators -->
+<!ELEMENT actuators (actuatorgroup+)>
+<!ATTLIST actuators count CDATA #REQUIRED>
+
+<!-- A group of actuators -->
+<!ELEMENT actuatorgroup (actuator+)>
+<!ATTLIST actuatorgroup name CDATA #REQUIRED>
+
+<!-- A actuator -->
+<!ELEMENT actuator (minimum,maximum)>
+<!ATTLIST actuator id CDATA #REQUIRED>
+<!ATTLIST actuator name CDATA #REQUIRED>
+<!ATTLIST actuator unit (DEGREE|PERCENT|RPM) #REQUIRED>
+
+<!-- Power sources -->
+<!ELEMENT powersource (#PCDATA)>
+<!ATTLIST powersource warningValue CDATA #REQUIRED>
+<!ATTLIST powersource max CDATA #REQUIRED>
+<!ATTLIST powersource unit (AMPERE|VOLT|FARAD|PERCENT|CCM) #REQUIRED>
+<!ATTLIST powersource datapoolKey CDATA #REQUIRED>
+
+<!-- Sensor groups -->
+<!ELEMENT sensorgroup (sensor+)>
+<!ATTLIST sensorgroup visible (true|false) #REQUIRED>
+<!ATTLIST sensorgroup longName CDATA #REQUIRED>
+<!ATTLIST sensorgroup datapoolKey CDATA #REQUIRED>
+
+<!-- Sensors -->
+<!ELEMENT sensor (sensorspecs)>
+<!ATTLIST sensor id CDATA #REQUIRED>
+<!ATTLIST sensor subKey CDATA #REQUIRED>
+<!ATTLIST sensor unit (DEGREE|PERCENT|RPM|PARTICLES_PER_MILLION|CENTIMETER|KELVIN|CELSIUS|FAHRENHEIT|MILES_PER_HOUR|KILOMETERS_PER_HOUR|METERS_PER_HOUR|METERS_PER_MINUTE|CENTIMETERS_PER_HOUR|CENTIMETERS_PER_MINUTE) #REQUIRED>
+
+<!-- Specs of a sensor -->
+<!ELEMENT sensorspecs (position,minimum,maximum,option*)>
+
+<!-- The position of the sensor -->
+<!ELEMENT position EMPTY>
+<!ATTLIST position attached (TORSO|EXTREMITY) #REQUIRED>
+<!ATTLIST position side (FRONT|REAR|LEFT|RIGHT|INSIDE|TOP|BOTTOM) #REQUIRED>
+<!ATTLIST position x CDATA #REQUIRED>
+<!ATTLIST position y CDATA #REQUIRED>
+
+<!-- A minimum -->
+<!ELEMENT minimum (#PCDATA)>
+
+<!-- A maximum -->
+<!ELEMENT maximum (#PCDATA)>
+
+<!-- A option -->
+<!ELEMENT option (#PCDATA)>
+<!ATTLIST option name CDATA #REQUIRED>
+
+<!-- A fully qualified class name -->
+<!ELEMENT class (#PCDATA)>
+
+<!-- Name of the comm-specs file -->
+<!ELEMENT communicationspecification (#PCDATA)>
+
+<!-- Multimedia -->
+<!ELEMENT multimedia (video?,audio?)>
+
+<!-- Video devices -->
+<!ELEMENT video (camera*,display*)>
+<!ATTLIST video simultaneous (true|false) #REQUIRED>
+
+<!-- A camera -->
+<!ELEMENT camera (#PCDATA)>
+
+<!-- A display -->
+<!ELEMENT display (#PCDATA)>
+
+<!-- Audio devices -->
+<!ELEMENT audio (microphone*,speaker*)>
+
+<!-- A microphone -->
+<!ELEMENT microphone (#PCDATA)>
+
+<!-- A speaker -->
+<!ELEMENT speaker (#PCDATA)>
+
+<!-- The plugins -->
+<!ELEMENT plugins (plugin+)>
+
+<!-- A plugin -->
+<!ELEMENT plugin (class,sensorname*,usemultimedia?,option*)>
+<!ATTLIST plugin name CDATA #REQUIRED>
+
+<!-- Name of a sensor which is displayed by a plugin -->
+<!ELEMENT sensorname (#PCDATA)>
+
+<!-- Flag, indicating if the plugin uses multiumedia devices -->
+<!ELEMENT usemultimedia (true|false)>

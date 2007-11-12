@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Specification of the communication with
+  the robot
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="specification">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" maxOccurs="unbounded" ref="communicationprotocol"/>
+        <xs:element minOccurs="1" maxOccurs="unbounded" ref="communicationinterface"/>
+      </xs:sequence>
+      <xs:attribute name="complete" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="true"/>
+            <xs:enumeration value="false"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <!--
+    Class which should be used for
+    communication with the robot,
+    as fully qualified path
+  -->
+  <xs:element name="communicationprotocol">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="class"/>
+        <xs:element ref="messagehandler"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="datum"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="class" type="xs:string"/>
+  <xs:element name="messagehandler" type="xs:string"/>
+  <!--
+    Communication deals with sending and
+    receiving of data, which is specified
+    in here
+  -->
+  <xs:element name="datum">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="option"/>
+        <xs:element ref="receiveformat"/>
+        <xs:element ref="datapoolkey"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <!--
+     Options specific for this communication
+    class. Might hold processID and exportID
+  -->
+  <xs:element name="option">
+    <xs:complexType mixed="true">
+      <xs:attribute name="name" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <!--
+    format for this data when received.
+    Formats are specified in documentation
+  -->
+  <xs:element name="receiveformat" type="xs:string"/>
+  <!--
+    data is put to datapool after parsing
+    with the specified key and format
+  -->
+  <xs:element name="datapoolkey" type="xs:string"/>
+  <xs:element name="communicationinterface">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="class"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="option"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

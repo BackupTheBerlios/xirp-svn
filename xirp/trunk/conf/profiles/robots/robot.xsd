@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Struktur von robot -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="robot">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="robotspecs"/>
+        <xs:element ref="actuators"/>
+        <xs:element minOccurs="1" maxOccurs="unbounded" ref="powersource"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="sensorgroup"/>
+        <xs:element ref="communicationspecification"/>
+        <xs:element minOccurs="0" maxOccurs="1" ref="multimedia"/>
+        <xs:element minOccurs="0" maxOccurs="1" ref="plugins"/>
+      </xs:sequence>
+      <xs:attribute name="name" use="required"/>
+      <xs:attribute name="type" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="WHEEL"/>
+            <xs:enumeration value="WALK"/>
+            <xs:enumeration value="FLY"/>
+            <xs:enumeration value="OTHER"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="complete" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="true"/>
+            <xs:enumeration value="false"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <!-- Maße des Torsos den jeder Roboter hat -->
+  <xs:element name="robotspecs">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="height"/>
+        <xs:element ref="width"/>
+        <xs:element ref="length"/>
+        <xs:element ref="weight"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <!-- in mm -->
+  <xs:element name="height">
+    <xs:complexType mixed="true">
+      <xs:attribute name="unit" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="MILLIMETER"/>
+            <xs:enumeration value="CENTIMETER"/>
+            <xs:enumeration value="DECIMETER"/>
+            <xs:enumeration value="METER"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="width">
+    <xs:complexType mixed="true">
+      <xs:attribute name="unit" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="MILLIMETER"/>
+            <xs:enumeration value="CENTIMETER"/>
+            <xs:enumeration value="DECIMETER"/>
+            <xs:enumeration value="METER"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="length">
+    <xs:complexType mixed="true">
+      <xs:attribute name="unit" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="MILLIMETER"/>
+            <xs:enumeration value="CENTIMETER"/>
+            <xs:enumeration value="DECIMETER"/>
+            <xs:enumeration value="METER"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="weight">
+    <xs:complexType mixed="true">
+      <xs:attribute name="unit" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="GRAM"/>
+            <xs:enumeration value="KILOGRAM"/>
+            <xs:enumeration value="TON"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <!-- Actuators -->
+  <xs:element name="actuators">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" maxOccurs="unbounded" ref="actuatorgroup"/>
+      </xs:sequence>
+      <xs:attribute name="count" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="actuatorgroup">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" maxOccurs="unbounded" ref="actuator"/>
+      </xs:sequence>
+      <xs:attribute name="name" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <!-- CHANGES HERE:  min,max -->
+  <xs:element name="actuator">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="minimum"/>
+        <xs:element ref="maximum"/>
+      </xs:sequence>
+      <xs:attribute name="id" use="required"/>
+      <xs:attribute name="name" use="required"/>
+      <xs:attribute name="unit" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="DEGREE"/>
+            <xs:enumeration value="PERCENT"/>
+            <xs:enumeration value="PARTICLES_PER_MILLION"/>
+            <xs:enumeration value="CENTIMETER"/>
+            <xs:enumeration value="KELVIN"/>
+            <xs:enumeration value="CELSIUS"/>
+            <xs:enumeration value="FAHRENHEIT"/>
+            <xs:enumeration value="MILES_PER_HOUR"/>
+            <xs:enumeration value="KILOMETERS_PER_HOUR"/>
+            <xs:enumeration value="METERS_PER_HOUR"/>
+            <xs:enumeration value="METERS_PER_MINUTE"/>
+            <xs:enumeration value="CENTIMETERS_PER_HOUR"/>
+            <xs:enumeration value="CENTIMETERS_PER_MINUTE"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <!-- Id of the servo inside the group -->
+  <!--  Accumulator of the robot -->
+  <xs:element name="powersource">
+    <xs:complexType mixed="true">
+      <xs:attribute name="warningValue" use="required"/>
+      <xs:attribute name="max" use="required"/>
+      <xs:attribute name="unit" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="AMPERE"/>
+            <xs:enumeration value="VOLT"/>
+            <xs:enumeration value="FARAD"/>
+            <xs:enumeration value="PERCENT"/>
+            <xs:enumeration value="CCM"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="datapoolKey" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="sensorgroup">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" maxOccurs="unbounded" ref="sensor"/>
+      </xs:sequence>
+      <xs:attribute name="visible" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="true"/>
+            <xs:enumeration value="false"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="longName" use="required"/>
+      <xs:attribute name="datapoolKey" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="sensor">
+    <xs:complexType>
+	  <xs:sequence>
+        <xs:element minOccurs="1" maxOccurs="1" ref="sensorspecs"/>
+      </xs:sequence>
+      <xs:attribute name="id" use="required"/>
+      <xs:attribute name="subKey" use="required"/>
+      <xs:attribute name="unit" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+			<xs:enumeration value="DEGREE"/>
+            <xs:enumeration value="PERCENT"/>
+            <xs:enumeration value="PARTICLES_PER_MILLION"/>
+            <xs:enumeration value="CENTIMETER"/>
+            <xs:enumeration value="KELVIN"/>
+            <xs:enumeration value="CELSIUS"/>
+            <xs:enumeration value="FAHRENHEIT"/>
+            <xs:enumeration value="MILES_PER_HOUR"/>
+            <xs:enumeration value="KILOMETERS_PER_HOUR"/>
+            <xs:enumeration value="METERS_PER_HOUR"/>
+            <xs:enumeration value="METERS_PER_MINUTE"/>
+            <xs:enumeration value="CENTIMETERS_PER_HOUR"/>
+            <xs:enumeration value="CENTIMETERS_PER_MINUTE"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <!--  specs enthält die Spezifikation des sensors je eine spec pro sensor also 4x wenn 4 ir sensoren -->
+  <xs:element name="sensorspecs">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="position"/>
+        <xs:element ref="minimum"/>
+        <xs:element ref="maximum"/>
+        <xs:element maxOccurs="unbounded" minOccurs="0" ref="option"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="position">
+    <xs:complexType>
+      <xs:attribute name="attached" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="TORSO"/>
+            <xs:enumeration value="EXTREMITY"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="side" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="FRONT"/>
+            <xs:enumeration value="REAR"/>
+            <xs:enumeration value="LEFT"/>
+            <xs:enumeration value="RIGHT"/>
+            <xs:enumeration value="INSIDE"/>
+            <xs:enumeration value="TOP"/>
+            <xs:enumeration value="BOTTOM"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="x" use="required"/>
+      <xs:attribute name="y" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <!-- CHANGES HERE elements minimum maximum -->
+  <xs:element name="minimum" type="xs:string"/>
+  <xs:element name="maximum" type="xs:string"/>
+  <xs:element name="option">
+    <xs:complexType mixed="true">
+      <xs:attribute name="name" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <!-- Enthält einen Klassennamen (fully qualified) -->
+  <xs:element name="class" type="xs:string"/>
+  <!-- Name des comm specs files -->
+  <xs:element name="communicationspecification" type="xs:string"/>
+  <!--  Multimedia Element für Video/Audio Plugin -->
+  <xs:element name="multimedia">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="1" ref="video"/>
+        <xs:element minOccurs="0" maxOccurs="1" ref="audio"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="video">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" minOccurs="0" ref="camera"/>
+        <xs:element maxOccurs="unbounded" minOccurs="0" ref="display"/>
+      </xs:sequence>
+      <xs:attribute name="simultaneous" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="true"/>
+            <xs:enumeration value="false"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="camera" type="xs:string"/>
+  <xs:element name="display" type="xs:string"/>
+  <xs:element name="audio">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" minOccurs="0" ref="microphone"/>
+        <xs:element maxOccurs="unbounded" minOccurs="0" ref="speaker"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="microphone" type="xs:string"/>
+  <xs:element name="speaker" type="xs:string"/>
+  <!--  Additional Plugins Specs -->
+  <xs:element name="plugins">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" minOccurs="1" ref="plugin"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="plugin">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="class"/>
+        <xs:element maxOccurs="unbounded" minOccurs="0" ref="sensorname"/>
+        <xs:element minOccurs="0" maxOccurs="1" ref="usemultimedia"/>
+        <xs:element maxOccurs="unbounded" minOccurs="0" ref="option"/>
+      </xs:sequence>
+      <xs:attribute name="name" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <!-- Name des Sensors welchen ein Plugin darstellt -->
+  <xs:element name="sensorname" type="xs:string"/>
+  <xs:element name="usemultimedia">
+	<xs:simpleType>
+      <xs:restriction base="xs:token">
+        <xs:enumeration value="true"/>
+        <xs:enumeration value="false"/>
+      </xs:restriction>
+    </xs:simpleType>
+   </xs:element>
+</xs:schema>

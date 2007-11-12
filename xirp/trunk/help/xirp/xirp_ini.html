@@ -1,0 +1,144 @@
+<!--
+	==========================================================================
+	Xirp 2: eXtendable interface for robotic purposes.
+	==========================================================================
+	
+	Copyright (C) 2005-2007, by Authors and Contributors listed in CREDITS.txt
+ 	
+	All rights reserved. This program and the accompanying materials
+	are made available under the terms of the Common Public License v1.0
+	which accompanies this distribution, and is available at:
+	
+				http://www.opensource.org/licenses/cpl1.0.php
+
+	Original Author:  Matthias Gernand [matthias.gernand AT gmx.de]
+	Contributor(s): 
+-->	
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=windows-1252">
+	<TITLE>Ini</TITLE>
+</HEAD>
+<BODY>
+<P align="justify"><FONT FACE="Arial, sans-serif">
+<b>&#967;irp Configuration</b><br/><br/>
+
+The main configuration if &#967;irp is done in the <code>xirp.ini</code> file located 
+in the <code>conf</code> folder of the installation folder of &#967;irp.
+<br/>
+There are 9 sections with options available in the <code>xirp.ini</code> file. Each of those
+sections are described below. Every value in the <code>xirp.ini</code> can be set using the preferences
+dialog.
+<br/><br/>
+
+<b>General</b><br/>
+The <code>[General]</code> section contains options about the general behavior of the
+application. At the moment there are 3 options available:<br/>
+
+<ul>
+	<li><p align="left"><code>locale</code><br/>This option indicates the language that &#967;irp should use. 
+	If the language pack does not exist, the default language (english) is used.</p></li>
+	<li><p align="left"><code>timerWarning</code><br/>This options sets a time value in milliseconds. 
+	This value indicates when the robot timers should change to their warning mode.</p></li>
+	<li><p align="left"><code>timerFinal</code>This options sets a time value in milliseconds. 
+	This value indicates the maximum time of the robot timer.</p></li>
+</ul>	
+
+<center><img src="./images/timer.png"/></center>
+<br/>If you want to know more about the robot timers, please read the <strong>Workspace</strong> chapter.
+<br/><br/>
+
+<b>Mail</b><br/>
+The <code>[Mail]</code> section contains options for configuring the integrated mailing system.<br/>
+
+<ul>
+	<li><p align="left"><code>smtpHost</code><br/>This option holds the host name of the SMTP server to use.</p></li>
+	<li><p align="left"><code>smtpUser</code><br/>This options holds the user name for the SMTP server to use.</p></li>
+	<li><p align="left"><code>smtpPassword</code><br/>This options holds the encrypted password to use. 
+	This options can not ne set directly in the <code>xirp.ini</code> file. It must be set via the prefences dialog.</p></li>
+	<li><p align="left"><code>needsAuthentication</code><br/>A flag indicating if the SMTP server needs an authentication.</p></li>
+	<li><p align="left"><code>smtpPort</code><br/>This options holds the port number on which the SMTP server is reachable.</p></li>
+	<li><p align="left"><code>noReplyAddress</code><br/>This option holds the noreply mail address.</p></li>
+</ul>
+<br/><br/>
+
+<b>Appearance</b><br/>
+The <code>[Appearance]</code> section contains color options. Seven options are used to configure
+the appearance of the application. The best way to set those values is to use the preferences dialog.<br/>
+
+<ul>
+	<li><p align="left"><code>tabColor</code><br/>The color of a tab in the workspace.</p></li>
+	<li><p align="left"><code>tabTextColor</code><br/>The color of the text on a tab in the workspace.</p></li>
+	<li><p align="left"><code>inactiveTabTextColor</code><br/>The color of the text on an inactive tab in the workspace.</p></li>
+	<li><p align="left"><code>focusColor</code><br/>The color which is set to controls gaining the focus, f.e. text fields.</p></li>
+	<li><p align="left"><code>sashColor</code><br/>The color of the sashes in the workspace.</p></li>
+	<li><p align="left"><code>backgroundColor</code><br/>The background color for all controls of the application.</p></li>
+	<li><p align="left"><code>panelHeaderColor</code><br/>The color for the panel headers in the workspace.</p></li>
+</ul>
+<br/>
+
+The following pictures show more detailed which color option is used to set the color of a control in the application.
+<br/>
+<center>
+<img src="./images/colors1.png"/><br/><br/>
+<img src="./images/colors2.png"/><br/><br/>
+<img src="./images/colors3.png"/>
+</center>
+<br/><br/>
+
+<b>Database</b><br/>
+The <code>[Database]</code> section contains informations about the connection to a database
+and the used database driver.<br/>
+
+<ul>
+	<li><p align="left"><code>dbIP</code><br/>The IP address of the database server, if one is used.</p></li>
+	<li><p align="left"><code>dbIP</code><br/>The port number where the server is reachable.</p></li>
+	<li><p align="left"><code>dbIP</code><br/>The username to use.</p></li>
+	<li><p align="left"><code>dbIP</code><br/>The encypted password to use. This option must be the via the preferences dialog.</p></li>
+	<li><p align="left"><code>dbIP</code><br/>The database driver to use. This option must be set via the preferences dialog.</p></li>
+</ul>
+<br/>
+The default database is the HSQLDB running in file mode. Only the driver must be selected to have this database up and running.
+Read more about the database in the database chapter.
+<br/><br/>
+
+<b>Hotkeys</b><br/>
+The <code>[Hotkeys - *]</code> section contains the shortcuts for several functions.<br/>
+
+<ul>
+	<li><p align="left"><code>program_quit</code><br/>Quit the application using CTRL+[KEY]</p></li>
+	<li><p align="left"><code>program_preferences</code><br/>Open the preferences using CTRL+[KEY]</p></li>
+	<li><p align="left"><code>program_help</code><br/>Open the help using CTRL+[KEY]</p></li>
+	<li><p align="left"><code>open_mail</code><br/>Open the mail dialog using CTRL+[KEY]</p></li>
+	<li><p align="left"><code>create_chart</code><br/>Open the charting dialog using CTRL+[KEY]</p></li>
+	<li><p align="left"><code>plugin_info</code><br/>Show the info about the loaded plugins using CTRL+ALT+[KEY]</p></li>
+	<li><p align="left"><code>manage_contacts</code><br/>Open the contact managing dialog using CTRL+ALT+[KEY]</p></li>
+	<li><p align="left"><code>search_reports</code><br/>Open the report search using CTRL+ALT+[KEY]</p></li>
+	<li><p align="left"><code>program_info</code><br/>program_infoShow the info about the application using CTRL+SHIFT+[KEY]</p></li>
+</ul>
+<br/><br/>
+
+<b>Speech</b><br/>
+The <code>[Speech]</code> section contains options for configuring the speech system.<br/>
+
+<ul>
+	<li><p align="left"><code>enable_tts</code><br/>A flag indicating if the text to speech system should be active or not.</p></li>
+	<li><p align="left"><code>tts_voice</code><br/>The name of the language to use. This option should be set via the preferences dialog.</p></li>
+</ul>
+<br/><br/>
+
+<b>Chart</b><br/>
+The <code>[Chart]</code> section contains options to configure the export system of the live charting. Those flags indicate whether or not
+a file should be exported automatically.<br/>
+
+<ul>
+	<li><p align="left"><code>export_pdf</code><br/>A flag indicating if a PDF should be generated automatically after a live charting has been stopped.</p></li>
+	<li><p align="left"><code>export_png</code><br/>A flag indicating if a PNG should be generated automatically after a live charting has been stopped.</p></li>
+	<li><p align="left"><code>export_jpg</code><br/>A flag indicating if a JPG should be generated automatically after a live charting has been stopped.</p></li>
+	<li><p align="left"><code>export_csv</code><br/>A flag indicating if a CSV should be generated automatically after a live charting has been stopped.</p></li>
+</ul>
+<br/>
+</FONT></P>
+</BODY>
+</HTML>

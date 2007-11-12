@@ -1,0 +1,50 @@
+<!--
+	==========================================================================
+	Xirp 2: eXtendable interface for robotic purposes.
+	==========================================================================
+	
+	Copyright (C) 2005-2007, by Authors and Contributors listed in CREDITS.txt
+ 	
+	All rights reserved. This program and the accompanying materials
+	are made available under the terms of the Common Public License v1.0
+	which accompanies this distribution, and is available at:
+	
+				http://www.opensource.org/licenses/cpl1.0.php
+
+	Original Author:  Matthias Gernand [matthias.gernand AT gmx.de]
+	Contributor(s):   Rabea Gransberger [rgransberger AT web.de]
+-->
+<!-- The protocol to use -->
+<!ELEMENT specification (communicationprotocol+,communicationinterface+)>
+<!ATTLIST specification complete (true|false) #REQUIRED>
+
+<!-- Class which should be used for
+	 communication with the robot,
+	 as fully qualified path        -->
+<!ELEMENT communicationprotocol (class,messagehandler,datum*)>
+
+<!-- A fully qualified class name -->
+<!ELEMENT class (#PCDATA)>
+
+<!-- The message handler of the robot -->
+<!ELEMENT messagehandler (#PCDATA)>
+
+<!-- Communication deals with sending and
+	 receiving of data, which is specified in here -->
+<!ELEMENT datum (option*,receiveformat,datapoolkey)>
+
+<!-- Options specific for this communication
+	 class. Might hold processID and exportID -->
+<!ELEMENT option (#PCDATA)>
+<!ATTLIST option name CDATA #REQUIRED>
+
+<!-- Format for this data when received.
+	 formats are specified in documentation -->
+<!ELEMENT receiveformat (#PCDATA)>
+
+<!-- Data is put to datapool after parsing
+	 with the specified key and format     -->
+<!ELEMENT datapoolkey (#PCDATA)>
+
+<!-- The interface to use for communication -->
+<!ELEMENT communicationinterface (class,option*)>

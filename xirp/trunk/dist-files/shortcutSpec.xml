@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+
+<shortcuts>
+
+  <skipIfNotSupported />
+
+  <programGroup defaultName="Xirp @VERSION@" location="applications"/>
+
+   <shortcut
+     name="Xirp 2"
+     programGroup="yes"
+     desktop="yes"
+     applications="no"
+     startMenu="no"
+     startup="no"
+     target="javaw"
+     commandLine="-Djava.library.path=&quot;lib/dll&quot; -Xms256M -Xmx512M -jar &quot;@JARNAME@&quot;"
+     workingDirectory="$INSTALL_PATH"
+	 description="Starts Xirp 2">
+          
+     <createForPack name="Framework" />
+   </shortcut>
+   
+    <shortcut
+     name="User Guide"
+     programGroup="yes"
+     desktop="no"
+     applications="no"
+     startMenu="no"
+     startup="no"
+     target="$INSTALL_PATH/doc/guides/user.pdf"
+     workingDirectory="$INSTALL_PATH/doc/guides"
+	 description="Opens the User Guide">
+	 
+	 <createForPack name="Documentation: Guides" />
+   </shortcut>
+   
+    <shortcut
+     name="Developer Guide"
+     programGroup="yes"
+     desktop="no"
+     applications="no"
+     startMenu="no"
+     startup="no"
+     target="$INSTALL_PATH/doc/guides/developer.pdf"
+     workingDirectory="$INSTALL_PATH/doc/guides"
+	 description="Opens the Developer Guide">
+	 
+	 <createForPack name="Documentation: Guides" />
+   </shortcut>
+   
+   <shortcut
+     name="Visit Xirp Homepage"
+     programGroup="yes"
+     desktop="no"
+     applications="no"
+     startMenu="no"
+     startup="no"
+     target="http://xirp.berlios.de"
+	 description="Opens the Xirp Homepage">
+	 
+	 <createForPack name="Framework" />
+   </shortcut>
+  
+   <shortcut
+     name="Uninstall Xirp @VERSION@"
+     programGroup="yes"
+     desktop="no"
+     applications="no"
+     startMenu="no"
+     startup="no"
+     target="javaw"     
+     commandLine="-jar &quot;$INSTALL_PATH/Uninstaller/uninstaller.jar&quot;"
+	 iconFile="%SystemRoot%\system32\SHELL32.dll"
+     iconIndex="31" 
+     description="Uninstalls Xirp 2 Framework">
+     
+     <createForPack name="Framework" />
+   </shortcut>
+   
+</shortcuts>

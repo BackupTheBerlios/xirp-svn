@@ -1,0 +1,156 @@
+<!--
+	==========================================================================
+	Xirp 2: eXtendable interface for robotic purposes.
+	==========================================================================
+	
+	Copyright (C) 2005-2007, by Authors and Contributors listed in CREDITS.txt
+ 	
+	All rights reserved. This program and the accompanying materials
+	are made available under the terms of the Common Public License v1.0
+	which accompanies this distribution, and is available at:
+	
+				http://www.opensource.org/licenses/cpl1.0.php
+
+	Original Author:  Matthias Gernand [matthias.gernand AT gmx.de]
+	Contributor(s): 
+-->	
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=windows-1252">
+	<TITLE>Workspace</TITLE>
+</HEAD>
+<BODY>
+<P align="justify"><FONT FACE="Arial, sans-serif">
+<b>&#967;irp Workspace</b><br/><br/>
+
+&#967;irp offers a customizable and on-the-fly translatable graphical user interface. The
+workspace can be devided in the 5 following parts.
+
+<ul>
+	<li><p align="left">Menu and tool bars</p></li>
+	<li><p align="left">Status bar and tray</p></li>
+	<li><p align="left">Workbench</p></li>
+	<li><p align="left">Included panels</p></li>
+</ul>
+
+Before we take a closer look at the parts mentioned above, we look at the workspace at a whole.
+<br/><br/>
+
+<center>
+<img src="./images/workspace_overview.png"/>
+</center>
+<br/><br/>
+The picture above shows a possible arrangement of the plugins and internal panels.
+Panels that are created, because of loaded plugins are marked blue. Red marked panels are
+internal ones and the yellow marked spots are mixed plugin-created and internal, menus and tool bars.
+<br/><br/>
+
+<b>Menu and tool bars</b><br/><br/>
+The menu is devided into eight sub-menus: <img src="./images/menu.png"/>
+<br/><br/>
+
+The <code>File</code> menu contains entrys for opening the profile, robot and communication specification
+editors. The menu also contains entrys for the preferences dialog and for closing the application.
+<br/><br/>
+The <code>View</code> menu contains entrys for showing or hiding the status and tool bar. It also has an entrys
+which locks the tools on the tool bar, so they can't be moved to a custom order. At last the menu contains entrys
+for showing or hiding the internal panels, f.e. the live chart panel.
+<br/><br/>
+The <code>Robots</code> menu contains sub-menus for each loaded profile. These sub-menus contain entrys
+for each robot assocciated with the profile. These entrys show or hide the complete robot tab in the 
+workbench area.
+<br/><br/>
+The <code>Plugins</code> menu is a context sensitive menu. It contains the non-report, non-embedded plugins for the 
+currently active robot. It also contains an entry for opening the preferences dialog.
+<br/><br/>
+The <code>Reports</code> menu is a context sensitive menu. It contains the report plugins for the currently
+active robot and an entry for opening the report search.
+<br/><br/>
+The <code>Extras</code> menu contains entrys for opening the mail client, the contact management, the chart generator and
+the TesterBot user interface.
+<br/><br/>
+The <code>External tools</code> menu is a context sensitive menu, which contains the user-defined external tools for the
+currently active profile.
+<br/><br/>
+The <code>?</code> menu contains entrys for showing the info, plugin info and help dialogs.
+<br/><br/>
+
+There are two tool bars available. The application tool bar makes several functions available as tool items.
+The most important functions are made availabe over the tool bar. As an additional feature there is a timer.
+You may start, pause and stop the timer and can see the elapsed time in the robot toolbar. The start, stop and pause
+tool items in the application tool bar controls all timers of all robots. The application can also hold tool items created by
+a plugin.
+
+<br/><br/>
+<center>
+<img src="./images/app_tools.png"/>
+</center>
+<br/><br/>
+
+The robot tool bar is alsomst completely driven by plugins. The first drop-down menu holds the entrys of communication
+interface plugins, the second one holds the protocol plugins available for the robot. You have to choose one of each
+to connect to a robot. This can be done by clicking the plug tool item left of the drop-down menus. The robot toolbar has
+the timer display and controls for the timer of this robot. Also the tool bar can hold items created by a plugin.
+
+<br/><br/>
+<center>
+<img src="./images/robot_tools.png"/>
+</center>
+<br/><br/>
+
+<b>Status bar and tray</b><br/><br/>
+The status bar shows information about the current active robot, the connections status, the data traffic and the 
+status of the power sources of the robot. Only one power source status can be shown. If a robot has more than one power
+source, the first one is shown by default. The following power sources can be made visible by right-clicking on the battery icon
+in the bottom right corner. The desired power source can be chosen from the opening menu.
+<br/><br/>
+<center>
+<img src="./images/battery.png"/>
+</center>
+<br/><br/>
+Right-clicking on the tray icon opens a menu with several functions which can be found in the menu and tool bar also.
+<br/><br/>
+<center>
+<img src="./images/tray.png">
+</center>
+<br/><br/>
+
+<b>Workbench</b><br/><br/>
+The workbench itself consists of several pluin-based of integrated panels. The panels can be moved and resized.
+To move a panel just click and hold the left mouse button on the panels header. Drag and drop the panel to its new position.
+The layput of the workbench will be saved when &#967;irp is closed.
+<br/><br/>
+A panel can be shown in an own window by clicking on the window icon in its header.
+<br/><br/>
+<center>
+<img src="./images/window.png"/>
+</center>
+<br/><br/>
+A panel can also be maximized within &#967;irp by clicking on the maximize icon.
+<br/><br/>
+<center>
+<img src="./images/max.png"/>
+</center>
+
+<b>Included panels</b><br/><br/>
+There are four included panels which are not created by a plugin.
+<br/><br/>
+<ul>
+	<li><p align="left">System log</p></li>
+	<li><p align="left">Live charting</p></li>
+	<li><p align="left">Recorder</p></li>
+	<li><p align="left">Robot overview</p></li>
+</ul>	
+<br/><br/>
+The <strong>System log</strong> shows log messages created by the Log4J logging system.
+With the <strong>Live charting</strong> panel a real time plotting of received sensor values is possible.
+The <strong>Recorder</strong> can record the received vaules of selected sensors to the database.
+Finally the <strong>Robot overview</strong> shows an abstract view of the robot with the attached sensors.
+<br/><br/>
+Read more about use of these panel in the corresponding chapters.
+<br/><br/>
+
+</FONT></P>
+</BODY>
+</HTML>

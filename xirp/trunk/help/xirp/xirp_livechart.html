@@ -1,0 +1,68 @@
+<!--
+	==========================================================================
+	Xirp 2: eXtendable interface for robotic purposes.
+	==========================================================================
+	
+	Copyright (C) 2005-2007, by Authors and Contributors listed in CREDITS.txt
+ 	
+	All rights reserved. This program and the accompanying materials
+	are made available under the terms of the Common Public License v1.0
+	which accompanies this distribution, and is available at:
+	
+				http://www.opensource.org/licenses/cpl1.0.php
+
+	Original Author:  Matthias Gernand [matthias.gernand AT gmx.de]
+	Contributor(s): 
+-->	
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=windows-1252">
+	<TITLE>Live Charting</TITLE>
+</HEAD>
+<BODY>
+<P align="justify"><FONT FACE="Arial, sans-serif">
+<b>&#967;irp Live Charting</b><br/><br/>
+
+The live charting allows the user to view the elaboration of the value of one or 
+more selected sensor keys. Before you can plot one or more of the sensor values
+you have to select the desired one from the drop-down menu. Therefore just click 
+on the green plus icon.
+
+<br/><br/>
+<center>
+<img src="./images/livechart_menu.png"/>
+</center>
+<br/><br/>
+
+As you can see there are two additional tool items available. The red <code>A</code> indicates
+that the live charting is in the absolute time mode. By clicking on the item it can be switch to 
+relative time mode and back. This can be done before and while plotting. The green triangle starts 
+the plotting and turns into a stop icon, so you can stop the plotting by clicking on the same button 
+again.
+<br/><br/>
+After you have chosen one or more keys to plot you can start the plotting. If you are not connected
+to a robot, or have not received any values yet, the plot will look like the one below.
+
+<br/><br/>
+<center>
+<img src="./images/livechart_nodata.png"/>
+</center>
+<br/><br/>
+
+When you are connected to a robot and receive sensor values from it, you can see the live charting 
+in action. It may look like seen in the screenshot below.
+
+<br/><br/>
+<center>
+<img src="./images/livechart_data.png"/>
+</center>
+<br/><br/>
+
+If you selected options in the preferences dialog to automatically export the 
+charts (see chapter about the preferences for details) the files are generated
+after stopping the plotting.
+
+</FONT></P>
+</BODY>
+</HTML>

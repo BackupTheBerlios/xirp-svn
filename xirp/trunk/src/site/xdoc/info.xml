@@ -1,0 +1,64 @@
+﻿<document>
+  <properties>
+    <title>&#967;irp 2 - Information</title>
+  </properties>
+  <body>
+    <section name="Überblick">
+      <p>&#967;irp steht für "eXtendable interface for
+      robotic purposes". Übersetzt heißt dies
+      "Erweiterbare Benutzerschnittstelle für
+      Robotikanwendungen". &#967;irp bietet eine erweiterbare
+      graphische Benutzeroberfläche zur Steuerung
+      verschiedenster Robotersysteme. Für jedes
+      erdenkliche Robotersystem kann durch für &#967;irp
+      entwickelte Plugins eine Kontrolloberfläche
+      geschaffen werden. Um Plugins für einen beliebigen
+      Roboter entwickeln zu können, stellt &#967;irp
+      eine umfangreiche Programmierschnittstelle zur
+      Verfügung.</p>
+      <p>Das Framework stellt zur Unterstützung und
+      Beschleunigung der Entwicklung diverse Hilfsklassen und
+      -methoden zur Verfügung. Entwickelte Plugins
+      können mittels der integrierten Testumgebung ohne
+      "echten" Roboter getestet werden. Die Anwendung stellt dem
+      Benutzer eine Fülle an Funktionen zur Auswertung,
+      Aufzeichnung und für Experimente zur
+      Verfügung. Die umfangreiche Dokumentation
+      ermöglicht Entwicklern und Benutzern einen
+      leichten Einstieg in &#967;irp.</p>
+    </section>
+    <section name="Technische Details">
+      <p>&#967;irp wurde komplett in Java geschrieben und ist
+      kompatibel zur Java Laufzeitumgebung ab Version 6. Die
+      graphische Oberfläche wurde mittels des "Standard
+      Widget Toolkit" (SWT) erstellt. Darüber hinaus
+      wurden diverse Open Source Bibliotheken verwendet. Darunter
+      befinden sich z.B.:</p>
+      <p>
+        <ul>
+          <li>Apache Jakarta Commons Projekte</li>
+          <li>Hibernate 3 (Objekt Persistierung)</li>
+          <li>iText (PDF-Erstellung)</li>
+          <li>FreeTTS (Sprachausgabe)</li>
+          <li>JavaMail</li>
+          <li>JFreeChart (Diagrammerstellung)</li>
+          <li>HSQLDB (Dateibasierte Datenbank)</li>
+        </ul>
+      </p>
+      <p>&#967;irp kann als plattformunabhängige
+      Installationsvariante, sowie als Quelltextvariante
+      heruntergeladen werden. Das Installationsprogramm wurde mit
+      "IzPack" erstellt. &#967;irp kann allerdings auch auf
+      Grundlage der Quelltexte mit Hilfe eines "ANT"-Buildscriptes
+      selbst erstellt werden.</p>
+      <p>In &#967;irp werden Roboter in XML spezifiziert. Diese
+      XML-Dateien werden mittels "JAXB - Java Architecture for XML
+      Binding" und annotierten Klassen in eine Bean-Struktur
+      überführt. Der Arbeitsbereich kann den
+      Wünschen des Benutzers angepasst werden. Hierzu
+      können sämtliche Farben selbst
+      definiert, die Sprache umgestellt und
+      Oberflächenelemente frei angeordnet werden.</p>
+    </section>
+  </body>
+</document>

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+
+<!-- 
+	Notes: 
+	Since there is no dtd (yet), here is a short explanation
+	of the last change.
+	- Each Shortcut has now a optional attribute
+
+	createForAll 
+	 
+	As root you can create Shortcuts for all users or even only for yourself.
+	This can be the case i.e. for the uninstaller.
+	If you whant to do so, set createForAll to true otherwise to false, which is the default.
+	
+	! If not explicite set or present the default is false.	
+-->
+
+<shortcuts>
+
+  <programGroup defaultName="Xirp @VERSION@" location="applications"/>
+
+   <shortcut
+     name="Xirp 2"
+     programGroup="yes"
+     desktop="yes"
+     applications="no"
+     startMenu="yes"
+     startup="no"
+     target="$INSTALL_PATH/xirp.sh"
+     workingDirectory="$INSTALL_PATH"
+     description="Starts Xirp 2"
+     iconIndex="0"
+     type="Application"
+     encoding="UTF-8"
+     terminal="true"
+     KdeSubstUID="false"
+	 createForAll="true"
+     initialState="normal"> 
+     
+     <createForPack name="Framework"/>
+   </shortcut>
+   
+   <shortcut
+     name="User Guide"
+     programGroup="yes"
+     desktop="no"
+     applications="no"
+     startMenu="yes"
+     startup="no"
+     target="$INSTALL_PATH/doc/guides/user.pdf"
+     workingDirectory="$INSTALL_PATH/doc/guides"
+     description="Opens the User Guide"
+     iconIndex="0"
+     type="Application"
+     encoding="UTF-8"
+     terminal="true"
+     KdeSubstUID="false"
+	 createForAll="true"
+     initialState="normal"> 
+     
+     <createForPack name="Documentation: Guides" />
+   </shortcut>
+   
+   <shortcut
+     name="Developer Guide"
+     programGroup="yes"
+     desktop="no"
+     applications="no"
+     startMenu="yes"
+     startup="no"
+     target="$INSTALL_PATH/doc/guides/developer.pdf"
+     workingDirectory="$INSTALL_PATH/doc/guides"
+     description="Opens the Developer Guide"
+     iconIndex="0"
+     type="Application"
+     encoding="UTF-8"
+     terminal="true"
+     KdeSubstUID="false"
+	 createForAll="true"
+     initialState="normal"> 
+     
+     <createForPack name="Documentation: Guides" />
+   </shortcut>
+   
+   <shortcut
+     name="Visit Xirp Homepage"
+     programGroup="yes"
+     desktop="no"
+     applications="no"
+     startMenu="yes"
+     startup="no"
+     target="http://xirp.berlios.de"
+     description="Opens the Xirp Homepage"
+     iconIndex="0"
+     type="Link"
+     encoding="UTF-8"
+     terminal="true"
+     KdeSubstUID="false"
+	 createForAll="true"
+     initialState="normal"> 
+     
+     <createForPack name="Framework" />
+   </shortcut>
+    
+   <shortcut
+     name="Uninstall Xirp @VERSION@"
+     programGroup="yes"
+     desktop="no"
+     applications="no"
+     startMenu="yes"
+     startup="no"
+     target="java"
+     commandLine="-jar &quot;$INSTALL_PATH/Uninstaller/uninstaller.jar&quot;"
+     initialState="noShow"
+     iconFile="trashcan_full"
+     iconIndex="0" 
+     workingDirectory="$INSTALL_PATH"
+     type="Application"
+     encoding="UTF-8"
+     createForAll="true"
+     description="Uninstalls Xirp 2 Framework">
+
+     <createForPack name="Framework" />
+   </shortcut>
+   
+</shortcuts>

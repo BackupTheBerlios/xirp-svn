@@ -1,0 +1,147 @@
+<!--
+	==========================================================================
+	Xirp 2: eXtendable interface for robotic purposes.
+	==========================================================================
+	
+	Copyright (C) 2005-2007, by Authors and Contributors listed in CREDITS.txt
+ 	
+	All rights reserved. This program and the accompanying materials
+	are made available under the terms of the Common Public License v1.0
+	which accompanies this distribution, and is available at:
+	
+				http://www.opensource.org/licenses/cpl1.0.php
+
+	Original Author:  Matthias Gernand [matthias.gernand AT gmx.de]
+	Contributor(s): 
+-->	
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=windows-1252">
+	<TITLE>Charting</TITLE>
+</HEAD>
+<BODY>
+<P align="justify"><FONT FACE="Arial, sans-serif">
+<b>&#967;irp Charts</b><br/><br/>
+
+In &#967;irp it is possible to generate several different chart-types. The data on which the charts are generated upon
+is gathered by the recording feature of &#967;irp, or is directly plotted into a chart by the live-chart feature. 
+Read more about this topics in the corresponding chapters. This chapter deals with the generation of
+charts from existing records.
+<br/><br/>
+Charts from existing records are generated using the <code>Create chart</code> dialog. The dialog is available
+under the menu entry <code>Extras -> Charts</code>.
+
+<br/><br/>
+<center>
+<img src="./images/chart_dialog.png"/>
+</center>
+<br/><br/>
+
+There are four possible chart types available. You can choose the from the chart type drop-down menu.
+<br/><br/>
+<ul>
+	<li><p align="left">Time chart<br/>This type shows the values as line chart.</p></li>
+	<li><p align="left">Pie chart<br/>This type shows the occurences of keys in the time interval.</p></li>
+	<li><p align="left">Bar chart<br/>This type chart shows the values als bars.</p></li>
+	<li><p align="left">Scatter chart<br/>This type shows the values as points.</p></li>
+</ul>
+
+<br/><br/>
+<center>
+<img src="./images/chart_type.png"/>
+</center>
+<br/><br/>
+
+Before you can choose a record you have to select one of the robots. This can be done from the
+robot name drop-down menu.
+
+<br/><br/>
+<center>
+<img src="./images/chart_robot.png"/>
+</center>
+<br/><br/>
+
+After that you can choose one or more records for this robot, using the record lookup dialog.
+If you want only one record to be the data for the chart leave <code>Compare multiple records</code> unchecked.
+But if you want up to four records to be compared check <code>Compare multiple records</code>.
+If this flag is set you can select more than one record from the record lookup dialog.
+
+<br/><br/>
+<center>
+<img src="./images/chart_robot.png"/>
+</center>
+<br/><br/>
+
+The record lookup dialog shows you all available recordings for the selected robot.
+
+<br/><br/>
+<center>
+<img src="./images/chart_record.png"/>
+</center>
+<br/><br/>
+
+<b>One record</b><br/><br/>
+
+After you have chosen a record you can see the observed keys of this record in the list 
+on the right hand side. You must select at least one of the observed keys. (Learn more about 
+observed keys in the recordings chapter.) In the middle of the dialog you find the time interval
+area. You can choose the interval to look at by moving the two time separators of the time interval widget.
+
+<br/><br/>
+<center>
+<img src="./images/chart_single.png"/>
+</center>
+<br/><br/>
+
+Before generating the chart you have the possibility to activate some options.
+You can choose to have a chart generated with relative time values. <code>Use all keys</code>
+selects all availabe observed keys in the record. <code>Show threshold</code> activates the 
+threshold input field, where you can specify the value where a threshold line is drawn in the chart.
+The <code>Create 3D chart</code> option is not availabe for all chart types. The last four options are export options,
+if enabled the chart is exported automatically while after creation. The exports are saved under
+<code>charts/&lt;robot name&gt;/&lt;export format extension&gt;</code>.
+
+<br/><br/>
+<center>
+<img src="./images/chart_options.png"/>
+</center>
+<br/><br/>
+
+After clicking <code>Generate chart</code> the chart is openend in the generated chart dialog and 
+may look like the one seen below. The chart dialog has several options in its context menu and the
+ability to zoom into the chart by selecting an area with the mouse.
+
+<br/><br/>
+<center>
+<img src="./images/chart_gen.png"/>
+</center>
+<br/><br/>
+
+<b>Multiple records</b><br/><br/>
+<br/><br/>
+
+If you choose to compare up to four records you have to check <code>Compare multipe records</code>. 
+Then you select up to four records form with the record lookup dialog. On the right hand side you can see
+the observed keys which have all the selected records in common. Also the time interval area has
+an additional option, the <code>Time interval</code> value in milliseconds. This value is the amount of milliseconds
+to look at in the selected records. The interval can only be as large as the shortest record. The sliders in the
+time interval widget now only can be moved togerther int the chosen interval.
+
+<br/><br/>
+<center>
+<img src="./images/chart_multi.png"/>
+</center>
+<br/><br/>
+
+The generated chart of multiple records may look like the one below.
+
+<br/><br/>
+<center>
+<img src="./images/chart_multi2.png"/>
+</center>
+<br/><br/>
+
+</FONT></P>
+</BODY>
+</HTML>

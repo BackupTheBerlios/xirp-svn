@@ -1,0 +1,39 @@
+<!--
+	==========================================================================
+	Xirp 2: eXtendable interface for robotic purposes.
+	==========================================================================
+	
+	Copyright (C) 2005-2007, by Authors and Contributors listed in CREDITS.txt
+ 	
+	All rights reserved. This program and the accompanying materials
+	are made available under the terms of the Common Public License v1.0
+	which accompanies this distribution, and is available at:
+	
+				http://www.opensource.org/licenses/cpl1.0.php
+
+	Original Author:  Matthias Gernand [matthias.gernand AT gmx.de]
+	Contributor(s): 
+-->
+<!-- A profile -->
+<!ELEMENT profile (robot+, externaltools?)>
+<!ATTLIST profile name CDATA #REQUIRED>
+<!ATTLIST profile complete (true|false) #REQUIRED>
+
+<!-- A robot -->
+<!ELEMENT robot (#PCDATA)>
+
+<!-- The external tools -->
+<!ELEMENT externaltools (tool*)>
+
+<!-- A tool -->
+<!ELEMENT tool (executable+)>
+<!ATTLIST tool name CDATA #REQUIRED>
+
+<!-- A executable -->
+<!ELEMENT executable (args?)>
+<!ATTLIST executable name CDATA #REQUIRED>
+<!ATTLIST executable path CDATA #REQUIRED>
+<!ATTLIST executable wait CDATA #REQUIRED>
+
+<!-- The arguments for the executable -->
+<!ELEMENT args (#PCDATA)>

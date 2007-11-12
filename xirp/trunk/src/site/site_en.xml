@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="${project.name}">
+  <bannerLeft>
+    <name>${project.name}</name>
+    <src>http://xirp.berlios.de/images/title.png</src>
+    <href>http://xirp.berlios.de</href>
+  </bannerLeft>
+  <bannerRight>
+    <src>http://developer.berlios.de/bslogo.php?group_id=8442</src>
+    <href>http://developer.berlios.de/projects/xirp</href>
+  </bannerRight>
+  <body>
+    <links>
+      <item name="Maven 2" href="http://maven.apache.org/"/>
+      <item name="berliOS Project Page" href="http://developer.berlios.de/projects/xirp"/>
+      <item name="Deutsch" href="../index.html" src="http://www.glindemann.net/images/german-flag.gif"/>
+    </links>
+
+    <menu name="${project.name} 2">
+      <item name="Home" href="index.html"/>
+      <item name="Information" href="info.html"/>
+      <item name="Download" href="download.html"/>
+      <item name="Documentation" href="documentation.html" />
+      <item name="Developers" href="developer.html" />
+      <item name="Contact" href="contact.html" />
+    </menu>
+
+    <menu ref="reports"/>
+
+  </body>
+</project>

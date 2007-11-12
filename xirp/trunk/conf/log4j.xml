@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j='http://jakarta.apache.org/log4j/'>
+
+<appender name="STDOUT" class="org.apache.log4j.ConsoleAppender">
+	<param name="Threshold" value="DEBUG"/>
+	<layout class="org.apache.log4j.PatternLayout">
+		<param name="ConversionPattern" value="%m"/>
+	</layout>
+</appender>
+	
+<appender name="STDOUT_LINE" class="org.apache.log4j.ConsoleAppender">
+	<layout class="org.apache.log4j.PatternLayout">
+		<param name="ConversionPattern" value="%m %n"/>
+	</layout>
+</appender>
+
+<appender name="LOG"
+	class="de.xirp.io.logging.XirpRollingFileAppender">
+	<param name="File" value="log/xirp.log"/>
+	<param name="Threshold" value="DEBUG"/>
+	<param name="ShowThrowable" value="false"/>
+	<param name="Append" value="false"/>
+	<param name="MaxFileSize" value="300KB"/>
+	<param name="MaxBackupIndex" value="3"/>
+	<layout class="org.apache.log4j.PatternLayout">
+		<param name="ConversionPattern" value="[%d %p %c] %m %n"/>
+	</layout>
+</appender>
+
+<appender name="ROLLING"
+	class="de.xirp.io.logging.XirpRollingFileAppender">
+	<param name="File" value="log/error.log"/>
+	<param name="Threshold" value="WARN"/>
+	<param name="ShowThrowable" value="true"/>
+	<param name="Append" value="true"/>
+	<param name="MaxFileSize" value="300KB"/>
+	<param name="MaxBackupIndex" value="3"/>
+	<layout class="org.apache.log4j.PatternLayout">
+		<param name="ConversionPattern" value="[%d %t %c] - %m"/>
+	</layout>
+</appender>
+	
+<appender name="I18N"
+	class="de.xirp.io.logging.XirpRollingFileAppender">
+	<param name="File" value="log/i18n-error.log"/>
+	<param name="Threshold" value="TRACE"/>
+	<param name="ShowThrowable" value="true"/>
+	<param name="Append" value="false"/>
+	<param name="MaxFileSize" value="300KB"/>
+	<param name="MaxBackupIndex" value="1"/>
+	<layout class="org.apache.log4j.PatternLayout">
+		<param name="ConversionPattern" value="%m"/>
+	</layout>
+</appender>
+	
+<logger name="de.xirp.util">
+	<level value="trace"/>
+	<appender-ref ref="I18N"/>
+</logger>
+	
+<logger name="org.hibernate">
+	<level value="WARN"/>
+	<appender-ref ref="STDOUT_LINE"/>
+	<appender-ref ref="ROLLING"/>
+	<appender-ref ref="LOG"/>
+</logger>
+
+<logger name="org.apache.commons.configuration">
+	<level value="INFO"/>
+	<appender-ref ref="STDOUT"/>
+	<appender-ref ref="ROLLING"/>
+	<appender-ref ref="LOG"/>
+</logger>
+
+<logger name="de">
+	<level value="DEBUG"/>
+	<appender-ref ref="STDOUT"/>
+	<appender-ref ref="ROLLING"/>
+	<appender-ref ref="LOG"/>
+</logger>
+
+<root>
+	<level value ="DEBUG"/>
+</root>	
+</log4j:configuration>

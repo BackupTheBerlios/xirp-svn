@@ -1,0 +1,24 @@
+body {
+  background-color: #CAD5AA;
+}
+body, td, select, input, li{
+  color: #1D7224;
+}
+h2 {
+  background-color: #CED1C6;
+}
+h3 {
+  background-color: #E3E5DC;
+}
+h4 {
+  background-color: #E3E5DC;
+}
+#breadcrumbs {
+  background-color: #CAD3B3;
+}
+#leftColumn {
+  background-color: #CAD3B3;
+}
+table.bodyTable th {
+  background-color: #1D7224;
+}

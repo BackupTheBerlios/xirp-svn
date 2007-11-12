@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ====================================================================== -->
+<!-- Ant build file (http://ant.apache.org/) for Ant 1.6.2 or above.        -->
+<!-- ====================================================================== -->
+<project name="%PROJECT_ARTIFACTID%" default="jar" basedir=".">
+	<!-- ====================================================================== -->
+	<!-- Import maven-build.xml into the current project                        -->
+	<!-- ====================================================================== -->
+	<import file="maven-build.xml" />
+	<!--taskdef classpath="${basedir}/ant/ant-contrib.jar"
+                  resource="net/sf/antcontrib/antcontrib.properties"/-->
+	<typedef classpath="${maven.repo.local}\ant-contrib\ant-contrib\1.0b2\ant-contrib-1.0b2.jar" resource="net/sf/antcontrib/antlib.xml" />
+	<!--typedef resource="net/sf/antcontrib/antcontrib.properties" uri="urn:maven-artifact-ant">
+             <classpath refid="maven.plugin.classpath"/>
+          </typedef-->
+	<taskdef name="izpack" classpath="${basedir}/ant/standalone-compiler.jar" classname="com.izforge.izpack.ant.IzPackTask" />
+	<property name="deploy" location="${maven.build.dir}" />
+	<property name="languages" location="${deploy}/languages" />
+	<property name="dist" location="dist-files" />
+	<property name="compile.debug" value="true" />
+	<property name="version.file" location="${basedir}/version.properties" />
+	<property name="error.file" location="${basedir}/errors.txt" />
+	<property name="version.class" location="${src}/de/xirp/util/Version.java" />
+	<property name="pluginRevisionString" value="Letzte ge&#228;nderte Rev" />
+	<property name="normalRevisionString" value="Revision" />
+	<property name="guides" location="${deploy}/doc/guides" />
+	<property name="dev.guide.url" value="http://developer.berlios.de/docman/display_doc.php?docid=1711&amp;group_id=8442" />
+	<property name="usr.guide.url" value="http://developer.berlios.de/docman/display_doc.php?docid=1710&amp;group_id=8442" />
+	<property name="dep.down.target" location="${basedir}/lib/down"/>
+	<property name="dep.down.unzip" location="${basedir}/lib/unzip"/>
+	<!--loadproperties srcFile="build.conf"/>
+          <loadproperties srcFile="${version.file}"/-->
+	
+	<!-- ====================================================================== -->
+	<!-- Help target                                                            -->
+	<!-- ====================================================================== -->
+	<target name="help">
+		<echo message="Please run: $ant -projecthelp" />
+	</target>
+	
+	<target name="buildLanguageJars" description="Creates jars for each language">
+		<mkdir dir="${languages}" />
+		<!-- iterate over all messages_*.properties which stand for a language in the
+                    application -->
+		<for param="file">
+			<path>
+				<fileset dir="${maven.build.resourceDir.0}/de/xirp/util">
+					<include name="messages*.properties" />
+				</fileset>
+			</path>
+			<!-- Iterate over the properties files and create the jars -->
+			<sequential>
+				<!-- extract the language from the filename -->
+				<propertyregex override="yes" property="language" input="@{file}" regexp="(.*)[\\/]messages_(.*).properties" replace="\2" />
+				<!-- extract the name of the properties file without the package -->
+				<propertyregex override="yes" property="include" input="@{file}" regexp="(.*)[\\/](.*)" replace="\2" />
+				<echo message="Creating language jar for locale: ${language} from file: @{file}" />
+				<!-- only include the properties file of the current language in the jar file -->
+				<jar destfile="${languages}/language_${language}.jar" basedir="${maven.build.resourceDir.0}/de/xirp/util" includes="${include}" />
+			</sequential>
+		</for>
+	</target>
+	
+	<target name="getDependencies" depends="getDeps,unpack"/>
+	
+	<target name="installDependencies">
+		<exec dir="lib" executable="activation-1.0.2.bat" resolveexecutable="true" osfamily="Windows"/>
+		<exec dir="lib" executable="jta-1.0.1B.bat" resolveexecutable="true" osfamily="Windows"/>
+		<exec dir="lib" executable="jmxtools-1.2.1.bat" resolveexecutable="true" osfamily="Windows"/>
+		<exec dir="lib" executable="jmxri-1.2.1.bat" resolveexecutable="true" osfamily="Windows"/>
+		<exec dir="lib" executable="jms-1.1.bat" resolveexecutable="true" osfamily="Windows"/>
+		<exec dir="lib" executable="ejb3-persistence.bat" resolveexecutable="true" osfamily="Windows"/>
+	</target>
+	
+	<target name="getDeps">
+		<mkdir dir="${dep.down.target}"/>
+		<get dest="${dep.down.target}/itext-2.0.6.jar" src="http://prdownloads.sourceforge.net/itext/itext-2.0.6.jar"/>
+		<get dest="${dep.down.target}/freetts-1.2.1-bin.zip" src="http://switch.dl.sourceforge.net/sourceforge/freetts/freetts-1.2.1-bin.zip"/>
+		<get dest="${dep.down.target}/ini4j-0.2.6.zip" src="http://superb-west.dl.sourceforge.net/sourceforge/ini4j/ini4j-0.2.6.zip"/>
+		<get dest="${dep.down.target}/javolution-5.2.6-bin.zip" src="http://javolution.org/javolution-5.2.6-bin.zip"/>
+		<get dest="${dep.down.target}/Joystick-0-6.zip" src="http://superb-east.dl.sourceforge.net/sourceforge/javajoystick/Joystick-0-6.zip"/>
+		<!--get dest="${dep.down.target}/naf-0.3.zip" src="http://www.novocode.com/naf/naf-0.3.zip"/-->
+		<get dest="${dep.down.target}/swt-3.3-win32-win32-x86.zip" src="http://ftp.wh2.tu-dresden.de/pub/mirrors/eclipse/eclipse/downloads/drops/R-3.3-200706251500/swt-3.3-win32-win32-x86.zip"/>
+		<get dest="${dep.down.target}/swt-3.3-gtk-linux-x86.zip" src="http://ftp-stud.fht-esslingen.de/pub/Mirrors/eclipse/eclipse/downloads/drops/R-3.3-200706251500/swt-3.3-gtk-linux-x86.zip"/>
+	</target>
+	
+	
+	<target name="unpack">
+		<delete dir="${dep.down.unzip}"/>
+		<mkdir dir="${dep.down.unzip}"/>
+		<unzip src="${dep.down.target}/ini4j-0.2.6.zip" dest="${dep.down.unzip}">
+		    <patternset>
+		        <include name="dist/ini4j.jar"/>
+		    </patternset>
+		    <mapper type="flatten"/>
+		</unzip>
+		<move tofile="${dep.down.unzip}/ini4j-0.2.6.jar" file="${dep.down.unzip}/ini4j.jar"/>
+			
+		<copy file="${dep.down.target}/itext-2.0.6.jar" tofile="${dep.down.unzip}/itext-2.0.6.jar"/>
+		
+		<unzip src="${dep.down.target}/javolution-5.2.6-bin.zip" dest="${dep.down.unzip}">
+		    <patternset>
+		        <include name="javolution-5.2/javolution.jar"/>
+		    </patternset>
+		    <mapper type="flatten"/>
+		</unzip>
+		<move tofile="${dep.down.unzip}/javolution-5.2.6.jar" file="${dep.down.unzip}/javolution.jar"/>
+		
+		<unzip src="${dep.down.target}/Joystick-0-6.zip" dest="${dep.down.unzip}">
+		    <patternset>
+		        <include name="joystick/Joystick.jar"/>
+		    </patternset>
+		    <mapper type="flatten"/>
+		</unzip>
+		<move tofile="${dep.down.unzip}/Joystick-0.6.jar" file="${dep.down.unzip}/Joystick.jar"/>
+		<mkdir dir="${dep.down.unzip}/dll"/>
+		<mkdir dir="${dep.down.unzip}/so"/>
+		<unzip src="${dep.down.target}/Joystick-0-6.zip" dest="${dep.down.unzip}/dll">
+		    <patternset>
+		        <include name="joystick/lib/*.dll"/>
+		    </patternset>
+		    <mapper type="flatten"/>
+		</unzip>
+		<unzip src="${dep.down.target}/Joystick-0-6.zip" dest="${dep.down.unzip}/so">
+		    <patternset>
+		        <include name="joystick/lib/*.so*"/>
+		    </patternset>
+		    <mapper type="flatten"/>
+		</unzip>
+		
+		<unzip src="${dep.down.target}/swt-3.3-win32-win32-x86.zip" dest="${dep.down.unzip}">
+		    <patternset>
+		        <include name="swt.jar"/>
+		    </patternset>
+		    <mapper type="flatten"/>
+		</unzip>
+		<mkdir dir="${dep.down.unzip}/windows"/>
+		<move tofile="${dep.down.unzip}/windows/swt-3.3-win32-win32-x86.jar" file="${dep.down.unzip}/swt.jar"/>
+		
+		<unzip src="${dep.down.target}/swt-3.3-gtk-linux-x86.zip" dest="${dep.down.unzip}">
+		    <patternset>
+		        <include name="swt.jar"/>
+		    </patternset>
+		    <mapper type="flatten"/>
+		</unzip>
+		<mkdir dir="${dep.down.unzip}/linux"/>
+		<move tofile="${dep.down.unzip}/linux/swt-3.3-gtk-linux-x86.jar" file="${dep.down.unzip}/swt.jar"/>
+		
+		<unzip src="${dep.down.target}/freetts-1.2.1-bin.zip" dest="${dep.down.unzip}">
+		    <patternset>
+		        <include name="freetts-1.2.1/lib/cmu_us_kal.jar"/>
+		    	<include name="freetts-1.2.1/lib/cmudict04.jar"/>
+		    	<include name="freetts-1.2.1/lib/cmulex.jar"/>
+		    	<include name="freetts-1.2.1/lib/en_us.jar"/>
+		    	<include name="freetts-1.2.1/lib/freetts.jar"/>
+		    	<include name="freetts-1.2.1/mbrola/mbrola.jar"/>
+		    </patternset>
+		    <mapper type="flatten"/>
+		</unzip>
+	</target>
+	
+	
+	<target name="prepLanguage">
+		<for param="file">
+			<path>
+				<fileset dir="${languages}">
+					<include name="language_*.jar" />
+				</fileset>
+			</path>
+			<!-- Iterate over the properties files and create the jars -->
+			<sequential>
+				<!-- extract the language from the filename -->
+				<propertyregex override="yes" property="language" input="@{file}" regexp="(.*)[\\/]language_(.*).jar" replace="\2" />
+				<echo message="Found language jar for locale: ${language} from file: @{file}" />
+				<!-- add the language jar as a pack to the installer -->
+				<!-- english is a required language pack -->
+				<if>
+					<equals arg1="${language}" arg2="en" casesensitive="false" />
+					<then>
+						<replace file="${deploy}/install.xml" token="@LANGUAGE@">
+							<replacevalue>
+								<![CDATA[<pack name="Languagepack: @LANGUAGENAME@" required="yes">
+									<description>Enables the GUI to be displayed in @LANGUAGENAME@</description>
+									<file targetdir="$INSTALL_PATH/languages" src="@LANGUAGEJAR@"/>
+								</pack>
+                             @LANGUAGE@]]>
+							</replacevalue>
+						</replace>
+					</then>
+					<!-- other language packs are optional -->
+					<else>
+						<replace file="${deploy}/install.xml" token="@LANGUAGE@">
+							<replacevalue>
+								<![CDATA[<pack name="Languagepack: @LANGUAGENAME@" required="no">
+										<description>Enables the GUI to be displayed in @LANGUAGENAME@</description>
+										<file targetdir="$INSTALL_PATH/languages" src="@LANGUAGEJAR@"/>
+									</pack>
+								 @LANGUAGE@]]>
+							</replacevalue>
+						</replace>
+					</else>
+				</if>
+				<!-- replace the placeholders of the pack -->
+				<replace file="${deploy}/install.xml" token="@LANGUAGENAME@" value="###${language}###" />
+				<replace file="${deploy}/install.xml" token="@LANGUAGEJAR@" value="${deploy}/languages/language_${language}.jar" />
+			</sequential>
+		</for>
+		<!-- Translate the language tags like en to english because the installer
+                    should display real names for the languages -->
+		<translate toDir="${deploy}/translated" starttoken="###" endtoken="###" bundle="${deploy}/language" bundlelanguage="en" forceoverwrite="yes">
+			<fileset dir="${deploy}">
+				<include name="**/install.xml" />
+			</fileset>
+		</translate>
+	</target>
+								
+	<target name="-getUsrGuide" unless="usr.guide.present">
+		<get src="${usr.guide.url}" dest="${guides}/user.pdf" usetimestamp="true" ignoreerrors="true" />
+	</target>
+								
+	<target name="-getDevGuide" unless="dev.guide.present">
+		<get src="${dev.guide.url}" dest="${guides}/developer.pdf" usetimestamp="true" ignoreerrors="true" />
+	</target>
+								
+	<target name="getGuides">
+		<mkdir dir="${deploy}/doc/guides" />
+		<available file="${guides}/developer.pdf" property="dev.guide.present" />
+		<available file="${guides}/user.pdf" property="usr.guide.present" />
+		<echo message="Developer Guide found: ${dev.guide.present}" />
+		<echo message="User Guide found: ${usr.guide.present}" />
+		<antcall target="-getUsrGuide" />
+		<antcall target="-getDevGuide" />
+	</target>
+								
+	<target name="makeInstaller" depends="getGuides" description="Creates an installer.">
+		<!-- copy all files needed for the installer (like pictures) to the
+                            deploy folder -->
+		<copy todir="${deploy}">
+			<fileset dir="${dist}" includes="*" excludes="install.xml*" />
+		</copy>
+		<!-- copy the installer template to a real installer file on which we can work on -->
+		<copy tofile="${deploy}/install.xml" file="${dist}/install.xml.tmpl" overwrite="true" />
+		<antcall target="prepLanguage" />
+		<copy tofile="${deploy}/install.xml" file="${deploy}/translated/install.xml" overwrite="true" />
+		
+		<propertyregex override="yes" property="major.number" input="${project.version}" regexp="(\d*)(.*)" replace="\1" />
+		<!-- create the startup scripts for the os -->
+		<replaceregexp file="${deploy}/xirp.bat" match="java(.*)" replace="java -Djava.library.path=lib/dll -Xms256M -Xmx512M -jar ${maven.build.finalName}.jar" byline="true" />
+		<replaceregexp file="${deploy}/xirp.sh" match="java(.*)" replace="java -Djava.library.path=lib/so -Xms256M -Xmx512M -jar ${maven.build.finalName}.jar" byline="true" />
+		<!-- replace all placeholders in the install and shortcut config files -->
+		<replace file="${deploy}/install.xml" token="@VERSION@" value="${project.version}" summary="yes" />
+		<replace file="${deploy}/install.xml" token="@JARNAME@" value="${maven.build.finalName}.jar" summary="yes" />
+		<replace file="${deploy}/install-readme.html" token="@VERSION@" value="${project.version}" summary="yes" />
+		<replace file="${deploy}/shortcutSpec.xml" token="@VERSION@" value="${major.number}" summary="yes" />
+		<replace file="${deploy}/shortcutSpec.xml" token="@JARNAME@" value="${maven.build.finalName}.jar" summary="yes" />
+		<replace file="${deploy}/Unix_shortcutSpec.xml" token="@VERSION@" value="${major.number}" summary="yes" />
+		<replace file="${deploy}/Unix_shortcutSpec.xml" token="@JARNAME@" value="${maven.build.finalName}.jar" summary="yes" />
+		<!-- Call IzPack -->
+		<echo message="Makes the installer using IzPack" />
+		<izpack input="${deploy}/install.xml" output="${deploy}/${maven.build.finalName}_Setup.jar" installerType="standard" basedir="${deploy}" />
+		<chmod file="${deploy}/${maven.build.finalName}_Setup.jar" perm="700" />
+	</target>
+	
+	<target name="manifest">
+		<fileset id="lib.files" dir="${deploy}/lib">
+					<include name="*.jar"/>
+					<include name="linux/**/*.jar"/>
+					<include name="windows/**/*.jar"/>
+				</fileset>
+		
+		<pathconvert pathsep=" " property="jarfiles" refid="lib.files">
+					<chainedmapper>
+						<!-- Linux systems need forward slash -->
+						<regexpmapper from="(.*)[//\\]lib[//\\](.*)"
+							to="lib\/\2"/>
+						<filtermapper>
+						  <replacestring from="\" to="/"/>
+						</filtermapper>
+					</chainedmapper>
+				</pathconvert>
+		
+		<manifest file="${deploy}/MANIFEST.MF" mode="replace">
+			<attribute name="Built-By" value="${user.name}"/>
+			<attribute name="Main-Class"
+						value="de.xirp.Xirp"/>
+			<attribute name="Class-Path" value="${jarfiles}"/>
+			<attribute name="Build-Jdk"
+				value="${java.specification.version}"/>
+			<attribute name="Specification-Title"
+			value="${project.name}"/>
+			<attribute name="Specification-Version"
+			value="${project.version}"/>
+			<attribute name="Implementation-Title"
+			value="${project.name}"/>
+			<attribute name="Implementation-Version"
+			value="${project.version}"/>
+			<attribute name="Implementation-Vendor-Id"
+			value="${project.name}"/>
+		</manifest>
+	</target>
+								
+	<!-- VERSION -->
+	<target name="setVersion" depends="-setMajorVersion, -setMinorVersion, -setPatchLevel, -setRevision" />
+	
+	<target name="incrementMajorVersion">
+		<propertyfile file="${version.file}">
+			<entry key="major.number" type="int" default="0" operation="+" />
+			<entry key="minor.number" type="int" value="0" operation="=" />
+			<entry key="patchlevel.number" type="int" value="0" operation="=" />
+		</propertyfile>
+		<antcall target="setVersion" />
+	</target>
+								
+	<target name="incrementMinorVersion">
+		<propertyfile file="${version.file}">
+			<entry key="minor.number" type="int" default="0" operation="+" />
+			<entry key="patchlevel.number" type="int" value="0" operation="=" />
+		</propertyfile>
+		<antcall target="setVersion" />
+	</target>
+								
+	<target name="incrementPatchLevel">
+		<propertyfile file="${version.file}">
+			<entry key="patchlevel.number" type="int" default="0" operation="+" />
+		</propertyfile>
+		<antcall target="setVersion" />
+	</target>
+								
+	<target name="setDevelopmentVersion">
+		<propertyfile file="${version.file}">
+			<entry key="jar.edition" type="string" value="d" operation="=" />
+		</propertyfile>
+		<replaceregexp file="${version.class}" match="DEVELOPMENT = (.*);" replace="DEVELOPMENT = true;" byline="true" />
+	</target>
+								
+	<target name="setNonDevelopmentVersion">
+		<propertyfile file="${version.file}">
+			<entry key="jar.edition" type="string" value="" operation="=" />
+		</propertyfile>
+		<replaceregexp file="${version.class}" match="DEVELOPMENT = (.*);" replace="DEVELOPMENT = false;" byline="true" />
+	</target>
+								
+	<target name="-revision" unless="xirp.revision">
+		<antcall target="-revisionWindows" />
+		<antcall target="-revisionLinux" />
+		<loadproperties srcFile="${basedir}\revision.properties" />
+		<echo message="${xirp.revision}" />
+	</target>
+								
+	<target name="-revisionWindows" if="os.windows">
+		<exec dir="${svnpath}" executable="${svnpath}\SubWCRev.exe">
+			<arg line="'${basedir}' '${basedir}\revision.tmpl' '${basedir}\revision.properties' -f" />
+		</exec>
+	</target>
+								
+	<target name="-revisionLinux" if="os.linux">
+		<exec dir="." executable="svn" output="revision.properties">
+			<arg line="info" />
+		</exec>
+		<replaceregexp file="revision.properties" match=":" replace=" =" byline="true" />
+		<replaceregexp file="revision.properties" match="${normalRevisionString}" replace="xirp.revision" byline="true" />
+	</target>
+								
+	<!-- read the plugins revision from the top folder of the plugin -->
+	<target name="-pluginRevision">
+		<antcall target="-pluginRevisionWindows" />
+		<antcall target="-pluginRevisionLinux" />
+		<loadproperties srcFile="${basedir}\pluginRevision.properties">
+			<filterchain>
+				<tokenfilter>
+					<replacestring from="xirp.revision" to="plugin.revision" />
+				</tokenfilter>
+			</filterchain>
+		</loadproperties>
+	</target>
+								
+	<target name="-pluginRevisionWindows" if="os.windows">
+		<exec dir="${svnpath}" executable="${svnpath}\SubWCRev.exe">
+			<arg line="'${dirName}' '${basedir}\revision.tmpl' '${basedir}\pluginRevision.properties' -f" />
+		</exec>
+	</target>
+								
+	<target name="-pluginRevisionLinux" if="os.linux">
+		<exec dir="${dirName}" executable="svn" output="pluginRevision.properties">
+			<arg line="info" />
+		</exec>
+		<replaceregexp file="pluginRevision.properties" match=":" replace=" =" byline="true" />
+		<replaceregexp file="pluginRevision.properties" match="${pluginRevisionString}" replace="xirp.revision" byline="true" />
+	</target>
+								
+	<target name="-setMajorVersion">
+		<property file="${version.file}" />
+		<replaceregexp file="${version.class}" match="MAJOR_VERSION = (.*);" replace="MAJOR_VERSION = ${major.number};" byline="true" />
+	</target>
+								
+	<target name="-setMinorVersion">
+		<property file="${version.file}" />
+		<replaceregexp file="${version.class}" match="MINOR_VERSION = (.*);" replace="MINOR_VERSION = ${minor.number};" byline="true" />
+	</target>
+								
+	<target name="-setPatchLevel">
+		<property file="${version.file}" />
+		<replaceregexp file="${version.class}" match="PATCH_LEVEL = (.*);" replace="PATCH_LEVEL = ${patchlevel.number};" byline="true" />
+	</target>
+								
+	<target name="-setRevision" depends="-revision">
+		<replaceregexp file="${version.class}" match="REVISION = (.*);" replace="REVISION = ${xirp.revision};" byline="true" />
+	</target>				
+</project>

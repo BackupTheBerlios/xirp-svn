@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<specification complete="true">
+    <communicationprotocol>
+        <class>de.unibremen.rr.plugins.protocols.testerbot.TesterBotCommunication</class>
+        <messagehandler></messagehandler>
+    </communicationprotocol>
+    <communicationinterface>
+        <class>de.unibremen.rr.plugins.communication.ip.IPCommunication</class>
+    </communicationinterface>
+</specification>

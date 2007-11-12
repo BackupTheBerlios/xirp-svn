@@ -1,0 +1,32 @@
+﻿<document>
+  <properties>
+    <title>&#967;irp 2 - Download</title>
+  </properties>
+  <body>
+    <section name="Downloads">
+      <ul>
+        <li>
+          <a href="http://developer.berlios.de/project/showfiles.php?group_id=8442"
+             target="_blank">Installer für
+             Windows/Linux</a>
+        </li>
+        <li>
+          <a href="http://developer.berlios.de/docman/?group_id=8442"
+             target="_blank">Benutzerhandbuch</a>
+        </li>
+        <li>
+          <a href="http://developer.berlios.de/docman/?group_id=8442"
+             target="_blank">Entwicklerhandbuch</a>
+        </li>
+        <li>
+          <a href="http://developer.berlios.de/docman/?group_id=8442"
+             target="_blank">JavaDoc (im Installer)</a>
+        </li>
+        <li>
+          <a href="http://developer.berlios.de/project/showfiles.php?group_id=8442"
+             target="_blank">Sourcecode (im Installer)</a>
+        </li>
+      </ul>
+    </section>
+  </body>
+</document>
