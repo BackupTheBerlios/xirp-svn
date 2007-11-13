@@ -6,7 +6,7 @@
   <groupId>de.berlios.xirp</groupId>
   <artifactId>Xirp</artifactId>
   <name>xirp</name>
-  <version>2.5.0-SNAPSHOT</version>
+  <version>2.5.0</version>
   <description>eXtendable Interface for Robotic Purposes</description>
   <url>http://xirp.berlios.de</url>
   <prerequisites>
@@ -48,9 +48,10 @@
   <scm>
     <connection>scm:svn:svn://svn.berlios.de/xirp/xirp/trunk</connection>
     <developerConnection>scm:svn:svn+ssh://username@svn.berlios.de/svnroot/repos/xirp/xirp/trunk</developerConnection>
-    <url>http://svn.berlios.de/wsvn/xirp</url>
+    <url>http://svn.berlios.de/wsvn/xirp/xirp/trunk</url>
   </scm>
   <build>
+    <finalName>${project.artifactId}-${project.version}.${buildNumber}</finalName>
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -73,6 +74,23 @@
           <archive>
             <manifestFile>${project.build.directory}/MANIFEST.MF</manifestFile>
           </archive>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>buildnumber-maven-plugin</artifactId>
+        <version>1.0-beta-1</version>
+        <executions>
+          <execution>
+            <phase>validate</phase>
+            <goals>
+              <goal>create</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <doCheck>false</doCheck>
+          <doUpdate>false</doUpdate>
         </configuration>
       </plugin>
       <plugin>
@@ -234,6 +252,7 @@
               <tasks>
                 <echo>build.xml</echo>
                 <property name="project.version" value="${project.version}"/>
+                <property name="maven.build.finalName" value="${build.finalName}"/>
                 <ant antfile="build.xml" target="makeInstaller"/>
               </tasks>
             </configuration>
@@ -543,14 +562,9 @@
     </plugins>
   </reporting>
   <distributionManagement>
-    <repository>
-      <id>berlios</id>
-      <name>berliOs</name>
-      <url>Host to Company Repository</url>
-    </repository>
     <site>
       <id>berlios</id>
-      <url>scp://shell.berlios.de:/home/groups/xirp/htdocs/maven</url>
+      <url>scp://shell.berlios.de:/home/groups/xirp/htdocs</url>
     </site>
   </distributionManagement>
 </project>

@@ -25,8 +25,8 @@
 package de.xirp.util;
 
 /**
- * This Class defines versioning constants needed in Xirp.
- * The values are set by the <code>build.xml</code> ant build script.
+ * This Class defines versioning constants needed in Xirp. The values
+ * are set by the <code>build.xml</code> ant build script.
  * 
  * @author Matthias Gernand
  */
@@ -39,7 +39,7 @@ public final class Version {
 	/**
 	 * Minor number of the current version
 	 */
-	public static final int MINOR_VERSION = 4;
+	public static final int MINOR_VERSION = 5;
 	/**
 	 * Number of the patch level
 	 */
@@ -47,10 +47,10 @@ public final class Version {
 	/**
 	 * Revision number of the current version
 	 */
-	public static final int REVISION = 1333;
+	public static final int REVISION = 6;
 	/**
-	 * Set <code>true</code> for development versions. Can be used to 
-	 * print special debug messages.
+	 * Set <code>true</code> for development versions. Can be used
+	 * to print special debug messages.
 	 */
 	public static final boolean DEVELOPMENT = true;
 
