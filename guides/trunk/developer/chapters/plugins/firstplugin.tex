@@ -1,0 +1,112 @@
+\section{Ein erstes Plugin}
+\label{sec:firstplugin}
+\index{Plugin!erstellen|(}
+Voraussetzungen:
+\begin{itemize}
+\item Java (\seegls{JDK}) ab 1.6
+\item Entwicklungsumgebung wie eclipse
+\item \xirp~Installation
+\end{itemize}
+
+Der erste Schritt ist das erstellen eines neuen Projektes und hinzufügen des
+\xirp~jar aus dem Installationsordner sowie
+des \seegls{SWT} Jar aus dem Unterordner \fileQuote{lib/windows} oder \fileQuote{lib/linux} und hinzufügen.
+
+Dann kann eine neue Klasse erstellt werden, welche
+\index{Plugin!IPlugable!AbstractPlugin}
+\newline\codeQuote{de.unibremen.rr.xirp.plugin.AbstractPlugin} erweitert (\refFig{newPluginClass}). \par
+\kfig{plugin_plugin_newPluginClass}{1}{Erstellen einer neuen Pluginklasse}{newPluginClass}
+
+Damit die Applikation weiß, dass diese neu erstellte Klasse die \index{Plugin!Hauptklasse}Hauptklasse 
+des Plugins ist, muss eine \index{Plugin!Properties}properties Datei erstellt werden (\refFig{properties}).
+
+Eine Vorlage dieser Properties Datei befindet sich bei der Installation im Ordner 
+\fileQuote{development} als \fileQuote{plugin.properties.template}. Diese Datei in das Paket der 
+\seegls{Plugin}-Klasse kopieren und die Endung \texttt{.template} entfernen.
+
+\kfig{plugin_properties}{1}{Eine \enquote{plugin.properties}-Datei}{properties}
+
+Nun können die Methoden mit Inhalten gefüllt werden.
+
+Die Methode \index{Plugin!IPlugable!runInternal()}\codeQuote{runInternal()} 
+wird ausgeführt wenn das Plugin gestartet wird. Um eine Ausgabe im 
+Systemprotokoll von \xirp~zu erhalten muss noch eine Konstante für das 
+\seegls{Logging} definiert werden.
+
+Dies sieht wie folgt aus:
+\codeQuote{private static final RobotLogger LOGGER = RobotLogger.getLogger(MyPlugin.class);}
+
+Der \index{Roboter!Logging}\index{Logging!Roboter}\codeQuote{RobotLogger} ist im Paket 
+\codeQuote{de.unibremen.rr.xirp.io.logging} zu finden. 
+
+Die Ausgabe in 
+\codeQuote{runInternal()} erfolgt dann über 
+\codeQuote{LOGGER.info(robotName,''Ausgabe'');}. 
+
+Die Methoden 
+\index{Plugin!IPlugable!getPluginType()}\codeQuote{getPluginType()} gibt den 
+Typ des Plugins zurück. Die \seegls{Plugin} Typen kommen aus der Klasse 
+\index{Plugin!PluginType}\codeQuote{de.unibremen.rr.xirp.plugin.PluginType}. Ähnliches
+gilt für den 
+\index{Plugin!VisualizationType}Darstellungstyp den die Methoden 
+\index{Plugin!IPlugable!getVisualizationType()}\codeQuote{getVisualizationType()} 
+zurückgibt.
+
+Die Methoden 
+\index{Plugin!IPlugable!getDescriptionKey()}\codeQuote{getDescriptionKey()} und 
+\index{Plugin!IPlugable!getNameKey()}\codeQuote{getNameKey()} geben einen Schlüssel 
+zur \index{Internationalisierung!Schlüssel}Übersetzung des \seegls{Plugin} Namens und der \seegls{Plugin} Beschreibung zurück.
+
+\kfig{plugin_basicProperties}{1}{Übersetzungsdateien für ein Plugin}{basicProperties}
+
+Für die Übersetzung kommen nun noch zwei weitere Dateien 
+(\refFig{basicProperties}) hinzu:\\
+\index{Internationalisierung!Plugin}\fileQuote{messages$\_$de.properties} für 
+die Deutsche Übersetzung und 
+\index{Internationalisierung!Plugin}\fileQuote{messages$\_$en.properties} für 
+die Englische Übersetzung.
+
+Die entstandene Java-Klasse ist in \autoref{stubsFilled} zu sehen.
+
+Das erste \seegls{Plugin} ist nun fast fertig. Nun muss nur noch ein Jar daraus erstellt
+werden. Dazu kann aus dem Ordner \fileQuote{development} der Installation die \seegls{Ant}-\fileQuote{build.xml}
+in den Hauptordner des Projekts kopiert werden.
+
+Die Pfade oben in der \index{Ant!build.xml}\fileQuote{build.xml} müssen entsprechend angepasst werden. Dies 
+betrifft normalerweise nur den Eintrag \codeQuote{plugins.pkg}.
+
+Dann kann der Task \index{Ant!build.xml!singlePlugin}\codeQuote{singlePlugin} ausgeführt werden. Im Ordner \fileQuote{jar} liegt nun ein 
+jar des \seegls{Plugins}. Dieses kann nun in die \xirp~Installation in den Ordner \fileQuote{plugins} 
+kopiert werden.
+
+Startet man nun \xirp~wird das \seegls{Plugin} geladen. Ob dies funktioniert hat kann man 
+über das Menü \menuQuote{?} und den Eintrag \index{Menü!?!Über Plugins}\menuQuote{Über Plugins}
+herausfinden. Wurde das \seegls{Plugin} 
+geladen so ist es dort in der Tabelle aufgelistet (\refFig{aboutPlugins}).
+
+\kfig{plugin_stubsFilled}{1}{Eine einfache Pluginklasse: MyPlugin.java}{stubsFilled}
+
+\kfig{plugin_aboutPlugins}{1}{Menü: Über Plugins}{aboutPlugins}
+
+Damit das \seegls{Plugin} ausgeführt wird, muss es einem Roboter hinzugefügt werden.
+
+Dazu kann der Roboter \robotQuote{TesterBot} genutzt werden. Die Definition dieses Roboters 
+befindet sich in der Installation \index{Profil!Roboter}\fileQuote{conf/profiles/robots/testerbot.bot}.
+
+\newpage
+Um das \seegls{Plugin} einzubinden muss einfach nur ein Element zum Element \codeQuote{plugins} ganz 
+unten hinzugefügt werden welches wie folgt aussieht:\index{Profil!Roboter!Plugin}
+
+\begin{xml}[caption=Plugin in Roboterprofil eintragen,label=lst:smplplug:first:xml]
+<plugin name="MeinPlugin">
+	<class>xirp.plugins.MyPlugin</class>
+	<usemultimedia>false</usemultimedia>
+</plugin>
+\end{xml}
+
+Startet man \xirp~nun wieder kann man den Roboter \robotQuote{TesterBot} auswählen und findet 
+im Menü unter \index{Menü!Plugins}\menuQuote{Plugins} das eigene \seegls{Plugin} wieder. Klickt man darauf so wird das 
+\index{Plugin!ausführen}\seegls{Plugin} ausgeführt und es sollte eine entsprechende Ausgabe im \index{Logging!Systemprotokoll}Systemprotokoll 
+erscheinen.
+
+\index{Plugin!erstellen|)}

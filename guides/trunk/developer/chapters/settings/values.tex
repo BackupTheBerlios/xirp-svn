@@ -1,0 +1,259 @@
+\section{Eigene Werte}
+\index{Einstellungen!Werte!eigene}
+\label{sec:settings:ownvalues}
+Die Methode \codeQuote{addValue(IValue)} bietet die Möglichkeit zu einer Option\index{Einstellungen!Optionen}
+auch selbst definierte Werte hinzuzufügen.
+
+Um einen eigenen \index{Einstellungen!Wert}Wert zu definieren muss daher die Klasse \codeQuote{IValue}
+implementiert, oder eine der schon bestehenden Werte erweitert werden.
+
+Als Beispiel soll ein Wert implementiert werden, welcher Vor- und Nachname einer
+Person enthalten kann.
+
+Dazu muss zunächst die Klasse \codeQuote{IValue} implementiert werden, welche
+zusätzlich \codeQuote{Observeable} erweitern muss, damit später eine
+Synchronisation mit der anzeigenden Oberfläche möglich wird. Weiterhin erhält
+die Klasse noch eine Klasse \codeQuote{PersonName} welche Name und Vorname
+kapselt. 
+
+\begin{java}[caption=Klasse PersonName]
+public class PersonName {
+
+	private String forename;
+	private String surename;
+
+	public PersonName(String forename, String surename) {
+		this.forename = forename;
+		this.surename = surename;
+	}
+
+	public String getForename() {
+		return forename;
+	}
+
+	public String getSurename() {
+		return surename;
+	}
+
+	public static PersonName parse(String string) {
+		final String[] split = string.split(" ");
+		String forename = "";
+		String surename = "";
+		if (split.length > 0) {
+			forename = split[0];
+			if (split.length > 1) {
+				surename = split[1];
+			}
+		}
+
+		return new PersonName(forename, surename);
+	}
+
+	@Override
+	public String toString() {
+		return forename + " " + surename;
+	}
+}
+\end{java}
+
+Die Klasse \codeQuote{PersonName} enthält bereits eine Methode welche einen mit
+\codeQuote{toString()} generierten String wieder zurück in ein Objekt parsen
+kann. Dies wird benötigt um die gespeicherten Einstellungen wieder auszulesen.
+
+\begin{java}[caption=Eigener Wert für Einstellungen: PersonNameValue, label=code:settings:ownvalue]
+import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
+
+import de.unibremen.rr.xirp.settings.IValue;
+import de.unibremen.rr.xirp.settings.SettingsChangedEvent;
+import de.unibremen.rr.xirp.settings.SettingsChangedListener;
+
+public class PersonNameValue extends Observable implements IValue {
+
+	private PersonName defaultValue;
+	private PersonName currentValue;
+	private PersonName savedValue;
+	private String saveKey;
+	private ArrayList<SettingsChangedListener> listeners = new ArrayList<SettingsChangedListener>( );
+
+	public PersonNameValue(String key, String forename, String surename) {
+		this.saveKey = key;
+		this.defaultValue = new PersonName(forename, surename);
+		this.currentValue = defaultValue;
+		this.savedValue = currentValue;
+	}
+
+	@Override
+	public void addObserverToValue(Observer obs) {
+		this.addObserver(obs);
+	}
+	
+	...
+} 
+\end{java}
+
+Da die Klasse \codeQuote{Observable} erweitert kann der \codeQuote{Observer} der
+Methode \codeQuote{addObserverToValue()} direkt zur Klasse hinzugefügt werden.
+Diese Methode wird von den \index{Einstellungen!Renderer}\seegls{Renderern} aufgerufen um sich auf Änderungen des
+Objektes zu registrieren.
+
+Nun folgt die Implementierung aller weiteren Methoden die vom Interface
+bereitgestellt werden:
+\begin{java}[caption=Eigener Wert für Einstellungen: PersonNameValue(2), label=code:settings:ownvalue2] 
+@Override public String getDisplayValue() {
+	return currentValue.toString( );
+}
+
+public PersonName getDisplayPerson() {
+	return currentValue;
+}
+
+public void setCurrentPerson(PersonName person) {
+	setCurrentPerson(person, false);
+}
+
+public void setCurrentPerson(PersonName person, boolean fromUI) {
+	this.currentValue = person;
+
+	// notify the observers that the current state has changed
+	// and they should update the UI
+	if (!fromUI) {
+		setChanged( );
+		notifyObservers( );
+	}
+
+	notifyChange( );
+}
+
+@Override
+public String getSaveKey() {
+	return saveKey;
+}
+
+@Override
+public String getSaveValue() {
+	return savedValue.toString( );
+}
+
+@Override
+public void parseSavedValue(Object object) {
+	setSavedValue(PersonName.parse(object.toString( )));
+}
+
+public void setSavedValue(PersonName person) {
+	this.savedValue = person;
+	setCurrentPerson(savedValue);
+}
+
+@Override
+public boolean hasChanged() {
+	return !currentValue.equals(savedValue);
+}
+
+@Override
+public boolean isDefaultSelected() {
+	return currentValue.equals(defaultValue);
+}
+
+@Override
+public void reset() {
+	setCurrentPerson(savedValue);
+}
+
+@Override
+public void save() {
+	this.savedValue = currentValue;
+}
+
+@Override
+public void setToDefault() {
+	setCurrentPerson(defaultValue);
+}
+
+@Override
+public void setSelected(boolean selection) {
+	setSelected(selection, false);
+}
+
+public void addLocaleChangeListener(SettingsChangedListener listener) {
+	listeners.add(listener);
+}
+
+private void notifyChange() {
+	for (SettingsChangedListener listener : listeners) {
+		listener.settingsChanged(new SettingsChangedEvent(this));
+	}
+}
+
+public void removeLocaleChangeListener(SettingsChangedListener listener) {
+	listeners.remove(listener);
+}
+
+//Die weiteren Methoden treffen hier nicht zu
+
+@Override
+public void setSelected(boolean selection, boolean fromUI) {
+	// Nothing to do
+}
+
+@Override
+public boolean isSelected() {
+	return true;
+}
+
+@Override
+public boolean isCurrentlySelected() {
+	return true;
+}
+
+@Override
+public String getKey() {
+	return null;
+}
+
+@Override
+public Object[] getKeyArgs() {
+	return null;
+}
+\end{java}
+
+Die Methoden \codeQuote{parseSavedValue()} wird von der Optionsklasse aufgerufen
+und übergibt den \index{Einstellungen!Werte}Wert welcher einmal durch \codeQuote{getSaveValue()}
+gespeichert wurde.
+
+Die Methode \codeQuote{setCurrentPerson()} kommt zweimal vor. Dies liegt daran
+dass ein Aufruf sowohl von der Oberfläche als auch von innerhalb erfolgen kann
+und dies unterschieden werden muss. Erfolgt der Aufruf nicht von der Oberfläche
+wird diese Beispielsweise über \codeQuote{notifyObservers( )} über die Änderung
+informiert, da sie sich vorher mit \codeQuote{addOberserverToValue( )}
+angemeldet hat.
+
+Der Wert kann nun benutzt werden und wird im folgenden Beispiel einer
+Checkbox-Option hinzugefügt.
+\index{Manager!PluginManager}
+\begin{java}[caption=Benutzung von PersonNameValue]
+@Override
+public Settings getSettings() {
+	if (settings == null) {
+		settings = new Settings(PluginManager.getProperties( ),
+				handler,
+				"Example.settings.main",
+				getRealKey( ));
+
+		SettingsPage settingsPage = settings.addPage("page",
+				"shortdescription",
+				"description");
+
+		Option check = settingsPage.addOption("personcheck",
+				OptionType.CHECKBOX);
+		PersonNameValue value = new PersonNameValue("personkey",
+				"Max",
+				"Musterman");
+		check.addValue(value);
+		check.addNumberValue(20.5, SettingsState.NOT_SELECTED);
+
+	}
+	return settings;
+}
+\end{java}

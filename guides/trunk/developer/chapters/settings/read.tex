@@ -1,0 +1,80 @@
+\section{Auslesen}
+\index{Einstellungen!Listener}
+Um über die Änderung von Einstellungen informiert zu werden kann man mittels
+\newline\codeQuote{addSettingsChangedListener(SettingsChangedListener)} einen Listener
+auf die Einstellungen registrieren welcher informiert wird wenn geänderte
+Einstellungen gespeichert werden.
+
+Von dem \codeQuote{Settings}-Objekt lassen sich dann mit \codeQuote{getPages()}
+die einzelnen \index{Einstellungen!Seiten}Seiten der Einstellungen abrufen. Von diesen Seiten lassen sich
+mit \codeQuote{getOptions()} die \index{Einstellungen!Optionen}Optionen jeder Seite abrufen. Mit
+\codeQuote{getOption(String)} lässt sich eine bestimmte Option zu einem
+Schlüssel abrufen.
+
+Von den Optionen lassen sich mittels \codeQuote{getValues()} die \index{Einstellungen!Werte}Werte abrufen. 
+Mit \codeQuote{getSelectedValues()} erhält man nur die selektierten Werte. Für
+Optionen die nur einen Wert haben können kann auch
+\codeQuote{getSelectedValue()} benutzt werden.
+Die Werte können dann mit \codeQuote{getDisplayValue()} ausgelesen werden. Bei
+speziellen Werte wie denen des \index{Einstellungen!Optionen!Optionstyp}Optionstyp \codeQuote{COLOR} sollten die Werte
+auf ihren speziellen Typ gecastet werden, damit direkt der Wert (z.B. RGB) 
+abgerufen werden kann.
+
+Werden nur wenige Optionen genutzt, so ist es am einfachsten sich die
+Optionsobjekte direkt zu merken und dann von dort die Werte auszulesen.
+
+Beispiel für einen \index{Einstellungen!Listener}Listener für die Einstellungen aus
+\autoref{code:settings:example} auf \autopageref{code:settings:example}.
+
+\begin{java}[caption=Einstellungen auslesen,label=code:settings:read]
+settings.addSettingsChangedListener(new SettingsChangedListener( ) {
+
+	@Override
+	public void settingsChanged(SettingsChangedEvent evt) {
+		StringBuilder b = new StringBuilder( );
+		b.append("{");
+		for (Iterator<IValue> it = checkbox.getSelectedValues( )
+				.iterator( ); it.hasNext( );) {
+			IValue value = it.next( );
+			b.append(value.getDisplayValue( ));
+			if (it.hasNext( )) {
+				b.append(", ");
+			}
+		}
+		b.append("}");
+		String checked = b.toString( );
+		String radio = radiobutton.getSelectedValue( )
+				.getDisplayValue( );
+		String combovalue = combo.getSelectedValue( )
+				.getDisplayValue( );
+		RGB rgb = ((RGBValue) color.getSelectedValue( )).getCurrentRGB( );
+		double spinnerVal = ((SpinnerValue) spinner.getSelectedValue( )).getCurrentSpinnerValue( );
+		int spinnerValInt = (int) ((SpinnerValue) spinnerInt.getSelectedValue( )).getCurrentSpinnerValue( );
+		String textVal = text.getSelectedValue( ).getDisplayValue( );
+		String passVal = pass.getSelectedValue( ).getDisplayValue( );
+
+		System.out.println("Checkbox: " + checked);
+		System.out.println("Radiobutton: " + radio);
+		System.out.println("Combobox: " + combovalue);
+		System.out.println("RGB: " + rgb);
+		System.out.println("Spinner: " + spinnerVal);
+		System.out.println("Spinner Int: " + spinnerValInt);
+		System.out.println("Textfield: " + textVal);
+		System.out.println("Password: " + passVal);
+	}
+
+});
+\end{java}
+
+Dies könnte zum Beispiel folgende Ausgabe erzeugen:
+
+\begin{lstlisting}
+Checkbox: {Übersetzter String: Ein Argument, 20.5}
+Radiobutton: Nicht übersetzbarer Wert
+Combobox: 20.5
+RGB: RGB {51, 153, 102}
+Spinner: 17.0
+Spinner Int: 19
+Textfield: Ein Text
+Password: MeinPasswort
+\end{lstlisting}

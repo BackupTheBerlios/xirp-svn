@@ -1,0 +1,195 @@
+\chapter{Datenpool}
+\label{sec:datapool}
+\index{Datenpool}
+
+Für jeden Roboter existiert in \xirp~ein Datenpool welche die eingehenden und
+ausgehenden Daten vom/zum Roboter aufnimmt und an registrierte
+\index{Datenpool!Listener}Listener
+weiter verteilt. Auf den Datenpool eines Roboters lässt sich über den
+\index{Datenpool!DatapoolManager} \codeQuote{DatapoolManager} wie folgt zugreifen:
+\begin{java}[caption=Datenpool des Roboters holen,label=code:datapool:robot]
+try {
+	Datapool datapool = DatapoolManager.getDatapool(robotName);
+}
+catch (DatapoolException e) {
+	LOGGER.error(robotName,"Fehler: " + e.getMessage() + Constants.LINE_SEPARATOR, e);
+}
+\end{java}
+
+Die Exception tritt auf, wenn es keinen Roboter für den angegebenen Namen gibt.
+
+\section{Empfangen vom Roboter}
+Die eingehenden Daten von einem verbundenen Roboter landen in \xirp~zunächst bei
+einem für diesen Roboter entworfenem Protokoll-\seegls{Plugin}. Dieses nimmt die Daten
+entgegen und bringt sie in eine vorformatierte Form. Das
+\index{Kommunikation!Protokoll} Protokoll-\seegls{Plugin} gibt
+die Daten an einen \index{Kommunikation!Handler}\seegls{Handler} weiter (siehe
+\autoref{sec:com} auf
+Seite\autopageref{sec:com}).  Spätestens nun wurde den Daten ein
+\index{Datenpool!Schlüssel} Schlüssel
+zugeordnet welcher identifiziert was es für Daten sind. Unter diesem Schlüssel
+werden die Daten an den Datenpool weitergegeben
+(\codeQuote{receiveToDatapool(DatapoolMessage)}) und dort eingetragen.
+
+\textbf{Beispiel}:\newline
+Ein Roboter mit zwei \seegls{Laserscannern}: Einer vorne und einer hinten.
+Daten vom vorderen \seegls{Laserscanner} bekommen den Schlüssel \enquote{laser\_front}
+die vom hinteren \seegls{Laserscanner} den Schlüssel \enquote{laser\_back}.
+
+Um die aktuellen Daten vom vorderen \seegls{Laserscanner} vom Datenpool abzurufen müsste
+man folgendes tun:
+\begin{java}[caption=aktuellen Wert von Datenpool
+abfragen,label=code:datapool:getValue] try {
+	Datapool datapool = DatapoolManager.getDatapool(robotName);
+	Object laserData = datapool.getValue("laser_front");
+}
+catch (DatapoolException e) {
+	LOGGER.error(robotName,"Fehler: " + e.getMessage() + Constants.LINE_SEPARATOR, e);
+}
+\end{java}
+
+Damit man nicht in einer Schleife immer wieder \codeQuote{getValue()} aufrufen
+muss um immer den aktuellen Wert zu haben, gibt es die \index{Datenpool!Listener}
+DatenpoolListener:
+\begin{java}[caption=Listener am Datenpool
+anmelden,label=code:datapool:addDatapoolReceiveListener] try {
+	Datapool datapool = DatapoolManager.getDatapool(robotName);
+	datapool.addDatapoolReceiveListener("laser_front",
+			new DatapoolListener( ) {
+
+				@Override
+				public boolean notifyOnlyWhenChanged() {
+					return true;
+				}
+
+				@Override
+				public void valueChanged(DatapoolEvent e) {
+					Object laserData = e.getValue( );
+				}
+
+			});
+
+}
+catch (DatapoolException e) {
+	LOGGER.error(robotName, "Fehler: " + e.getMessage( ) +
+			Constants.LINE_SEPARATOR, e);
+}
+\end{java}
+
+Die Methode \codeQuote{notifyOnlyWhenChanged()} des \index{Datenpool!Listener}Listeners gibt an, ob dieser
+immer bei eingehenden Daten \codeQuote{false} oder nur bei geänderten Daten
+\codeQuote{true} benachrichtigt werden soll. Meist ist es ausreichend sich nur
+bei geänderten Daten informieren zu lassen, in diesem Fall kann auch der
+\codeQuote{DatapoolAdapter} genutzt werden, welcher bereits \codeQuote{true}
+zurück gibt.
+
+Der Aufruf der \codeQuote{valueChanged()}-Methode erfolgt nun vom Datenpool aus
+immer dann wenn geänderte Daten für den vorderen \seegls{Laserscanner} empfangen wurden.
+Die Methode wird vom Datenpool aus in einem eigenen \seegls{Thread} aufgerufen. Bei der
+Programmierung mit \seegls{SWT} sind daher einige Dinge zu beachten: siehe
+\autoref{sec:swt:thread} auf \autopageref{sec:swt:thread} und
+\autoref{sec:sensor} auf \autopageref{sec:sensor}. 
+
+Im \codeQuote{DatapoolEvent} befindet sich neben den Daten auch noch
+Informationen über den Schlüssel \codeQuote{getKey()}, den Roboter zu welchem
+die Nachricht gehört \codeQuote{getRobot()} und wann die Nachricht vom Roboter
+empfangen wurde \codeQuote{getTimestamp()}. Mit diesen Daten ist es möglich
+den selben Listener auch auf mehrere Roboter oder Schlüssel anzumelden.
+
+\begin{java}[caption=Datenpool-Listener auf mehrere Schlüssel anmelden,label=code:datapool:addDatapoolReceiveListener:multi] 
+try {
+	Datapool datapool = DatapoolManager.getDatapool(robotName);
+	final DatapoolListener datapoolListener = new DatapoolListener( ) {
+
+		@Override
+		public boolean notifyOnlyWhenChanged() {
+			return true;
+		}
+
+		@Override
+		public void valueChanged(DatapoolEvent e) {
+			Object laserData = e.getValue( );
+			if (e.getKey( ).equals("laser_front")) {
+				LOGGER.info(robotName,
+						"Daten von vorderem Laserscanner empfangen." +
+								Constants.LINE_SEPARATOR);
+			}
+			else if (e.getKey( ).equals("laser_back")) {
+				LOGGER.info(robotName,
+						"Daten von hinterem Laserscanner empfangen." +
+								Constants.LINE_SEPARATOR);
+			}
+		}
+
+	};
+	datapool.addDatapoolReceiveListener("laser_front", datapoolListener);
+	datapool.addDatapoolReceiveListener("laser_back", datapoolListener);
+
+}
+catch (DatapoolException e) {
+	LOGGER.error(robotName, "Fehler: " + e.getMessage( ) +
+			Constants.LINE_SEPARATOR, e);
+}
+\end{java}
+
+Wird das \seegls{Plugin} beendet oder der Listener nicht mehr gebraucht muss er 
+vom Datenpool abgemeldet werden: 
+\codeQuote{removeDatapoolReceiveListener(String, DatapoolListener)} entfernt 
+den gegebenen \index{Datenpool!Listener}Listener für den gegebenen Schlüssel; 
+\newline\codeQuote{removeDatapoolReceiveListener(DatapoolListener)} entfernt den 
+gegebenen Listener für alle vorhandenen Schlüssel. Die letztere Methode sollte 
+aufgrund ihrer langsamen Ausführung nur dann genutzt werden wenn der Listener 
+auf mehrere Schlüssel registriert war und es nicht möglich ist sich diese
+Schlüssel zu merken.
+
+Mittels \codeQuote{addRobotReceiveListener(DatapoolListener)} und 
+\newline\codeQuote{removeRobotReceiveListener(DatapoolListener)} kann man sich 
+auch auf alle Empfangen Daten des Roboters an-/abmelden, zu welchem der 
+Datenpool gehört.
+
+Ein Beispiel für das Empfangen von Daten vom Datenpool in einem \seegls{Plugin} findet
+sich in \autoref{sec:sensor} auf \autopageref{sec:sensor}.
+
+\section{Senden zum Roboter}
+Daten die zum Roboter gesendet werden sollen, sollten an den Datenpool 
+übergeben werden: \codeQuote{sendToRobot(DatapoolMessage)} bzw. aus einem 
+\seegls{Plugin} heraus \codeQuote{sendToRobotOverDatapool(String, Object)}. Der 
+Datenpool kann dann alle Listener die sich auf den Schlüssel mit 
+\codeQuote{addDatapoolSendListener(String, DatapoolListener)} bzw. 
+\newline\codeQuote{addRobotSendListener(DatapoolListener)} registriert haben in eigenen 
+\seegls{Threads} (siehe oben) informieren. Die Information über gesendete Daten 
+kann zum Beispiel für statistische Auswertungen nützlich sein.
+
+Die Abmeldung der Listener erfolgt über 
+\newline\codeQuote{removeDatapoolSendListener(String, DatapoolListener)} oder 
+\newline\codeQuote{removeDatapoolSendListener(DatapoolListener)}  bzw. 
+\newline\codeQuote{removeRobotSendListener(DatapoolListener)}.
+
+Die zu sendenden Daten werden dann über den \index{Kommunikation!Handler} \seegls{Handler}
+an das \index{Kommunikation!Protokoll}Protokoll des
+Roboters weitergegeben und gesendet.
+
+\section{Arbeitsweise des Datenpool}
+Daten welche vom Roboter empfangen wurden oder zum Roboter gesendet werden
+sollen werden vom Datenpool bei Aufruf von \codeQuote{receiveToDatapool(DatapoolMessage)}
+und \codeQuote{sendToRobot(DatapoolMessage)} nicht direkt weiter verteilt sondern
+zunächst nur in \index{Datenpool!Queue}Queues gelegt. Würden die Daten direkt weiter verteilt werden
+müssten die Aufrufenden Klassen der beiden Methoden warten bis die
+Weiterverteilung beendet ist.
+
+Aus den \index{Datenpool!Queue}Queues werden die Daten dann in \seegls{Threads} regelmäßig abgerufen und aus
+diesen \seegls{Threads} an die \index{Datenpool!Listener}Listener in einem neuen \seegls{Thread} weiter verteilt. 
+
+Da einige \seegls{Sensor}en sehr viele Daten in kurzen Zeitabständen liefern, würde die
+Auswertung jedes einzelnen Datensatzes \xirp~zu sehr verlangsamen.
+
+\index{Datenpool!drop}
+Daher ist es möglich in den \codeQuote{DatapoolMessage}s, welche die zu
+empfangenden Daten enthalten, anzugeben ob es erlaubt ist diese Nachricht
+weg zuwerfen ohne sie zu verarbeiten. Ist dies für eine Nachricht erlaubt so wird
+sie weggeworfen wenn sie noch nicht verarbeitet wurde, aber bereits eine neue
+Nachricht mit dem selben Schlüssel empfangen wurde.
+
+Zu sendende Nachrichten können zur Zeit nicht gedropped werden.
+
+%\include{chapters/plugins/firstplugin}

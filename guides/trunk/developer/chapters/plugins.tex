@@ -1,0 +1,41 @@
+\chapter{Plugins}
+\index{Plugin}
+\xirp~bietet ein \seegls{Framework} zur Pluginentwicklung mit welchem die Steuerung
+eines Roboters realisiert werden kann.
+
+Jedes \seegls{Plugin} ist dabei ein eigenes Jar mit einem bestimmen Aufbau, welches beim
+Start von \xirp~erkannt und geladen wird. \seegls{Plugins} können im 
+\index{Profil!Roboter}Roboter \seegls{Profil} einem
+Roboter zugeordnet werden.
+
+Die Plugin-\seegls{API} bietet dabei folgende Features:
+\begin{itemize}
+  \item Internationalisierung
+  \item Bereitstellung von Funktionalität für die Toolbar
+  \item Nutzung eigener Bilder
+  \item \index{Einstellungen}Einstellungen für das \seegls{Plugin}
+  \item Graphische Benutzeroberfläche (eingebettet, in eigenem Fenster)
+  \item Bereitstellung von Kommandos (und Steuerung über Tastatur/\seegls{Gamepad})
+  \item Reporterstellung
+  \item Nutzung von \seegls{Sensor}daten des Roboters
+  \item Nutzung zusätzlicher Java (Jars) und Nativer (\seegls{dll}/\seegls{so}) \seegls{Bibliothek}en
+  \item Erstellung von \seegls{HTML}-Hilfe
+  \item Implementierung der Kommunikation über eine Schnittelle (TCP/IP)
+  \item Implementierung eines Kommunikationsprotokolls für einen Roboter 
+\end{itemize}
+
+In den Folgenden Abschnitten wird die Erstellung eines \seegls{Plugins} mit den
+verschiedenen Features nach und nach beschrieben.
+
+\include{chapters/plugins/firstplugin}
+\include{chapters/plugins/toolbar}
+\include{chapters/plugins/settings}
+\include{chapters/plugins/gui}
+\include{chapters/plugins/data}
+\include{chapters/plugins/datasync}
+\include{chapters/plugins/commands}
+\include{chapters/plugins/reports}
+\include{chapters/plugins/sensor}
+\include{chapters/plugins/biblio}
+\include{chapters/plugins/help}
+\include{chapters/plugins/tipsTricks}

@@ -1,0 +1,184 @@
+\section{Helferlein}
+
+\xirp~stellt für den leichteren Umgang mit \seegls{SWT} ein paar Hilfsklassen bereit:
+\begin{itemize}
+  \item \index{Manager!ColorManager}\codeQuote{ColorManager} (\longRefSec{sec:swt:dispose})
+  \item \index{Manager!FontManager}\codeQuote{FontManager} (\longRefSec{sec:swt:dispose})
+  \item \index{Manager!ImageManager}\codeQuote{ImageManager} (\longRefSec{sec:swt:dispose})
+  \item \index{SWT!SWTUtil}\codeQuote{SWTUtil} 
+  \item \index{SWT!PointUtil}\codeQuote{PointUtil}: Methode zum addieren,
+  dividieren etc mit \codeQuote{org.eclipse.swt.graphics.Point}
+\end{itemize}
+
+\subsection{SWTUtil}
+
+Klasse mit allgemeinen statischen Hilfsmethoden für \seegls{SWT}:
+\begin{itemize}
+  \item \index{SWT!SWTUtil!asyncExec()}\codeQuote{asyncExec(Runnable)}: \longRefSec{sec:swt:thread}
+  \item \index{SWT!SWTUtil!syncExec()}\codeQuote{syncExec(Runnable)}: \longRefSec{sec:swt:thread}
+  \item \index{SWT!SWTUtil!centerDialog()}\codeQuote{centerDialog(Shell)}: Zentriert die übergebene \codeQuote{Shell} auf dem Bildschirm.
+  \item \index{SWT!SWTUtil!setGridLayout()}\codeQuote{setGridLayout(Composite,
+  int, boolean)}: Setzt ein \codeQuote{GridLayout} für das gegebene \codeQuote{Composite}
+  \item \index{SWT!SWTUtil!resetMargins()}\codeQuote{resetMargins(GridLayout)}:
+  Entfernt Ränder vom gegebenen \codeQuote{GridLayout}
+  \item
+  \index{SWT!SWTUtil!resetSpacings()}\codeQuote{resetSpacings(GridLayout)}: 
+  Entfernt Abstände zwischen Zeilen und Spalten vom gegebenen 
+  \codeQuote{GridLayout}
+  \item \index{SWT!SWTUtil!setGridData()}\codeQuote{setGridData(...)}: Setzt
+  die \codeQuote{GridData} für ein \codeQuote{Composite}.
+  \item \index{SWT!SWTUtil!convertPoint()}\codeQuote{convertPoint(...)}:
+  Koordinaten z.B. von Mausklicks werden relativ zum Parent-Widget angegeben und
+  müssen daher teilweise umgerechnet werden. Hierzu kann diese Methode benutzt
+  werden oder aber direkt \codeQuote{toDisplay()} des \codeQuote{Composite}.
+  \item
+  \index{SWT!SWTUtil!blockDialogFromReturning()}\codeQuote{blockDialogFromReturning(Shell)}: siehe
+  unten
+  \item \index{SWT!SWTUtil!showBusyWhile()}\codeQuote{showBusyWhile(Shell,
+  Runnable)}: Zeigt einen wartenden Mauszeiger solange wie der übergebene Task läuft.
+  \item \index{SWT!SWTUtil!packTable()}\codeQuote{packTable(Table)}: Ruft
+  \codeQuote{pack} für alle Tabellenspalten der Tabelle auf.
+  \item \index{SWT!SWTUtil!checkStyle()}\codeQuote{checkStyle(int, int)}: \longRefSec{sec:checkstyle}
+  \item \index{SWT!SWTUtil!secureDispose()}\codeQuote{secureDispose(...)}:
+  Prüft mit \codeQuote{swtAssert()} und \codeQuote{SWT!dispose()}\seegls{disposed} den
+  Parameter wenn erfolgreich.
+  \item \index{SWT!SWTUtil!swtAssert()}\codeQuote{swtAssert(...)}: Prüft ob
+  der übergebene Parameter nicht \codeQuote{null} und nicht \seegls{disposed}
+  ist.
+  \item \index{SWT!SWTUtil!rotate()}\codeQuote{rotate(...)}: Dreht einen
+  Punkt um seinen Mittelpunkt in einem gegeben Winkeln (im Bogenmaß).
+  \item \label{itm:swtutil:openfile}\index{SWT!SWTUtil!openFile()}\codeQuote{openFile(...)}: Versucht die
+  angegebene \index{Datei!Öffnen}Datei mit dem im System für dessen Endung registrierten Editor zu Öffnen.
+\end{itemize}
+
+\subsubsection{blockDialogFromReturning()}
+\index{SWT!SWTUtil!blockDialogFromReturning()}
+Damit ein erstellter Dialog erste bei einem Tastendruck nicht aber direkt nach
+dem Öffnen wieder schließt, kann \codeQuote{blockDialogFromReturning()} genutzt
+werden.
+
+Im folgenden ein Beispiel welches in Zeile 68
+\index{SWT!SWTUtil!centerDialog()}\codeQuote{centerDialog()} und in Zeile 71
+\codeQuote{blockDialogFromReturning()} benutzt.
+
+\begin{java}[numbers=left,caption=Ein einfacher Dialog mit Rückgabe,label=code:swt:util:block]
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Dialog;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
+
+import de.unibremen.rr.xirp.ui.util.SWTUtil;
+import de.unibremen.rr.xirp.ui.widgets.custom.XButton;
+import de.unibremen.rr.xirp.ui.widgets.custom.XLabel;
+import de.unibremen.rr.xirp.ui.widgets.custom.XShell;
+import de.unibremen.rr.xirp.ui.widgets.custom.XStyledSpinner;
+import de.unibremen.rr.xirp.ui.widgets.custom.XButton.XButtonType;
+
+public class SimpleDialog extends Dialog {
+
+	private static final int HEIGHT = 130;
+	private static final int WIDTH = 300;
+	private XShell dialogShell;
+	private int returnValue = -1;
+
+	public SimpleDialog(Shell parent) {
+		super(parent);
+	}
+
+	public int open() {
+		dialogShell = new XShell(getParent( ), SWT.DIALOG_TRIM |
+				SWT.APPLICATION_MODAL);
+		dialogShell.setText(getText( ));
+		dialogShell.setSize(WIDTH, HEIGHT);
+		dialogShell.setMinimumSize(WIDTH / 2 + 50, HEIGHT / 2);
+		dialogShell.setText("SimpleDialog");
+
+		SWTUtil.setGridLayout(dialogShell, 2, true);
+
+		XLabel label = new XLabel(dialogShell, SWT.NONE);
+		label.setText("Zahl eingeben");
+		SWTUtil.setGridData(label, true, true, SWT.BEGINNING, SWT.CENTER, 1, 1);
+
+		final XStyledSpinner theta = new XStyledSpinner(dialogShell, SWT.NONE);
+		SWTUtil.setGridData(theta, true, true, SWT.FILL, SWT.CENTER, 1, 1);
+
+		XButton ok = new XButton(dialogShell, XButtonType.OK);
+		SWTUtil.setGridData(ok, true, false, SWT.FILL, SWT.CENTER, 1, 1);
+		ok.addSelectionListener(new SelectionAdapter( ) {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+
+				returnValue = theta.getSelection( );
+				dialogShell.close( );
+			}
+		});
+
+		XButton cancel = new XButton(dialogShell, XButtonType.CANCEL);
+		SWTUtil.setGridData(cancel, true, false, SWT.FILL, SWT.CENTER, 1, 1);
+		cancel.addSelectionListener(new SelectionAdapter( ) {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				dialogShell.close( );
+			}
+		});
+
+		dialogShell.setDefaultButton(ok);
+		dialogShell.pack( );
+		dialogShell.layout( );
+		SWTUtil.centerDialog(dialogShell);
+		dialogShell.open( );
+
+		SWTUtil.blockDialogFromReturning(dialogShell);
+
+		return returnValue;
+	}
+
+	public static void main(String[] args) {
+		final Display display = new Display( );
+		final Shell shell = new Shell(display);
+		shell.pack( );
+		shell.open( );
+
+		SimpleDialog dialog = new SimpleDialog(shell);
+		int value = dialog.open( );
+
+		System.out.println(value);
+
+		while (!shell.isDisposed( )) {
+			if (!display.readAndDispatch( )) {
+				display.sleep( );
+			}
+		}
+		display.dispose( );
+	}
+}
+\end{java}
+\lstset{
+numbers=none,
+}
+
+\subsubsection{checkStyle()}
+\label{sec:checkstyle}
+\index{SWT!SWTUtil!checkStyle()}
+
+Mit \codeQuote{checkStyle()} lässt sich überprüfen ob ein bestimmter Stil z.B.
+von \seegls{SWT} gesetzt ist.
+
+Im folgenden Beispiel ist dies gezeigt:
+
+\begin{java}[caption=Prüfen ob Stil gesetzt ist, label=code:swt:util:checkstyle]
+public static void main(String[] args) {
+	int combinedStyle = SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM;
+	boolean applicationModal = SWTUtil.checkStyle(combinedStyle,
+			SWT.APPLICATION_MODAL);
+	boolean systemModal = SWTUtil.checkStyle(combinedStyle,
+			SWT.SYSTEM_MODAL);
+	System.out.println("Modalität");
+	System.out.println("Applikation: " + applicationModal);
+	System.out.println("System: " + systemModal);
+}
+\end{java}

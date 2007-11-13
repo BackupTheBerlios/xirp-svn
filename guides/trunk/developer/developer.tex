@@ -1,0 +1,57 @@
+\input{chapters/header}
+
+\begin{document}
+
+\sffamily
+\input{chapters/glossary}
+\pagenumbering{Roman}
+\input{chapters/titlepage}
+\pagenumbering{roman}
+\tableofcontents
+\newpage
+\listoffigures
+\newpage
+\listoftables
+\newpage
+\lstlistoflistings
+\newpage
+\pagenumbering{arabic}
+
+% Hier die Kapitel einfuegen
+%%\input{chapters/...}
+\input{chapters/intro}
+%\input{chapters/arch}
+\input{chapters/swt}
+\input{chapters/plugins}
+\input{chapters/profile}
+\input{chapters/communication}
+\input{chapters/i18n}
+\input{chapters/datapool}
+\input{chapters/settings}
+\input{chapters/report}
+\input{chapters/testerbot}
+\input{chapters/other}
+
+\index{Roboter!TesterBot|see {TesterBot}}
+\index{Plugin!Einstellungen|see {Einstellungen}}
+\index{Plugin!Internationalisierung|see {Internationalisierung}}
+\index{Plugin!Bild|see {Bild}}
+\index{Farbe!Manager|see {Manager, ColorManager}}
+\index{Schriftart!Manager|see {Manager, FontManager}}
+\index{Bild!Manager|see {Manager, ImageManager}}
+\index{Profil!Manager|see {Manager, ProfileManager}}
+\index{Joystick|see {Gamepad}}
+\newpage
+
+\pagenumbering{alph}
+\appendix
+% \bibliographystyle{alphadin}
+% \bibliography{referenzen}
+% \newpage
+%\begin{multicols}{2}
+\printglossary
+%\end{multicols}
+\newpage
+\printindex
+
+\end{document}

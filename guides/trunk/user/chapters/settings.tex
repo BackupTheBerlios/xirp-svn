@@ -1,0 +1,359 @@
+\chapter{Einstellungen}
+\index{Einstellungen|(}
+\index{Plugins}
+\label{ref:settings}
+
+In \xirp~existiert eine einzelne Stelle, wenn es um Einstellungen für die
+Anwendung und der darin geladenen Plugins geht, der Dialog 
+\enquote{Einstellungen}. Die Einstellungen der Anwendung sind in die folgenden
+neun Kategorien eingeteilt.
+
+\begin{itemize}
+  \item Allgemeine Einstellungen
+  \item Erscheinungsbild
+  \item Spracheinstellungen
+  \item Tastenkürzel
+  \item Externe Werkzeuge
+  \item Datenbankeinstellungen
+  \item Maileinstellungen
+  \item Speech-Einstellungen
+  \item Diagrammeinstellungen
+\end{itemize}
+
+Jedes Plugin kann Einstellungen definieren. Wenn dies der Fall ist, erhält das
+Plugin in einer Einstellungsgruppe des Roboters eine eigene Kategorie unter der
+sich die Einstellungen des Plugins befinden. Das folgende Kapitel erläutert alle
+existierenden Einstellungsmöglichkeiten und gibt einen Einblick in den Dialog
+mit dem diese Einstellungen getätigt werden können.
+
+\newpage
+
+\section{Einstellungsdialog}
+
+Der Dialog zum Vornehmen der systemweiten und pluginspezifischen Einstellungen
+ist in einen Kategorie- und einen Inhaltsbereich aufgeteilt. Der
+Kategoriebereich ist in Abbildung \ref{img:settings:dialog} auf Seite
+\pageref{img:settings:dialog} rot und der Inhaltsbereich blau markiert.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\textwidth]{images/settingsdialog}
+    \caption{Der Settingsdialog mit markierten Kategorie- und Inhaltsbereichen}
+    \label{img:settings:dialog}
+\end{figure}
+
+Um die Einstellungen einer Kategorie oder eines Plugins vorzunehmen, muss durch
+einen Klick auf das entsprechende Listenelement auf der linken Seite der Inhalt
+aufgerufen werden. In der Abbildung \ref{img:settings:content}
+auf Seite \pageref{img:settings:content} ist der Inhalt für
+\enquote{Allgemeinen Einstellungen} zu sehen.
+
+\begin{figure}[hp]
+    \centering
+    \includegraphics[width=1\textwidth]{images/settingscontent}
+    \caption{Der Settingsdialog mit geöffnetem \enquote{Allgemeine Einstellungen}
+    Inhalt}
+    \label{img:settings:content}
+\end{figure}
+
+\newpage
+
+Wie in den Abbildungen zu sehen gibt es diverse Knöpfe die man anklicken könnte.
+
+\begin{itemize}
+  \item \texttt{OK}, speichert die neuen Einstellungen und schießt den Dialog
+  \item \texttt{Übernehmen}, speichert die neuen Einstellungen
+  \item \texttt{Zurücksetzen}, setzt auf den zuletzt gespeicherten Wert zurück
+  \item \texttt{Standard}, setzt den Wert auf seinen Standard Wert
+  \item \texttt{Abbrechen}, verwirft alle neuen Einstellungen und schließt den Dialog
+\end{itemize}
+
+\texttt{Zurücksetzen} und \texttt{Standard} sind nur verfügbar, wenn die Funktion
+von den Einstellungen unterstützt wird.
+
+In den folgenden Abschnitten werden die einzelnen Einstellungsmöglichkeiten der
+Anwendung erläutert.
+
+\section{Allgemeine Einstellungen}
+In den allgemeinen Einstellungen gibt es zwei Werte die einstellbar sind.
+
+\begin{itemize}
+  \item Timer Warnwert
+  \item Timer Endwert
+\end{itemize}
+
+Die Werte für diese Einstellungen werden in Sekunden angegeben. Sie werden bei
+der Farbberechnung der Stoppuhr Anzeige benutzt. Nach den im Warnwert
+angegebenen Sekunden wechselt die Anzeige ihre Farbe nach orange. Wird der
+Endwert erreicht, wechselt die Anzeige ihre Farbe nach rot.
+
+\section{Erscheinungsbild}
+In den Einstellungen für das Erscheinungsbild der Anwendung gibt es sieben
+Farboptionen.
+
+\begin{itemize}
+  \item Reiterfarbe
+  \item Reiterschriftfarbe
+  \item Textfarbe eines inaktiven Reiters
+  \item Farbe für diverse Elemente die den Fokus haben
+  \item Trennlinienfarbe
+  \item Hintergrundfarbe
+  \item Farbe der Elementtitel
+\end{itemize}
+
+Eine Demonstration der Farbenwerte kann in Abbildung \ref{img:settings:badcolor}
+auf Seite \pageref{img:settings:badcolor} betrachtet werden.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\textwidth]{images/badcolors}
+    \caption{\xirp~mit abweichender Kolorierung zum Verdeutlichung der Farboptionen}
+    \label{img:settings:badcolor}
+\end{figure}
+
+\section{Spracheinstellungen}
+\index{Internationalisierung}
+In den Spracheinstellungen gibt es nur eine Option: Die zu verwendende Sprache
+der Anwendung. \xirp~unterstützt momentan die folgenden Sprachen. Weitere
+Sprachpakete sollen in Zukunft folgen.
+
+\begin{itemize}
+  \item Deutsch
+  \item Englisch
+\end{itemize}
+
+Die eingestellte Sprache gilt sowohl für die Anwendung als auch für die
+geladenen Plugins. Sollte ein Plugin für die eingestellte Sprache keine
+Sprachdatei zur Verfügung stellen wird die Standard Sprache des Plugins
+benutzt.
+
+\section{Tastenkürzel}
+Die Kategorie \enquote{Tastenkürzel} enthält zwei Typen von Tastenkürzeln.
+
+\begin{itemize}
+  \item Anwendungskürzel, z.B. Strg+Q
+  \item Kommandokürzel
+\end{itemize}
+
+\subsection{Anwendungskürzel}
+\index{Hotkey}
+Die Anwendungskürzel werden benutzt um oft benutzte Funktionen mittels einer
+Tastenkombination verfügbar zu machen. In \xirp~gibt es diverse Tastenkürzel. In
+den Einstellungen gibt es eine Aufteilung nach den Tasten vor dem eigentlichen
+\seegls{Hotkey}.
+
+\begin{itemize}
+  \item Strg+
+  \item Strg+Umschalt+
+  \item Strg+Alt+
+\end{itemize}
+
+Für jede dieser 3 Möglichkeiten existiert ein eigener Reiter auf der Inhaltsseite
+der Einstellungen. Die einzelnen verfügbaren Funktionen werden im folgenden
+erläutert.
+
+\newpage
+
+\subsubsection{Strg+ - Tastenkürzel}
+\index{Hotkey}
+Es existieren sieben Funktionen deren Tastenkürzel frei bestimmt werden kann.
+Der \enquote{\seegls{Hotkey}} wird nach der Steuerung-Taste (Strg) erwartet.
+
+\begin{itemize}
+  \item Programm beenden
+  \item Einstellungen öffnen
+  \item Hilfe anzeigen
+  \item Mailverwaltung öffnen
+  \item Konfigurationsdialog für den Diagrammgenerator öffnen
+  \item Reportsuche öffnen
+  \item Kontaktverwaltung öffnen
+\end{itemize}
+
+\subsubsection{Strg+Umschalt+ - Tastenkürzel}
+\index{Hotkey}
+Es existiert eine Funktion deren Tastenkürzel frei bestimmt werden kann.
+Der \enquote{\seegls{Hotkey}} wird nach der Steuerung- plus der Umschalt-Taste
+(Strg+Umschalt) erwartet.
+
+\begin{itemize}
+  \item Programminformationen anzeigen
+\end{itemize}
+
+\subsubsection{Strg+Alt+ - Tastenkürzel}
+Es existiert eine Funktion deren Tastenkürzel frei bestimmt werden kann.
+Der \enquote{\seegls{Hotkey}} wird nach der Steuerung- plus der Alt-Taste
+(Strg+Alt) erwartet.
+
+\begin{itemize}
+  \item Plugininformationen anzeigen
+\end{itemize}
+
+\subsection{Kommando Tastenkürzel}
+\index{Kommandos}
+\index{Kommandos!kommandierbar}
+\index{Gamepad}
+Plugins können kommandierbar sein, das bedeutet, dass ein Plugin/eine Klasse
+gewissen Funktionen für Kommandos freigeben kann. Zum Beispiel könnte eine
+\enquote{Notaus} Funktion freigegeben werden. Um diese Funktion nutzen zu
+können muss für die Funktion entweder eine Taste der Tastatur, eine Taste eines
+\seegls{Gamepad}s, oder beides hinterlegt werden. Dies kann in dem Inhaltsreiter
+\enquote{Kommando Tastenkürzel} getan werden. Die dort vorhandene Tabelle
+enthält alle verfügbaren Kommando-Funktionen (Siehe Abbildung
+\ref{img:settings:commads} auf Seite \pageref{img:settings:commads}).
+
+\begin{figure}[hbp]
+    \centering
+    \includegraphics[width=1\textwidth]{images/commands}
+    \caption{Kommando Tastenkürzel Konfiguration}
+    \label{img:settings:commads}
+\end{figure}
+
+Wie zu sehen ist, wurde der Funktion \enquote{Lösche den Nachrichtenverlauf.}
+der Klasse \enquote{MessageDisplay} die Tastaturtaste \enquote{F12} zugewiesen.
+Eine Gamepadtaste wurde noch nicht zugewiesen. Um nun die Taste zu ändern oder
+hinzuzufügen muss nur auf die entsprechende Tabellenzelle geklickt werden. Hier
+öffnet sich nun ein Eingabefeld. Dann muss nur noch die gewünschte
+Tastatur-/Gamepadtaste gedrückt werden.
+
+\section{Externe Werkzeuge}
+\index{Externe Werkzeuge}
+In den Einstellungen für die externen Programme der \seegls{Profile} gibt es pro
+geladenem Profil einen Inhaltsreiter. Jeder dieser Reiter enthält die
+Konfigurationsoberfläche die in Abbildung \ref{img:settings:ext} auf Seite
+\pageref{img:settings:ext} zu sehen ist.
+
+\begin{figure}[hp]
+    \centering
+    \includegraphics[width=.75\textwidth]{images/ext}
+    \caption{Oberfläche zum konfigurieren der externen Programme}
+    \label{img:settings:ext}
+\end{figure}
+
+Um ein neues externes Werkzeug anzulegen muss einfach auf den Knopf
+\enquote{Werkzeug hinzufügen} geklickt werden. Dann muss in dem folgenden
+Eingabedialog der Name des Werkzeugs angegeben werden. Ist dies erfolgreich
+wird in der List das neue Werkzeug angezeigt. Der nächste Schritt ist nun diesem
+Werkzeug mindestens ein ausführbares Programm zuzuordnen. Dazu muss zuerst das
+Werkzeug in der Liste markiert werden und dann auf den Knopf
+\enquote{Ausführbare Datei hinzufügen} geklickt werden.
+\par
+Der folgende Eingabedialog erwartet zwei Pflichtangaben: Den Namen des Programms
+und die Wartezeit nach Start der Anwendung. Der Name des Programms ist frei
+wählbar. In dem Beispiel in Abbildung \ref{img:settings:ext:example} auf Seite
+\pageref{img:settings:ext:example} ist als Name \enquote{Firefox} gewählt. Die
+Wartezeit nach dem Start wird in Millisekunden angegeben. Dieser Wert kann
+genutzt werden, um einem Programm eine gewissen zeitlichen Spielraum zu
+verschaffen, bis ein weiteres gestartet wird. Dies ist nützlich falls
+nachfolgende Programme von vorherigen abhängig sind.
+
+\begin{figure}[hp]
+    \centering
+    \includegraphics[width=0.5\textwidth]{images/ext_example}
+    \caption{Beispieleingabe für ein ausführbares Programm}
+    \label{img:settings:ext:example}
+\end{figure}
+
+Die \enquote{Argumente} Eingabe ist optional. Hier können Argumente angegeben
+werden die ein Programm beim Start benötigt. Wird dieser Eingabedialog bestätigt
+erscheint ein Dateiauswahldialog. Erst jetzt wird die eigentliche ausführbare
+Datei ausgewählt.
+\par
+Wurden zu einem Werkzeug mehrere Programme hinzugefügt kann die Reihenfolge in
+der sie gestartet werden sollen mittels der Pfeiltasten auf der linken Seiten
+verändert werden.
+
+\section{Datenbankeinstellungen}
+\index{Datenbank}
+In den Einstellungen für die Datenbank gibt es fünf Optionen die eingestellt
+werden können.
+
+\begin{itemize}
+  \item IP-Adresse
+  \item Port
+  \item Benutzer
+  \item Passwort
+  \item Datenbanktreiber
+\end{itemize}
+
+\newpage
+
+Die ersten vier Optionen beziehen sich auf Datenbanken die über \seegls{TCP/IP}
+kommunizieren. Diese sollten angegeben werden, wenn ein Datenbanktreiber gewählt
+wird der diese Einstellungen benötigt. Momentan werden die folgenden Datenbanken
+unterstützt.
+
+\begin{itemize}
+  \item HSQLDB
+  \item MySQL
+\end{itemize}
+
+\index{Rekorder}
+\index{Reporte}
+Die \enquote{HSQSLDB} wird bei der Installation von \xirp~mitgeliefert, so dass
+kein spezieller Datenbankserver vorhanden sein muss, um Aufzeichnungen mit dem
+Rekorder vorzunehmen und Reporte abzuspeichern.
+
+\section{Maileinstellungen}
+\index{Mail}
+In den Einstellungen für das Mailsystem gibt es sechs Optionen die eingestellt
+werden können.
+
+\begin{itemize}
+  \item SMTP-Host
+  \item Port
+  \item Authentifizierung nötig
+  \item Benutzername
+  \item Passwort
+  \item No-Reply Adresse
+\end{itemize}
+
+Hier können die für die Kommunikation mit dem SMTP-\seegls{Server} nötigen Einstellungen
+gemacht werden. Die \enquote{No-Reply} Adresse muss gesetzt werden, da sonst das
+Versenden von E-Mails nicht funktionieren wird.
+
+\section{Speech-Einstellungen}
+\index{Text-To-Speech}
+\index{Sprachausgabe}
+In den Einstellungen für das Speech-System\footnote{Bisher wird nur
+Sprachausgabe unterstützt. Spracherkennung soll in einer zukünftigen Version
+hinzukommen} gibt es zwei Optionen die eingestellt werden können.
+
+\begin{itemize}
+  \item Stimme der Sprachausgabe
+  \item Sprachausgabe aktivieren
+\end{itemize}
+
+Die erste Option bestimmt die Stimme die für die Sprachausgabe benutzt werden
+soll. Es gibt zwei Standard Sprachen:
+
+\begin{itemize}
+  \item kevin
+  \item kevin16
+\end{itemize}
+
+Das Sprachausgabesystem unterstützt \enquote{MBROLA} Stimmen. Wenn diese
+installiert werden, werden die neu hinzugekommenen Stimmen ebenfalls hier zur
+Auswahl gestellt. in Kapitel \ref{ref:speech} ab Seite \pageref{ref:speech} kann
+nachgelesen werden, wie diese zusätzlichen Stimmen installiert werden können und
+woher man diese beziehen kann.
+
+\section{Diagrammeinstellungen}
+\label{ref:settings:livechart}
+\index{Live-Diagramme}
+\index{Live-Diagramme!PDF}
+\index{Live-Diagramme!PNG}
+\index{Live-Diagramme!JPG}
+\index{Live-Diagramme!CSV}
+In den Einstellungen für die Live-Diagramme gibt es vier Optionen die eingestellt
+werden können. Alle beziehen sich darauf, ob nach dem Stoppen eines
+Plottingvorgangs das erzeugte Diagramm in verschiedenen Formaten automatisch
+exportiert werden sollen.
+
+\begin{itemize}
+  \item PDF beim Stoppen eines Live-Diagramms automatisch exportieren
+  \item PNG beim Stoppen eines Live-Diagramms automatisch exportieren
+  \item JPG beim Stoppen eines Live-Diagramms automatisch exportieren
+  \item CSV beim Stoppen eines Live-Diagramms automatisch exportieren
+\end{itemize}
+
+\index{Einstellungen|)}

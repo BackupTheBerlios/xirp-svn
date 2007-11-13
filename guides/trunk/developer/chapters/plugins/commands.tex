@@ -1,0 +1,65 @@
+\section{Kommandos}
+\label{sec:plugin:commands}
+\index{Kommando}
+\index{Kommando!Manager}
+Um ein \seegls{Plugin} per Tastatur oder \index{Gamepad}\seegls{Gamepad} steuerbar zu machen kann zusätzlich noch
+das Interface \codeQuote{de.unibremen.rr.xirp.io.command.ICommandable.java}
+implementieren.
+
+Im Beispielplugin soll so per Tastaturdruck der Klickzähler erhöht werden.
+
+Nach folgendem Schema können Kommandos sehr einfach für \seegls{Plugins} implementiert werden:
+\index{Manager!CommandManager}
+\begin{java}[caption=Kommandodefinition im Beispielplugin,label=lst:smplplug:commands]
+	@Override
+	protected void runInternal() {
+		readSettings( );
+		CommandManager.register(this, robotName);
+	}
+
+	private static final String INCREMENT_CLICK_KEY = "MyPlugin.command.incrementClick";
+
+	@Override
+	public boolean executeCommand(Command command) {
+		String key = command.getCommandDefinition( ).getKey( );
+		boolean executed = false;
+		if (key.equalsIgnoreCase(INCREMENT_CLICK_KEY)) {
+			pluginData.incrementClickCount( );
+			executed = true;
+		}
+		return executed;
+	}
+
+
+	private CommandDefinition getCommandDefinition(String key) {
+		List<String> parameterNames = Collections.emptyList( );
+		List<GeneratorType> types = Arrays.asList(GeneratorType.values( ));
+		CommandDefinition def = new CommandDefinition(this,
+				key,
+				parameterNames,
+				types,
+				this.handler);
+		return def;
+	}
+
+	@Override
+	public List<CommandDefinition> getCommandDefinitions() {
+		List<CommandDefinition> commandDefs = new ArrayList<CommandDefinition>( );
+		commandDefs.add(getCommandDefinition(INCREMENT_CLICK_KEY));
+
+		return commandDefs;
+	}
+\end{java}
+
+Der Schlüssel muss zu den \index{Internationalisierung!Schlüssel}Übersetzungen hinzugefügt werden. Er beschreibt in Kurzform
+was das Kommando tut. Wichtig ist, das \seegls{Plugin} in \codeQuote{runInternal()} beim
+\codeQuote{CommandManager} zu registrieren.
+
+\index{Hotkey}
+In \xirp~lässt sich nun in den \index{Einstellungen!Hotkey}Einstellungen im Bereich \menuQuote{Tastenkürzel}
+auf dem Tab \menuQuote{Kommando Tastenkürzel} auf der Tastatur eine Taste
+eintippen die für das Kommando benutzt werden soll (\refFig{commandView}). 
+Speichert und schließt man diese Einstellungen, so lässt sich das \seegls{Plugin} nun mit
+der eingestellten Taste tatsächlich steuern.
+
+\kfig{plugin_commandView}{1}{Hotkeys für Kommandos einstellen}{commandView}

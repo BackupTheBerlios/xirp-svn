@@ -1,0 +1,190 @@
+\chapter{Profile}
+\index{Profile|(}
+
+In der Anwendung \xirp~gibt es drei verschiedene Arten von Profildateien:
+
+\begin{itemize}
+  \item Profile
+  \item Roboter
+  \item Kommunikationsspezifikationen
+\end{itemize}
+
+Im folgenden Kapitel werden der Aufbau und die Funktionsweise der \seegls{XML}-basierten
+Profildateien erläutert. Des Weiteren wird auf die Möglichkeit eingegangen diese
+Dateien mittels einer Benutzeroberfläche zu bearbeiten oder zu erstellen. Um
+einen genaueren Einblick in die \seegls{Profile} zu erhalten, kann im
+\href{\devguideurl}{Developer Guide} nachgeschlagen werden. Dieser kann von 
+\href{\devguideurl}{\devguideurlname} heruntergeladen werden.
+
+\newpage
+
+\section{Erklärung}
+\index{Profile!*.pro}
+\index{Profile!*.bot}
+\index{Profile!*.cms}
+
+Etwas verwirrend ist die Tatsache, dass es drei verschiedene Profildateien
+gibt und eine von diesen ein Profil darstellt. Erklärend kann hierzu gesagt
+werden, dass ein Profil immer aus den drei Dateien zusammengesetzt ist. Eine
+Profildatei (\texttt{*.pro}) enthält Informationen und eine Anzahl von
+Verbindungen zu Roboterdateien (\texttt{*.bot}). In diesen wiederum findet sich
+je eine Verbindung zu einer Kommunikationsspezifikationsdatei (\texttt{*.cms}).
+\par
+Diese Aufteilung wurde gewählt, um z.B. einen bereits definierten Roboter mit
+möglichst geringem Aufwand wiederverwenden zu können.
+
+\section{Die Profildatei}
+\index{Profildatei}
+\index{Profile!*.pro}
+
+\seegls{Profile} werden in den \texttt{*.pro}-Dateien definiert.
+
+\lstinputlisting[caption=Ein Beispiel für eine Profildatei,
+                 label=lst:pro,
+                 frame=tb,
+                 captionpos=b]{files/testerbot.pro}
+
+\subsection{Aufbau}
+Im der oben angegebenen Auflistung ist zu sehen, dass ein Profil einen Namen hat.
+Im Beispiel ist dieser \enquote{Testing}. Des Weiteren kann einen solche Datei
+einen Abschnitt über die externen Programme enthalten. Im Falle des Beispiels
+wird \enquote{Notepad} gefolgt vom \enquote{Calulator} gestartet.
+\par
+Verpflichtend ist die Angabe von mindestens einer Roboterdatei:
+\texttt{<robot>testerbot</robot>} sorgt dafür, dass der in der Datei
+\texttt{testerbot.bot} spezifizierte Roboter diesem Profil zugeordnet wird. Es
+ist möglich mehrere Roboter - auch mehrfach der Selbe - zuzuordnen.
+
+\subsection{Bedeutung}
+Wird \xirp~gestartet wird bei der Erstellung der internen Profil-Datenstruktur
+mit diesen Dateien begonnen. Für jede \texttt{*.pro}-Datei, die sich im Ordner
+\texttt{<Xirp>/conf/profiles} befindet wird ein Reiter in der
+Benutzeroberfläche angelegt. Diese enthalten dann die durch die Plugins der
+Roboter definierten Arbeitsbereiche. Für jeden Roboter des \seegls{Profile}s wird ein
+weiterer Reiter in dem Profil-Reiter erstellt. Sollte die Profildatei Fehler
+aufweisen, oder nicht komplett sein, wird kein Reiter für das Profil erstellt.
+
+\subsection{Verwendung}
+Soll ein Profil verwendet werden, muss die Datei im Ordner
+\texttt{<Xirp>/conf/profiles} liegen, fehlerfrei und komplett sein.
+
+\section{Die Roboterdatei}
+\index{Roboterdatei}
+\index{Profile!*.bot}
+
+Roboter werden in den \texttt{*.bot}-Dateien definiert.
+
+\lstinputlisting[caption=Ein Beispiel für eine Roboterdatei,
+                 label=lst:bot,
+                 frame=tb,
+                 captionpos=b]{files/testerbot.bot}
+
+\subsection{Aufbau}
+\index{Plugins}
+Auch ein Roboter hat einen Namen, über den er später in der
+Anwendung identifiziert wird. Der Typ und die Maße des Roboters müssen ebenfalls
+angegeben werden. Danach folgt die Spezifikation der \seegls{Aktuator}en, Energiequellen
+und \seegls{Sensor}en die der Roboter besitzt. Hiernach muss eine Verbindung zu einer
+Kommunikationsspezifikationsdatei hergestellt werden. Dies geschieht analog zum
+Vorgehen zum Hinzufügen einer Roboterdatei zu einer \texttt{*.pro}-Datei.
+\par
+Sollte der Roboter über Multimediageräte verfügen können diese ebenfalls in der
+Spezifikation mit angegeben werden. Zu guter letzt werden die Plugins angegeben,
+die dem Roboter zugeordnet sein sollen. Um ein Plugin für einen Roboter zu
+\enquote{installieren} muss der vollständige Klassenname der Plugin-Hauptklasse
+angegeben werden. Einem Plugin können noch \seegls{Sensor}en und die Benutzung der
+Multimediageräte zugeschrieben werden.
+
+\subsection{Bedeutung}
+Diese Datei ist das zentrale Moment der Anwendung. In diesen Dateien werden
+nicht nur die Roboter bis ins kleinste Detail spezifiziert, es werden auch die
+Plugins angegeben, welche dann im Arbeitsbereich der Anwendung für den Roboter
+angezeigt werden.
+
+\subsection{Verwendung}
+Soll ein Roboter verwendet werden, muss die Datei im Ordner
+\texttt{<Xirp>/conf/profiles/robots} liegen, fehlerfrei und komplett sein.
+
+\section{Die Kommunikationsspezifikationsdatei}
+\index{Kommunikationsspezifikationsdatei}
+\index{Profile!*.cms}
+
+Kommunikationsspezifikationen werden in den \texttt{*.cms}-Dateien definiert.
+
+\lstinputlisting[caption=Ein Beispiel für eine Kommunikationsspezifikation,
+                 label=lst:cms,
+                 frame=tb,
+                 captionpos=b]{files/testerbot.cms}
+
+\subsection{Aufbau}
+In den Kommunikationsspezifikationsdateien wird spezifiziert, welche
+Übertragungsmedien und Roboter-Kommunikationsprotokolle verwendet werden sollen.
+\par
+Um die Übertragungsmedien (\texttt{<communicationinterface>}) zu
+spezifizieren, werden die vollständigen Klassennamen der Hauptklasse der
+Kommunikationsplugins angegeben, gleiches bei
+den Roboter-Kommunikationsprotokollen (\texttt{<communicationprotocol>}). Ein
+Roboter-Kommunikationsprotokoll kann
+zusätzlich noch einen Handler spezifizieren.
+\par
+Des Weiteren ist es möglich die
+Kommunikation über mehrere \texttt{<datum>} Elemente anzugeben. Den
+Übertragungsmedien können noch Optionen mitgegeben werden. Dies geschieht
+mittels des \texttt{<option>} Elementes.
+
+\subsection{Bedeutung}
+Die Angaben in den Kommunikationsspezifikationsdateien sind essentiell für die
+Kommunikation mit dem Roboter. Hier werden Medien und Protokolle festgelegt, die
+der Roboter benutzen darf.
+
+\subsection{Verwendung}
+Soll eine Kommunikationsspezifikation verwendet werden, muss die Datei in dem
+folgenden Ordner liegen: \texttt{<Xirp>/conf/profiles/commspecs}. Des Weiteren
+muss sie fehlerfrei und komplett sein.
+
+\section{Anwendung}
+Wurde alle verwendeten Dateien korrekt und komplett zusammengestellt wird das
+Profil geladen und die Plugins der Roboter werden gestartet und zu den
+jeweiligen Roboter-Reitern und Menüeinträgen hinzugefügt.
+\par
+Hat alles erfolgreich funktioniert sollte der Arbeitsbereich ähnlich wie in
+Abbildung \ref{img:workspace} auf Seite \pageref{img:workspace} aussehen.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\textwidth]{images/workspace}
+    \caption{Der Arbeitsbereich}
+    \label{img:workspace}
+\end{figure}
+
+\section{Bearbeitung in der Anwendung}
+In der aktuellen Version 2.4.0 der Anwendung ist es möglich Profildateien
+mittels des Profil Editors zu erstellen und/oder zu bearbeiten. Unter den
+Menüpunkten \texttt{Datei --> Neues Profil} und \texttt{Datei --> Profil
+bearbeiten} kann der Editor aufgerufen werden.
+\par
+In der aktuellen Version gibt es noch keine Möglichkeit die Roboterdateien und
+die Kommunikationsspezifikationsdateien mittels eines Editors zu
+bearbeiten/erstellen.
+
+\subsection{Der Profileditor}
+\index{Profile!Profileditor}
+
+Egal, ob ein neues Profil erstellt, oder ein bestehendes bearbeitet werden soll,
+der Dialog mit dessen Hilfe dies erreicht werden soll ist immer der Selbe und
+ist in Abbildung \ref{img:profile:editor} auf Seite \pageref{img:profile:editor}
+zu sehen.
+
+\begin{figure}[htpb]
+    \centering
+    \includegraphics[width=0.75\textwidth]{images/editor}
+    \caption{Der Profileditor}
+    \label{img:profile:editor}
+\end{figure}
+
+Es muss ein Name eingegeben und mindestens ein Roboter zu dem Profil hinzugefügt
+werden, damit es als komplett angesehen wird. Wie die \enquote{Externen
+Programme} spezifiziert werden, kann im Kapitel über die \enquote{Einstellungen}
+ab Seite \pageref{ref:settings} nachgelesen werden.
+
+\index{Profile|)}

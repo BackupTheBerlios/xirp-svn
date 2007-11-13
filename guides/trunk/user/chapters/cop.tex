@@ -1,0 +1,91 @@
+\chapter{Kontrollübersicht}
+\index{Kontrollübersicht|(}
+\index{Roboter}
+\index{Profil}
+\xirp~bietet dem Benutzer die Möglichkeit mehrere Roboter einem Profil
+zuzuordnen. Jeder dieser zugeordneten Roboter kann gleichzeitig aktiv sein. Um
+einen Überblick über mehrere gleichzeitig agierende Roboter zu behalten wurde die
+Kontrollübersicht eingeführt. Die Kontrollübersicht kann je nach
+Monitorauflösung verschieden viele Roboter gleichzeitig anzeigen. Im folgenden
+Kapitel werden die Oberfläche und die Einstellungsmöglichkeiten erläutert.
+
+\newpage
+
+\section{Starten der Kontrollübersicht}
+\index{Profil}
+Wenn ein Profil mit mehr als einem zugeordneten Roboter geladen wurde, ist im
+Menü \enquote{Ansicht} eine weiterer Eintrag ganz am Anfang verfügbar:
+\enquote{Kontrollübersicht sichtbar}. Wird diese Option aktiviert, erscheint neben den
+Profilreitern ein weiterer Reiter mit dem Titel \enquote{Kontrollübersicht}.
+\par
+Wechselt man auf diesen Reiter sieht man, dass in dem Reiter für jedes Profil
+mit mehr als zwei zugeordneten Robotern ein weiterer Reiter angelegt wurde. Der
+Titel enthält den Namen des Profils, z.B.: \enquote{Kontrollübersicht: Testing}.
+\par
+\index{Roboter}
+Diese Reiter enthalten zunächst einen Bereich in dem die Kontrollübersicht
+konfiguriert werden kann. Aus einer Liste können die Roboter ausgewählt werden,
+die in der Kontrollübersicht angezeigt werden sollen. Mittels des
+\enquote{Start}-Knopfes wird die Kontrollübersicht für die ausgewählten Roboter
+geöffnet. In Abbildung \ref{img:settings:cop:einstellungen} auf Seite
+\pageref{img:settings:cop:einstellungen} ist der Einstellungsbereich zu sehen.
+
+\begin{figure}[htp]
+	\centering
+	\includegraphics[width=.55\textwidth]{images/cop-einstellungen}
+	\caption{Einstellungsbereich der Kontrollübersicht}
+	\label{img:settings:cop:einstellungen}
+\end{figure}
+
+\index{Roboter}
+Es kann nur eine begrenzte Anzahl an Robotern gleichzeitig angezeigt werden.
+Daher erscheint die in Abbildung \ref{img:settings:cop:error} auf Seite
+\pageref{img:settings:cop:error} zu sehende Fehlermeldung, wenn die ausgewählte
+Anzahl an Robotern nicht gleichzeitig angezeigt werden kann. Die Anzahl der
+möglichen Roboter wird bestimmt durch die Bildschirmauflösung. Eine höhere
+Auflösung ermöglicht es mehr Roboter anzuzeigen. 
+
+\begin{figure}[htp]
+	\centering
+	\includegraphics[width=.5\textwidth]{images/coperror}
+	\caption{Fehlermeldung bei zu vielen ausgewählten Robotern}
+	\label{img:settings:cop:error}
+\end{figure}
+
+\section{Oberfläche der Kontrollübersicht}
+\index{Roboter}
+Wurde eine passende Anzahl an Robotern ausgewählt und der \enquote{Start}-Knopf
+geklickt, erscheint die Kontrollübersicht für die ausgewählten Roboter. Jeder
+Roboter bekommt eine Spalte des Bereichs zugewiesen.Über der Spalte steht der
+Name des Roboters zu dem diese Spalte gehört. Die Breite der Spalten ist für
+jeden Roboter gleich.
+\par
+\index{Kontrollplugin}
+\index{Sensorplugin}
+\index{Multimediaplugin}
+Jede Spalte ist unterteilt in einen oberen und einen
+unteren Bereich. Im oberen Bereich werden alle \seegls{Sensor}- und Multimediaplugins des
+Roboters aufgeführt. Es kann jeweils nur eines zur Zeit angezeigt werden, indem
+es mittels des entsprechenden Reiters in den Vordergrund geholt wird.
+Im unteren Bereich werden alle Kontrollplugins des Roboters angezeigt. Auch hier
+kann nur jeweils eines zu Zeit angezeigt werden, indem es mittels des
+entsprechenden Reiters in den Vordergrund geholt wird.
+\par
+\index{Testerbot}
+Die Höhe der beiden Bereiche kann durch verschieben der Trennlinie (linke
+Maustaste über den Trennline gedrückt halten und nach oben bzw. unten
+verschieben) variiert werden. In Abbildung \ref{img:settings:cop:fourbots} auf
+Seite \pageref{img:settings:cop:fourbots} sind vier Spalten für vier \seegls{Testerbot}s
+zu sehen. Die Höhe der Bereiche wurde in Jeder Spalte anders eingestellt. Des
+Weiteren ist zu sehen, wie verschiedenen Plugins angezeigt werden. Da der
+\seegls{Testerbot} kein Kontrollplugin besitzt ist der untere Bereich in diesem Beispiel
+nicht gefüllt.
+
+\begin{figure}[htp]
+	\centering
+	\includegraphics[width=1\textwidth]{images/morebots}
+	\caption{Kontrollübersicht mit vier Robotern}
+	\label{img:settings:cop:fourbots}
+\end{figure}
+
+\index{Kontrollübersicht|)}

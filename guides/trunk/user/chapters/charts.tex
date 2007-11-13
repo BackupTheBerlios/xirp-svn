@@ -1,0 +1,559 @@
+\chapter{Diagramme und Aufzeichnungen}
+\index{Auswertungen}
+\index{Rekorder}
+\index{Diagrammgenerator}
+Das folgende Kapitel beschäftigt sich mit den Auswertungs- und
+Aufzeichnungsmöglichkeiten von \xirp. Mit Hilfe der in die Anwendung
+integrierten Rekorder und Diagrammgeneratoren ergeben sich vielfältige
+Möglichkeiten Werte, die vom Roboter geliefert werden, auszuwerten.
+Die drei Hauptbereiche sind:
+
+\begin{itemize}
+  \item Live-Diagramme
+  \item Aufzeichnungen
+  \item Diagrammgenerator
+\end{itemize}
+
+\newpage
+
+\section{Live-Diagramme}
+\index{Live-Diagramme|(}
+Jeder Roboterreiter enthält einige Standardbereiche. Zu diesen gehört auch der
+Bereich der \enquote{Live-Diagramme}. Dieser ist in inaktiver Form in Abbildung
+\ref{img:charts:livei} auf Seite \pageref{img:charts:livei} zu sehen.
+
+\subsection{Konfiguration}
+\index{Einstellungen}
+Wie in Abschnitt \ref{ref:settings:livechart} ab Seite
+\pageref{ref:settings:livechart} beschrieben, können mittels der Einstellungen
+vier Exportvarianten festgelegt werden. Diese Dateien werden dann automatisch
+beim Beenden des Vorgangs erstellt.
+\par
+\index{Live-Diagramme}
+\index{Live-Diagramme!relative Zeit}
+\index{Live-Diagramme!absolute Zeit}
+\index{Live-Diagramme!Sensorschlüssel}
+Zum Konfigurieren des Live-Diagramms existieren im Live-Diagrammbereich zwei
+Werkzeuge. In Abbildung \ref{img:charts:livei} auf Seite
+\pageref{img:charts:livei} sind diese Werkzeuge farblich markiert. Das Menü zur
+Auswahl von Sensorschlüsseln ist grün markiert. Hier können die zu beobachtenden
+Sensorwerte ausgewählt werden. Mit dem rot markierten Knopf ist es möglich die
+Zeitleiste zwischen relativer (5min, 34sek) und absoluter (15:32:12 Uhr) Zeitangabe
+umzuschalten. Ein rotes \enquote{A}
+zeigt an, dass die absolute Zeit verwendet wird und ein rotes \enquote{R} zeigt
+an, dass die relative Zeit verwendet wird.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=.65\textwidth]{images/chartslivei}
+    \caption{Der inaktive Live-Diagrammbereich}
+    \label{img:charts:livei}
+\end{figure}
+
+\index{Live-Diagramme}
+\index{Live-Diagramme!Sensorschlüssel}
+Um einen Live-Diagramm Vorgang zu starten, muss mindestens ein Sensorschlüssel
+des Roboters über das Menü, welches mit einem grünen Pluszeichen versehen ist,
+ausgewählt werden. Dann kann mit dem blau markierten Startknopf der Vorgang
+gestartet werden. Dieser Knopf wandelt sich dann in einen Stopknopf, mit dem der
+Vorgang beendet werden kann. Sollte die Meldung \enquote{Keine Daten verfügbar}
+erscheinen, kann es sein dass der Schlüssel nicht in der benötigten
+Form\footnote{Dies kann ein Fehler im Protokoll-Plugin sein. Siehe hierzu das
+entsprechende Kapitel im
+\href{\devguideurl}{Developer Guide}.}
+vorliegt, keine Verbindung zum Roboter besteht, oder der Roboter keine Werte
+sendet.
+
+\subsection{Benutzung}
+\index{Live-Diagramme}
+Wenn alle Einstellungen gemacht wurde, eine Verbindung zum Roboter besteht und
+dieser Werte sendet, kann die Erstellung eines Live-Diagramms gestartet werden.
+In Abbildung \ref{img:charts:livea} auf Seite \pageref{img:charts:livea} ist der
+Live-Diagrammbereich während des Vorgangs zu sehen.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=.65\textwidth]{images/chartslivea}
+    \caption{Der aktive Live-Diagrammbereich}
+    \label{img:charts:livea}
+\end{figure}
+
+Während des Vorgangs ist es nicht möglich weitere Schlüssel hinzuzufügen. Es ist
+jedoch möglich den Zeitmodus zwischen relativer und absoluter Zeit umzuschalten.
+\index{Live-Diagramme|)}
+
+\section{Aufzeichnungen}
+\index{Aufzeichnungen|(}
+\index{Rekorder|(}
+In Abschnitt \ref{ref:charts:gen} wird die Möglichkeit beschrieben Diagramme auf
+Grundlage von Aufzeichnungen zu Erstellen. Wie diese Aufzeichungen gemacht
+werden können beschreibt dieser Abschnitt.
+\par
+\index{Live-Diagramm}
+Wie auch schon bei den Live-Diagrammen existiert in jedem Roboterreiter ein
+Bereich für Aufzeichnungen. Dieser Bereich ist in Abbildung
+\ref{img:charts:recorder} auf Seite \pageref{img:charts:recorder}.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=.65\textwidth]{images/recorder}
+    \caption{Der Aufzeichnungsrekorder}
+    \label{img:charts:recorder}
+\end{figure}
+
+\index{Beobachtungsrekordermodus|(}
+Der Rekorder hat Optionen zum Aktivieren verschiedener Rekordermodi\footnote{Ab
+Version 3.0.0 ist geplant, dass nicht nur
+ausgewählte Sensorwerte aufgezeichnet werden können, sondern auch die komplette
+Kommunikation zwischen \xirp~und dem Roboter.}.
+
+\begin{itemize}
+  \item Beobachtungsrekordermodus
+\end{itemize}
+
+Der Beobachtungsrekordermodus wird in Abschnitt \ref{ref:charts:observed}
+genauer beschrieben.
+
+\subsection{Beobachtungsrekordermodus}
+\label{ref:charts:observed}
+\index{Rekorder}
+\index{Sensorschlüssel}
+\index{Sensorschlüssel!beobachtete}
+Wenn die Option \enquote{Den Beobachtungsrekordermodus aktivieren} gesetzt ist,
+können im unteren Bereich des Rekorders bestimmte Sensorschlüssel markiert und
+mittels des \texttt{>>>}-Knopfes zur Liste der beobachteten Schlüssel
+hinzugefügt werden. Mittels des \texttt{<<<}-Knopfes können Schlüssel aus der
+Liste der zu beobachtenden Schlüssel wieder entfernt werden. Dies funktioniert
+nur, wenn die Aufzeichnung noch nicht läuft. In Abbildung
+\ref{img:charts:recorder2} auf Seite \pageref{img:charts:recorder2} ist zu
+sehen, dass vier Schlüssel zu der Liste der zu beobachtenden Schlüssel
+\index{Aufzeichnungen!starten}
+hinzugefügt wurden. Es ist ebenfalls zu sehen, dass der Knopf \enquote{Starte
+Aufzeichnung} noch nicht benutzbar ist. Dies ist erst möglich, wenn eine
+Verbindung zum Roboter besteht.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=.65\textwidth]{images/recorder2}
+    \caption{Der Aufzeichnungsrekorder mit ausgewählten Schlüsseln}
+    \label{img:charts:recorder2}
+\end{figure}
+
+\index{Aufzeichnungen!stoppen}
+Wurde eine Verbindung zum Roboter hergestellt, kann die Aufzeichnung begonnen
+werden. Wurde diese gestartet, verwandelt sich der \enquote{Starte
+Aufzeichnung}-Knopf in einen \enquote{Stoppe Aufzeichnung}-Knopf.
+Dieser Zustand des Rekorders ist in Abbildung \ref{img:charts:recorder3} auf
+Seite \pageref{img:charts:recorder3} zu sehen.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=.65\textwidth]{images/recorder3}
+    \caption{Der Aufzeichnungsrekorder währed der Aufnahme}
+    \label{img:charts:recorder3}
+\end{figure}
+
+Wird die Aufzeichnung durch Anklicken des Knopfes \enquote{Stoppe Aufzeichnung}
+beendet, öffnet sich ein Eingabedialog, in dem für die soeben beendete
+Aufzeichnung ein Name und eine kurze Beschreibung eingegeben werden können. Die
+Beschreibung ist optional, der Name jedoch verpflichtend. Hierdurch kann die
+Wiedererkennbarkeit einer Aufzeichnung erhöht werden, da ansonsten nur der
+Aufzeichnungszeitraum die Aufzeichnung identifizieren kann.
+\par
+\index{Diagrammgenerator}
+\index{Mail}
+\index{Mail!CSV}
+Die Aufzeichnungen werden in der Datenbank dauerhaft gespeichert und können über
+das Mailsystem als \seegls{CSV}-Datei versendet, oder mittels des Diagrammgenerators in
+graphischer Form ausgewertet werden.
+
+\index{Beobachtungsrekordermodus|)}
+\index{Aufzeichnungen|)}
+\index{Rekorder|)}
+
+\section{Diagrammgenerator}
+\label{ref:charts:gen}
+\index{Diagramme|(}
+\index{Diagrammgenerator|(}
+\index{Aufzeichnungen}
+\index{Rekorder}
+\index{Beobachtungsrekordermodus}
+Mit Hilfe des Diagrammgenerators ist es möglich Aufzeichnungen die mit dem
+Rekorder im Beobachtungsrekordermodus gemacht wurden graphisch aufzuarbeiten und
+als Diagramme anzeigen zu lassen. Hierbei werden zwei Modi der Generierung und
+vier Diagrammtypen unterschieden. Diese Modi und Typen werden in den Abschnitten
+\ref{ref:charts:modi} und \ref{ref:charts:types} genauer beschrieben.
+Zunächst soll zunächst die Oberfläche des Generators vorgestellt werden.
+
+\subsection{Die Generatoroberfläche}
+Der Diagrammgenerator direkt nach seinem Aufruf ist in Abbildung
+\ref{img:charts:gen} auf Seite \pageref{img:charts:gen} zu sehen.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=.75\textwidth]{images/chartgen}
+    \caption{Der Diagrammgenerator}
+    \label{img:charts:gen}
+\end{figure}
+
+In den im folgenden aufgezählten Bereichen können verschiedenste Einstellungen
+vorgenommen werden. Diese Einstellungen beeinflussen die Art und Weise der
+Erstellung und das Erscheinungsbild des Diagramms.
+
+\begin{itemize}
+  \item Diagrammtyp
+  \item Aufzeichnungen vergleichen
+  \item Generelle Werte
+  \item Wahl der beobachteten Schlüssel
+  \item Zeitintervall
+  \item Diagrammoptionen
+\end{itemize}
+
+\subsubsection{Diagrammtyp}
+Hier wird der Typ des zu Erstellenden Diagramms ausgewählt. Mehr über die
+verschiedenen Typen kann in Abschnitt \ref{ref:charts:types} ab Seite
+\pageref{ref:charts:types} nachgelesen werden.
+
+\subsubsection{Aufzeichnungen vergleichen}
+Hier wird entschieden, welcher Modus des Generators benutzt werden soll. Wird
+die Option \enquote{Mehrere Aufzeichnungen vergleichen} aktiviert, ist es möglich
+in der Aufzeichnungsauswahl bis zu vier Aufzeichnungen auszuwählen. Die
+Auszeichnungen werden dann in dem resultierenden Diagramm gegenübergestellt.
+
+\subsubsection{Generelle Werte}
+Hier muss zuerst der Roboter ausgewählt werden, für den Aufzeichnungen
+vorliegen. Danach kann mittels des Knopfes \enquote{\texttt{\ldots}} der
+Auswahldialog für Aufzeichnungen aufgerufen werden. Ist die Option
+\enquote{Mehrere Aufzeichnungen vergleichen} aktiviert, können hier bis zu vier
+Aufzeichnungen ausgewählt werden. Ist die Option nicht aktiv kann nur eine
+Aufzeichnung gewählt werden.
+
+\subsubsection{Wahl der beobachteten Schlüssel}
+\index{Sensorschlüssel}
+Wurden eine oder mehrere Aufzeichnungen ausgewählt, werden in der Liste dieses
+Bereiches die Sensorschlüssel der Aufzeichnung angezeigt. Wenn mehrere
+Aufzeichnungen ausgewählt wurde, werden nur die Schlüssel angezeigt die in allen
+Aufzeichnungen vorhanden sind, da diese ja verglichen werden sollen.
+\par
+Um ein Diagramm zu erstellen, muss in der Liste der beobachteten Sensorschlüssel
+mindestens ein Eintrag markiert werden. Die Werte der markierten Schlüssel
+werden bei der Erstellung des Diagramm mit einbezogen.
+
+\subsubsection{Zeitintervall}
+Hier kann mittels der Schieberegler der Zeitintervall bestimmt werden, über den
+die beobachteten Werte in das Diagramm einbezogen werden sollen. Auch hier gibt
+es zwei Varianten, bestimmt durch die \enquote{Mehrere Aufzeichnungen
+vergleichen} Option. Der oder die Schieberegler erscheinen, wenn ein oder
+mehrere Aufzeichnungen ausgewählt wurden.
+
+\paragraph{\enquote{Mehrere Aufzeichnungen vergleichen} aktiv}
+\index{Diagrammgenerator!Zeitintervallauswahl}
+In Abbildung \ref{img:charts:gen:interval:single} auf Seite
+\pageref{img:charts:gen:interval:single} ist die Zeitintervallauswahl für eine
+einzelne ausgewählte Aufzeichnung zu sehen.
+\par
+Mittels der zwei Schieberegler lässt sich ein Intervall innerhalb des Zeitraumes
+der Aufzeichnung einstellen. Dieser Bereich wird dann bei der Generierung des
+Diagramms betrachtet.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=.75\textwidth]{images/interval_single}
+    \caption{Die Zeitintervallauswahl für eine einzelne Aufzeichnung}
+    \label{img:charts:gen:interval:single}
+\end{figure}
+
+\paragraph{\enquote{Mehrere Aufzeichnungen vergleichen} nicht aktiv}
+\index{Diagrammgenerator!Zeitintervallauswahl}
+In Abbildung \ref{img:charts:gen:interval:multi} auf Seite
+\pageref{img:charts:gen:interval:multi} ist die Zeitintervallauswahl für vier
+ausgewählte Aufzeichnungen zu sehen.
+\par
+Zusätzlich zu den vier Intervallreglern gibt es in diesem Modus ein Eingabefeld,
+um den Zeitintervall in Millisekunden festzulegen. Dies ist nötig, da die
+Aufzeichnungen unterschiedlich lang sein können und um immer den gleichen
+Zeitintervall vergleichen zu können. Das Maximum des Intervalls ist die
+komplette Dauer der kürzesten Aufzeichnung. Die Regler der Zeitintervallauswahl
+können nun nicht mehr einzeln bewegt werden, sondern bleiben immer in dem
+eingestellten Abstand.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=.75\textwidth]{images/interval_multi}
+    \caption{Die Zeitintervallauswahl für mehrere Aufzeichnungen}
+    \label{img:charts:gen:interval:multi}
+\end{figure}
+
+\subsubsection{Diagrammoptionen}
+In diesem Bereich gibt es neun Optionen die aktiviert werden können. Nicht jede
+Option ist für jeden Diagrammtyp verfügbar und einige Optionen haben, für einen
+Diagrammtyp, unterschiedliche Auswirkungen auf das generierte Diagramm.
+
+\paragraph{Relative Werte benutzen}
+Bei den Diagrammtypen \enquote{Zeitdiagramm}, \enquote{Balkendiagramm} und
+\enquote{Punktdiagramm} wird die die Zeitachse mit relativen Werten (5min, 54sek)
+versehen. Beim Typ \enquote{Tortendiagramm} werden prozentuale Angaben der
+Schlüssel verwendet. Eine weitere Besonderheit dieser Option beim Tortendiagramm
+ist der Effekt, dass die Option \enquote{Alle Schlüssel benutzen} aktiviert
+wird, wenn diese Option für ein Tortendiagramm aktiviert wird.
+
+\paragraph{Benutze alle Schlüssel}
+Wird diese Option aktiviert, werden alle in der Liste der beobachteten Schlüssel
+vorhandenen Einträge bei der Erstellung des Diagramms berücksichtigt.
+
+\newpage
+
+\paragraph{Zeige Schwellwert}
+Wird diese Option aktiviert, kann mittels des Eingabefeldes \enquote{Der
+Schwellwert der Anzuzeigen ist} ein Schwellwert eingegeben werden, der dann
+mittels einer orangenen Linie im generierten Diagramm angezeigt wird.
+\par
+Diese Option ist \textbf{nicht} für das Tortendiagramm verfügbar.
+
+\paragraph{Erzeuge 3D Diagramm}
+Wird diese Option aktiviert, wird eine \enquote{3D} Version des Diagramms
+erzeugt.
+\par
+Diese Option ist \textbf{nur} für das Tortendiagramm verfügbar.
+
+\paragraph{PDF automatisch exportieren}
+\index{Diagramme!Export!PDF}
+Wird diese Option aktiviert, wird das generierte Diagramm automatisch nach der
+Erstellung als \seegls{PDF}-Datei exportiert. Die Datei wird in der folgenden
+Ordnerstruktur abgelegt.
+\par
+\begin{center}
+\texttt{<xirp>/charts/<robotername>/pdf}
+\end{center}
+\par
+Die Option ist für \textbf{alle} Diagrammtypen verfügbar.
+
+\paragraph{PNG automatisch exportieren}
+\index{Diagramme!Export!PNG}
+Wird diese Option aktiviert, wird das generierte Diagramm automatisch nach der
+Erstellung als PNG-Datei exportiert. Die Datei wird in der folgenden
+Ordnerstruktur abgelegt.
+\par
+\begin{center}
+\texttt{<xirp>/charts/<robotername>/png}
+\end{center}
+\par
+Die Option ist für \textbf{alle} Diagrammtypen verfügbar.
+
+\paragraph{JPG automatisch exportieren}
+\index{Diagramme!Export!JPG}
+Wird diese Option aktiviert, wird das generierte Diagramm automatisch nach der
+Erstellung als JPG-Datei exportiert. Die Datei wird in der folgenden
+Ordnerstruktur abgelegt.
+\par
+\begin{center}
+\texttt{<xirp>/charts/<robotername>/jpg}
+\end{center}
+\par
+Die Option ist für \textbf{alle} Diagrammtypen verfügbar.
+
+\paragraph{CSV automatisch exportieren}
+\index{Diagramme!Export!CSV}
+Wird diese Option aktiviert, wird das generierte Diagramm automatisch nach der
+Erstellung als \seegls{CSV}-Datei exportiert. Die Datei wird in der folgenden
+Ordnerstruktur abgelegt.
+\par
+\begin{center}
+\texttt{<xirp>/charts/<robotername>/csv}
+\end{center}
+\par
+Die Option ist für \textbf{alle} Diagrammtypen verfügbar.
+
+\subsection{Modi der Diagrammgenerierung}
+\label{ref:charts:modi}
+Wie bereits erwähnt, gibt es zwei Modi der Diagrammgenerierung:
+
+\begin{itemize}
+  \item Einfaches Diagramm
+  \item Vergleich mehrerer Aufzeichnungen
+\end{itemize}
+
+Diese Modi werden in den folgenden Abschnitten genauer beschrieben.
+
+\subsubsection{Einfaches Diagramm}
+\index{Diagramme!Diagrammansicht}
+Wird die Option \enquote{Mehrere Aufzeichnungen vergleichen} nicht aktiviert,
+kann nur eine einzelne Aufzeichnung ausgewählt werden. Wird das Diagramm mittels
+des Knopfes \enquote{Generiere Diagramm} erzeugt, öffnet sich die
+Diagrammansicht mit einem einzelnen Diagramm. Ein Beispiel hierfür ist in
+Abbildung \ref{img:chart:single} auf Seite \pageref{img:chart:single} zu sehen.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=.8\textwidth]{images/single_chart}
+    \caption{Ein einfaches Diagramm in der Diagrammansicht}
+    \label{img:chart:single}
+\end{figure}
+
+\subsubsection{Vergleich mehrerer Aufzeichnungen}
+\index{Diagramme!Diagrammansicht}
+Wird die Option \enquote{Mehrere Aufzeichnungen vergleichen} aktiviert, können
+bis zu vier Aufzeichnungen ausgewählt und verglichen werden. Die Liste der
+beobachteten Schlüssel enthält nur jene Schlüssel, die in jeder Aufzeichnung
+vorkommen. Wird das Diagramm mittels des Knopfes \enquote{Generiere Diagramm}
+erzeugt, öffnet sich die Diagrammansicht mit je einem Diagramm für jede gewählte
+Aufzeichnung. Ein Beispiel mit vier Aufzeichnungen ist in Abbildung
+\ref{img:chart:multi} auf Seite \pageref{img:chart:multi} zu sehen.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\textwidth]{images/chart_multi}
+    \caption{Vier Diagramme in der Diagrammansicht}
+    \label{img:chart:multi}
+\end{figure}
+
+\subsection{Diagrammtypen}
+\label{ref:charts:types}
+Wie bereits erwähnt gibt es die folgenden vier verschiedenen Diagrammtypen.
+
+\begin{itemize}
+  \item Zeitdiagramm
+  \item Tortendiagramm
+  \item Balkendiagramm
+  \item Punktdiagramm
+\end{itemize}
+
+Die Diagrammypen werden in den folgenden Abschnitten einzeln beschrieben.
+
+\subsubsection{Zeitdiagramm}
+Dieser Diagrammtyp zeigt die Entwicklung eines Wertes über einen gewissen
+Zeitraum. Es kann ein Schwellwert angezeigt werden. Mehrere Sensorwerte können
+so verglichen werden. Ein Beispiel in in Abbildung
+\ref{img:chart:export:png:time} auf Seite \pageref{img:chart:export:png:time}
+zu sehen. Dieses Beispiel zeigt gleichzeitig, wie das generierte Diagramm als
+exportierte PNG-Datei aussieht.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=.5\textwidth]{images/exported_chart_2007-06-20_19-37-33-850}
+    \caption{Ein als PNG-Datei exportiertes Zeitdiagramm}
+    \label{img:chart:export:png:time}
+\end{figure}
+
+\subsubsection{Tortendiagramm}
+Dieser Diagrammtyp kann verwendet werden, um das Vorkommen von bestimmten
+Sensorwerten total oder prozentual auszuwerten. Im Beispiel in Abbildung
+\ref{img:chart:export:png:pie} auf Seite \pageref{img:chart:export:png:pie}
+werden die Vorkommen von sechs Sensorwerten prozentual\footnote{Im Beispiel
+herrscht eine Gleichverteilung der Werte, dies muss in der realen Welt nicht so
+sein.} angegeben.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=.5\textwidth]{images/exported_chart_2007-06-20_20-09-31-167}
+    \caption{Ein als PNG-Datei exportiertes Tortendiagramm}
+    \label{img:chart:export:png:pie}
+\end{figure}
+
+\subsubsection{Balkendiagramm}
+Dieser Diagrammtyp zeigt die Entwicklung von Sensorwerten über einen bestimmten
+Zeitraum in Balkenform. Sensorwerte können so verglichen werden. In Abbildung
+\ref{img:chart:export:png:bar} auf Seite \pageref{img:chart:export:png:bar}
+befindet sich ein Beispiel für ein Balkendiagramm.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=.5\textwidth]{images/exported_chart_2007-06-20_20-19-23-889}
+    \caption{Ein als PNG-Datei exportiertes Balkendiagramm}
+    \label{img:chart:export:png:bar}
+\end{figure}
+
+\subsubsection{Punktdiagramm}
+Dieser Diagrammtyp zeichnet für jeden Wert einen Punkt. Besonders gut geeignet
+ist dieser Diagrammtyp für Werte die große Sprünge aufweisen. In Abbildung
+\ref{img:chart:export:png:scatter} auf Seite
+\pageref{img:chart:export:png:scatter} befindet sich ein Beispiel für ein
+Punktdiagramm.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=.5\textwidth]{images/exported_chart_2007-06-20_20-24-03-642}
+    \caption{Ein als PNG-Datei exportiertes Punktdiagramm}
+    \label{img:chart:export:png:scatter}
+\end{figure}
+
+\newpage
+
+\subsection{Diagrammansicht}
+\index{Diagramme!Diagrammansicht}
+Jedes generierte Diagramm wird in einem neuen Fenster geöffnet: Der
+Diagrammansicht. Die Diagrammansicht hat einige weitere Funktionen die der
+Benutzer aufrufen kann.
+
+\begin{itemize}
+  \item Zoomen mit der Maus
+  \item Zoomen mittels des Kontextmenüs
+  \item Exportieren des Diagramms
+\end{itemize}
+
+Diese Funktionen werden in den folgenden Abschnitten genauer betrachtet. Die
+Diagrammansicht war bereits in Abbildung \ref{img:chart:single} auf Seite
+\pageref{img:chart:single} zu sehen.
+
+\subsubsection{Zoomen mit der Maus}
+\label{ref:charts:zoom}
+\index{Diagramme!Diagrammansicht!hereinzoomen}
+Es ist möglich in das Diagramm hineinzuzoomen, indem mit der Maus ein Bereich
+markiert wird. Hierzu muss die linke Maustaste gedrückt werden und der Bereich
+von links oben nach rechts unten gezogen werden. Wird die Maustaste losgelassen
+wird er neue Zoomstatus hergestellt.
+\par
+\index{Diagramme!Diagrammansicht!herauszoomen}
+Um den Originalstatus wiederherzustellen, kann mit der Maus wieder
+herausgezoomt werden. Hierzu muss die linke Maustaste gedrückt und von rechts
+unten nach links oben bewegt werden. Wird die Maustaste losgelassen
+wird er neue Zoomstatus hergestellt.
+
+\subsubsection{Zoomen mittels des Kontextmenüs}
+Die in Abschnitt \ref{ref:charts:zoom} beschriebenen Zoomfunktionen sind auch
+über ein Kontextmenü verfügbar. Dieses Menü kann durch einen Klick der rechten
+Maustaste aufgerufen werden. Für hereinzoomen und herauszoomen existieren
+gleichnamige Einträge. Es kann zwischen den einzelnen Achsen, oder der
+Möglichkeit beide Achsen zu Zoomen gewählt werden. Der neue Zoomstatus wird
+sofort nach dem Anklicken der gewünschten Funktion hergestellt.
+
+\begin{itemize}
+  \item Hereinzoomen
+    \begin{itemize}
+        \item Alle Achsen
+        \item Abzisse (x-Achse)
+        \item Ordinate (y-Achse)
+    \end{itemize}
+  \item Herauszoomen
+    \begin{itemize}
+        \item Alle Achsen
+        \item Abzisse (x-Achse)
+        \item Ordinate (y-Achse)
+    \end{itemize}
+\end{itemize}
+
+\newpage
+
+\subsubsection{Exportieren des Diagramms}
+Das Kontextmenü, welches mittels der rechten Maustaste aufgerufen werden kann,
+enthält zusätzlich zu Zoomfunktionen drei Exportfunktionen. Das Diagramm wird in
+der Form exportiert, in der es sich zu dem Exportmoment befindet. So kann auch
+ein gezoomter Zustand gespeichert werden.
+
+\begin{itemize}
+  \item PDF exportieren
+  \item PNG exportieren
+  \item JPG exportieren
+\end{itemize}
+
+Die erzeugten Dateien werden wie gewohnt in der folgenden Ordnerstruktur
+gespeichert.
+
+\begin{center}
+    \texttt{<xirp>/charts/<robotername>/pdf}\\
+    \texttt{<xirp>/charts/<robotername>/png}\\
+    \texttt{<xirp>/charts/<robotername>/jpg}\\
+\end{center}
+
+\index{Diagrammgenerator|)}
+\index{Diagramme|)}

@@ -1,0 +1,171 @@
+\section{Daten und Oberfläche}
+\index{Plugin!Plugindaten!erstellen|(}
+Ein \seegls{Plugin} kann mehrere Oberflächen haben, die jedoch immer das selbe anzeigen
+sollen. Dies resultiert daraus, dass eine Oberfläche z.B. in der Übersicht des
+Roboters und eine Zweite in der Gesamtübersicht aller Roboter zu sehen ist.
+
+Damit diese nun das gleiche Anzeigen besteht die Möglichkeit diese über eine
+Datenklasse zu synchronisieren.
+
+Auch für das \seegls{Plugin} selbst bietet sich so eine bessere Steuerung der Oberfläche.
+Es braucht nur die Daten zu setzen und die Oberfläche zeigt diese dann
+an. 
+
+Um Daten zu nutzen, muss eine neue Klasse \codeQuote{MyPluginData} erstellt 
+werden, welche \index{Plugin!Plugindaten!AbstractData}\codeQuote{AbstractData} 
+erweitert.
+
+Dem Konstruktor sollte direkt einen Parameter für die Plugin Basisklasse
+hinzugefügt werden:
+\begin{java}[caption=Plugindaten erstellen,label=lst:smplplug:data:newclass]
+package xirp.plugins;
+
+import de.unibremen.rr.xirp.plugin.AbstractData;
+
+public class MyPluginData extends AbstractData {
+
+	private MyPlugin plugin;
+
+	public MyPluginData(MyPlugin plugin) {
+		super( );
+		this.plugin = plugin;
+	}
+}
+\end{java}
+
+In der Klasse \codeQuote{MyPlugin} kann nun der \index{generisch!Typparameter}\seegls{generische} \seegls{Typparamter} \codeQuote{AbstractData}
+durch \codeQuote{MyPluginData} ersetzt werden:
+\begin{java}[caption=Plugindaten in Plugin eintragen,label=lst:smplplug:data:plugin_extends]
+public class MyPlugin extends AbstractPlugin<MyPluginData, MyPluginGUI> {
+...
+}
+\end{java}
+
+Nun kann die Methode \index{Plugin!IPlugable!getPluginDataInternal()}\codeQuote{getPluginDataInternal()} überschrieben werden:
+\begin{java}[caption=Plugindaten aus Plugin zurückgeben,label=lst:smplplug:data:plugin:getPluginDataInternal]
+	@Override
+	protected MyPluginData getPluginDataInternal() {
+		return new MyPluginData(this);
+	}
+\end{java}
+
+Nun wird der \codeQuote{MyPluginData} ein Feld \codeQuote{toPrint} und
+entsprechende Getter und Setter hinzugefügt. Der eigentliche Setter muss nun ein wenig
+modifiziert werden, so dass er beim Aufruf eine \index{Plugin!Plugindaten!notifyUI()}Benachrichtigung sendet, dass
+sich Daten geändert haben.
+
+\begin{java}[caption=Methoden in Plugindaten hinzufügen
+,label=lst:smplplug:data:data:methods]
+public class MyPluginData extends AbstractData {
+
+	private MyPlugin plugin;
+	private String toPrint;
+
+	public MyPluginData(MyPlugin plugin) {
+		super( );
+		this.plugin = plugin;
+	}
+
+	public String getToPrint() {
+		return toPrint;
+	}
+
+	public void setToPrint(String toPrint) {
+		plugin.notifyUI("toPrint", this.toPrint, this.toPrint = toPrint);
+	}
+}
+\end{java}
+
+Die Oberfläche soll nun ein Textfeld anzeigen:
+\begin{java}[caption=Oberfläche zur Plugindatendarstellung,label=lst:smplplug:data:gui:init]
+	private void init() {
+		GridLayout gl = SWTUtil.setGridLayout(this, 1, true);
+		SWTUtil.resetMargins(gl);
+
+		this.setBackground(ColorManager.getColor(SWT.COLOR_RED));
+
+		text = new XText(this, SWT.READ_ONLY | SWT.WRAP, false);
+		SWTUtil.setGridData(text,
+				true,
+				true,
+				GridData.FILL,
+				GridData.FILL,
+				1,
+				1);
+
+	}
+\end{java}
+
+Der Hintergrund der Oberfläche ist eigentlich Rot, jedoch nimmt das Textfeld
+durch die \codeQuote{FILL}-Attribute und das entfernen von Rändern mit
+\index{SWTUtil!resetMargins()}\codeQuote{SWTUtil.resetMargins()} den gesamten verfügbaren Platz ein.
+\par
+Damit dieses Textfeld Änderungen der Daten verarbeitet fehlt noch eine neue
+Methode welche im Konstruktor aufgerufen wird: 
+\begin{java}[caption=Listener der Oberfläche auf Plugindaten,label=lst:smplplug:data:gui:listener]
+	public MyPluginGUI(Composite parent, MyPlugin plugin) {
+		super(parent, plugin);
+		this.plugin = plugin;
+		init( );
+		initListener( );
+	}
+
+	private void initListener() {
+		MyPluginData pluginData = this.plugin.getPluginData( );
+		pluginData.addPropertyChangeListener("toPrint",
+				new PropertyChangeListener( ) {
+
+					@Override
+					public void propertyChange(PropertyChangeEvent event) {
+						text.append(event.getNewValue( ).toString( ));
+					}
+
+				});
+	}
+\end{java}
+
+In dieser Methode erfolgt die Anmeldung auf Änderungen der Eigenschaft
+\codeQuote{toPrint} der \seegls{Plugin} Daten. Ändern sich die Daten, so wird dies im
+Textfeld ausgegeben.
+
+Nun fehlt noch das schreiben der Daten beim klicken auf das \index{Toolbar}Toolbar 
+\index{Bild!Icon}\seegls{Icon}. Hierzu muss die Methode 
+\index{Plugin!IPlugable!getToolbar()}\codeQuote{getToolbar()} geändert werden.
+
+\begin{java}[caption=Setzen von Plugindaten aus der Oberfläche,label=lst:smplplug:data:gui:toolbar]
+	@Override
+	public XToolBar getToolBar(CoolItem parent) {
+		XToolBar tools = new XToolBar(parent.getParent( ), SWT.FLAT);
+		XToolItem helloWorld = new XToolItem(tools,
+				SWT.FLAT | SWT.PUSH,
+				handler);
+		helloWorld.setToolTipTextForLocaleKey("MyPlugin.toolbar.helloworld"); //$NON-NLS-1$
+		helloWorld.setImage(ImageManager.getPluginImage(this, "helloworld.png")); //$NON-NLS-1$
+		helloWorld.addSelectionListener(new SelectionAdapter( ) {
+
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+			 */
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				String string = getI18nString("MyPlugin.print.helloworld",
+						MyPlugin.this.getRobotName( ),
+						toPrint)
+						+ Constants.LINE_SEPARATOR;
+				LOGGER.info(robotName, string);
+				pluginData.setToPrint(string);
+			}
+		});
+
+		return tools;
+	}
+\end{java}
+
+Immer wenn die Sprache umgestellt wurde oder in den \index{Einstellungen}Einstellungen ein neuer Text
+für das \seegls{Plugin} gesetzt wurde, erscheint die Ausgabe beim Klick auf das Toolbar
+\seegls{Icon} nun auch in der Oberfläche des \seegls{Plugins} (\refFig{dataOut}). 
+
+\kfig{plugin_dataOut}{.7}{Ausgabe in der Plugin Oberfläche}{dataOut}
+\index{Plugin!Plugindaten!erstellen|)}

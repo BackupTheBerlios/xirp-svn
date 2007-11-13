@@ -1,0 +1,94 @@
+\section{Reporte Erstellen}
+\label{sec:plugin:report}
+\index{Report}
+
+Die \seegls{Plugin}-\seegls{API} bietet auch die Möglichkeit so genannte Reports zu erstellen. Dies
+sind \seegls{PDFs} welche selbst zusammengestellt werden können.
+
+Für das Beispielplugin kann so zum Beispiel die Anzahl der erfolgten Klicks
+zusammen mit einem Screenshot der aktuellen Oberfläche ausgegeben werden.
+
+Dazu muss das \seegls{Plugin} als Typ zusätzlich \codeQuote{PluginType.REPORT}
+zurückgeben. Weiterhin müssen die Methoden \codeQuote{getReport()} und
+\codeQuote{hasReport()} implementiert werden:
+\index{Manager!ProfileManager}
+\begin{java}[caption=Reporterstellung eines Plugins,label=code:plugin:report]
+@Override
+public int getPluginType() {
+	return PluginType.TOOLBAR | PluginType.REPORT;
+}
+
+@Override
+public boolean hasReport() {
+	return pluginData.getClickCount( ) > 0;
+}
+
+@Override
+public Report getReport() {
+	Report r = null;
+	try {
+		Header h = new Header("Klickzähler",
+				ProfileManager.getRobot(robotName),
+				this);
+		Content c = new Content( );
+		ContentPart part = new ContentPart( );
+		ContentPartText text = new ContentPartText( );
+		ContentPartTextParagraph para = new ContentPartTextParagraph( );
+		para.setHeader("Klickanzahl");
+		para.setText("In diesem Plugin wurde " +
+				pluginData.getClickCount( ) + " mal geklickt.");
+		text.addParagraph(para);
+		part.addReportText(text);
+
+		if (!guis.isEmpty( )) {
+			MyPluginGUI gui = guis.firstElement( );
+			Image image = gui.captureScreenshot( );
+			ImageLoader loader = new ImageLoader( );
+			loader.data = new ImageData[] {image.getImageData( )};
+			String imagePath = Constants.TMP_DIR + Constants.FS +
+					getClass( ).getName( ) + ".png";
+			loader.save(imagePath, SWT.IMAGE_PNG);
+			image.dispose( );
+
+			ContentPartImage imagePart = new ContentPartImage(imagePath,
+					"Screenshot der aktuellen GUI");
+
+			part.addReportImage(imagePart);
+		}
+
+		c.addReportPart(part);
+		r = new Report(h, c, h.getTitle( ));
+	}
+	catch (Exception e) {
+		LOGGER.error(robotName, "Error: " + e.getMessage( ) +
+				Constants.LINE_SEPARATOR, e);
+	}
+	return r;
+}
+\end{java}
+
+Der Report soll nur erstellt werden, wenn überhaupt schon einmal geklickt wurde.
+
+Für die Erstellung des Screenshot kann die Methode \codeQuote{captureScreenshot}
+der Oberfläche genutzt werden. Es reicht dabei einen Screenshot von einer
+Oberfläche zu nehmen (in diesem Fall der ersten), da diese ja alle das selbe
+anzeigen.
+
+\kfig{plugin_report_menu}{.5}{Plugin im Reportmenü}{img:plugin:report}
+
+Das Bild muss vor der Einbindung in das \seegls{PDF} mit dem \codeQuote{ImageLoader} 
+gespeichert werden, damit es
+von einem Pfad direkt bei der \seegls{PDF} Erstellung eingebunden werden kann.
+
+Im Menü unter \index{Menü!Reporte}Reporte (siehe \autoref{img:plugin:report} lässt sich dann der
+Report für das \seegls{Plugin} erstellen.
+Dieser öffnet sich direkt und ist im Ordner \fileQuote{reports} sowie über die
+Reportsuche zu finden.
+
+
+In \autoref{img:plugin:report:cutout} ist ein Ausschnitt des erstellten \seegls{PDFs} zu sehen.
+
+\kfig{plugin_report_cutout}{1}{Ausschnitt eines Pluginreports}{img:plugin:report:cutout}
+
+Mehr über die Reporterstellung kann im \autoref{sec:report} auf
+\autopageref{sec:report} nachgelesen werden.

@@ -1,0 +1,576 @@
+\chapter{Diverses}
+\label{cha:other}
+\index{Diverses}
+
+In diesem Kapitel sollen kurz weitere zur Verfügung stehende Klassen beschrieben
+werden.
+
+\section{Gamepad-Steuerung}
+\index{Gamepad}\index{Joystick}
+\xirp~bietet die Möglichkeit \seegls{Plugins} über ein \seegls{Gamepad} oder einen \seegls{Joystick} zu
+steuern. 
+
+Einerseits kann dies über \index{Kommando}Kommandos
+und \index{Hotkey}\seegls{Hotkeys} (\autoref{sec:plugin:commands},
+\autopageref{sec:plugin:commands}) erfolgen.
+Andernfalls kann auch die \seegls{Gamepad}-\seegls{API} aus dem Paket
+\codeQuote{de.unibremen.rr.xirp.io.gamepad} direkt genutzt werden.
+
+\index{Gamepad!Tasten}\index{Gamepad!Achsen}
+Zur Zeit werden dabei 32 Tasten und die Achsen \texttt{POV}, \texttt{X}, 
+\texttt{Y},	\texttt{Z},	\texttt{R} und	\texttt{U} unterstützt.
+\index{Manager!GamepadManager}
+Um über Tastendrücke und Achsenänderungen des \seegls{Gamepad} oder \seegls{Joystick} informiert
+zu werden können beim \codeQuote{GamepadManager} mittels
+\codeQuote{addGamepadEventListener(GamepadEventListener)} und
+\codeQuote{removeGamepadEventListener(GamepadEventListener)}
+\index{Gamepad!Listener} an und abgemeldet werden.
+
+Immer wenn nun eine Taste gedrückt/losgelassen wird oder sich die Werte der Achsen ändern
+erhält der Listener ein \index{Gamepad!Event}Event. Beim dauerhaften drücke
+einer Taste werden nicht mehrere Events ausgelöst.
+
+Das \index{Gamepad!Event}\codeQuote{GamepadEvent} bietet dann die Methoden um
+die aktuellen Werte des Gamepad abzurufen:
+\begin{itemize}
+  \item \codeQuote{getValues()}: Gibt die aktuellen Werte zusammen mit den
+  zugehörigen Achsen zurück.
+  \item \codeQuote{getValue(AxisType)}: Gibt den aktuellen Wert für eine
+  bestimmte Achse zurück.
+  \item \codeQuote{getAxisTypes()}: Gibt allen Achsentypen zurück, für die Werte
+  zur Verfügung stehen.
+  \item \codeQuote{getPressed()}: Gibt die Nummern der gerade gedrückten Tasten zurück.
+\end{itemize}
+
+Bei den Achsen ist normalerweise die Basisposition bei 0.0. Der Wert ist jedoch
+nicht immer ganz genau und sollte daher gerundet werden um die Basisposition
+herauszufinden. Für die \enquote{Point of View}-Achse ist 0.0 oben und der Wert
+für die Basisposition kann mittels \codeQuote{AxisType.POV_ZERO} abgerufen
+werden. Ob eine Achse in der Basisposition ist lässt sich mit
+\codeQuote{GamepadControl.isBasePosition(AxisType, float)} prüfen.
+
+\begin{java}[caption=Gamepad Listener anmelden,label=img:gamepad:listener]
+GamepadManager.addGamepadEventListener(new GamepadEventListener( ) {
+
+	@Override
+	public void axisChanged(GamepadEvent evt) {
+		for (Map.Entry<AxisType, Float> entry : evt.getValues( )
+				.entrySet( )) {
+			if (GamepadControl.isBasePosition(entry.getKey( ),
+					entry.getValue( ))) {
+				System.out.println(entry.getKey( ) + ": Nullposition");
+			}
+			else {
+				System.out.println(entry.getKey( ) + ": " +
+						entry.getValue( ));
+			}
+		}
+
+	}
+
+	@Override
+	public void buttonPressed(GamepadEvent evt) {
+		System.out.println("Pressed: " + evt.getPressed( ));
+	}
+
+});
+\end{java}
+
+
+\section{Roboter zeichnen}
+\index{Robot!RobotDrawHelper}
+Der in \seegls{XML} definierte Roboter (\autoref{sec:robotspecs}, 
+\autopageref{sec:robotspecs}) hat \seegls{Sensor}en welche eine bestimmte 
+Position am Roboter haben (\autoref{sec:sensorgroup}, 
+\autopageref{sec:sensorgroup}). In der Roboterübersicht (Menü 
+\menuQuote{Ansicht/Roboterübersicht}\index{Menü!Ansicht!Roboterübersicht}) von \xirp~sind die \seegls{Sensor}en des 
+Roboter an ihren korrekten Positionen eingezeichnet. Die Berechnung der 
+Positionen für dieser 2-Dimensionalen Draufsicht erfolgt mittels des 
+\codeQuote{RobotDrawHelper}.
+
+\index{Roboter}
+Dem Konstruktor wird der Roboter und der Rand übergeben in welchem nichts
+gezeichnet werden soll. Bei einem Rand von 10 würden also oben, unten, links und
+rechts 10 Pixel frei bleiben. Dieser Rand kann später noch mittels
+\codeQuote{setSpacing(int)} verändert werden.
+
+Die Größe des Bereichs auf dem gezeichnet wird (siehe 
+\codeQuote{org.eclipse.swt.widgets. Control.addControlListener(ControlListener 
+listener)}), wird dem Objekt dann mittels \codeQuote{resized(Point)} übergeben. 
+Dies führt zu einer Neuberechnung des einzeichenbaren Roboterrechtecks welches 
+mit \codeQuote{getRobotDrawRectangle()} abgerufen werden kann.
+
+Für die \seegls{Sensor}en können die Positionen am Roboterrechteck durch Aufrufe von
+\newline\codeQuote{getSensorLocation(Sensor)} berechnet werden.
+\index{Manager!ColorManager}
+\begin{java}[caption=Roboter mit 2 Sensoren zeichnen,label=code:robotdrawhelper]
+private void drawRobot(final Composite comp) throws RobotNotFoundException {
+	// Roboter holen
+	Robot robot = ProfileManager.getRobot(plugin.getRobotName( ));
+
+	// Sensoren holen
+	final Sensorgroup sensorgroup = robot.getSensorgroups( ).get(0);
+	final Sensor sensor = sensorgroup.getSensors( ).get(0);
+
+	final Sensorgroup sensorgroup2 = robot.getSensorgroup("Infrared");
+	final Sensor sensor2 = sensorgroup2.getSensors( ).get(0);
+
+	// 10 Pixel Rand
+	final RobotDrawHelper robotDraw = new RobotDrawHelper(10, robot);
+
+	comp.addControlListener(new ControlAdapter( ) {
+
+		@Override
+		public void controlResized(ControlEvent evt) {
+			// Danach wird automatisch repaint aufgerufen
+			robotDraw.resized(comp.getSize( ));
+		}
+
+	});
+
+	comp.addPaintListener(new PaintListener( ) {
+
+		@Override
+		public void paintControl(PaintEvent evt) {
+			GC gc = evt.gc;
+			// Roboter einzeichnen
+			gc.setBackground(ColorManager.getColor(SWT.COLOR_RED));
+			gc.fillRectangle(robotDraw.getRobotDrawRectangle( ));
+
+			// Sensoren einzeichnen
+			gc.setBackground(ColorManager.getColor(SWT.COLOR_BLUE));
+			final Point sensorLocation = robotDraw.getSensorLocation(sensor);
+			gc.fillOval(sensorLocation.x - 5, sensorLocation.y - 5, 10, 10);
+			gc.drawString(sensorgroup.getLongName( ),
+					sensorLocation.x + 5,
+					sensorLocation.y + 5,
+					true);
+
+			final Point sensorLocation2 = robotDraw.getSensorLocation(sensor2);
+			gc.fillOval(sensorLocation2.x - 5,
+					sensorLocation2.y - 5,
+					10,
+					10);
+			gc.drawString(sensorgroup2.getLongName( ),
+					sensorLocation2.x + 5,
+					sensorLocation2.y + 5,
+					true);
+		}
+
+	});
+
+}
+\end{java}
+
+\section{Farbverlauf berechnen}
+\index{Farbe!Farbverlauf}
+Die Klasse \codeQuote{GradientUtil} bietet Zugriff auf Einzelne Bereiche eines
+Farbverlaufs. 
+
+Erstellt man zum Beispiel einen Farbverlauf von Rot über Grün nach Blau und
+möchte wissen welche Farbe bei 75\% des Farbverlaufs gerade aktuell ist, so
+lässt sich dies wie folgt umsetzen:
+\begin{java}[caption=Farbverlauf berechnen,label=code:farbverlauf]
+GradientUtil gradient = new GradientUtil(new Color[] {Color.RED,
+		Color.GREEN, Color.BLUE});
+Color color = gradient.getColor(0.75f);
+System.out.println("Gleichverteilt bei 75%: " + color);
+
+gradient = new GradientUtil(new float[] {0.0f, 0.5f, 1.0f},
+		new Color[] {Color.RED, Color.GREEN, Color.BLUE});
+color = gradient.getColor(0.75f);
+System.out.println("Mehr Rot bei 75%: " + color);
+\end{java}
+
+Ausgabe:
+\begin{lstlisting}
+Gleichverteilt bei 75%: java.awt.Color[r=0,g=95,b=160]
+Mehr Rot bei 75%: java.awt.Color[r=0,g=128,b=127]
+\end{lstlisting}
+
+Dieses Beispiel erstellt zum einen einen Farbverlauf mit gleichgroßen
+Farbabschnitten für die drei Farben und dann eine Farbverlauf der einen größeren
+Rot-Anteil gegebenüber dem Grünen und Blauen hat.
+
+Die Klasse arbeitet mit \seegls{AWT}-Farben. Zur Umrechnung von \seegls{SWT} in \seegls{AWT} Farben und
+zurück kann der \index{Manager!ColorManager}\codeQuote{ColorManager} benutzt
+werden. 
+
+Diese Klasse soll nicht zum Zeichnen des Farbverlaufs benutzt werden sondern nur
+zur Berechnung einzelner Farben im Farbverlauf.
+
+\section{Nachrichten als Tooltip}
+\kfig{diverses_ballonwindow}{.5}{BalloonWindow in der
+Systemtray}{img:diverses:balloonwindow} 
+\xirp~bietet eine Möglichkeit kleine Nachrichten als so genanntes \enquote{Balloon Window}
+(eine Art \index{Tooltip}Tooltip) an der \index{Systemtray}\seegls{Systemtray} anzuzeigen
+(siehe \autoref{img:diverses:balloonwindow}). Dazu wird die Methode
+\codeQuote{showToolTip()} des \index{Manager!MessageManager} 
+\codeQuote{MessageManager} benutzt:
+\begin{java}[caption=BalloonWindow mit MessageManager erstellen,label=code:messagemanager]
+MessageManager.showToolTip("Ein Tooltip",
+		"Hier kann eine schöne Nachricht stehen",
+		MessageType.INFO);
+\end{java}
+
+
+\section{Sprachausgabe}
+\index{Sprachausgabe}
+\xirp~bietet die Möglichkeit Text in Sprache umzuwandeln und ausgeben zu lassen.
+\index{Manager!TextToSpeechManager}
+Dazu kann der \codeQuote{TextToSpeechManager} genutzt werden. Dieser bietet die
+Methode \codeQuote{speakText()} welche den übergebenen Text vorliest:
+\begin{java}
+TextToSpeechManager.speak("Hello World!");
+\end{java}
+
+Dazu muss in den \index{Einstellungen}Einstellungen unter \enquote{Speech-Einstellungen} die
+Sprachausgabe angeschaltet werden. Mehr Informationen dazu finden sich im
+\index{Benutzerhandbuch}Benutzerhandbuch.
+
+\section{Instanziierung}
+\index{Instanziierung}
+Mit der Klasse \codeQuote{InstanceUtil} lassen sich zum Beispiel Instanzen von
+zur Zeit der Kompilierung unbekannten Klassen erstellen.
+
+Als Beispiel wird hier jedoch nur eine Instanz von \codeQuote{GradientUtil}
+erstellt:
+\begin{java}[caption=Instanz mit InstanceUtil erstellen,label=code:instanceutil]
+// Array von Farben für GradientUtil
+final Color[] colors = new Color[] {Color.RED, Color.GREEN, Color.BLUE};
+//Array mit den Prozenten für die Farben
+float[] percents = new float[] {0.0f, 0.5f, 1.0f};
+//Array mit den beiden Argumenten für GradientUtil
+final Object[] objects = new Object[] {percents, colors};
+//Instanz erstellen und benutzen
+Object obj = InstanceUtil.createInstance(GradientUtil.class.getName( ),
+		objects);
+System.out.println(obj);
+if (obj != null && obj instanceof GradientUtil) {
+	GradientUtil util = (GradientUtil) obj;
+	System.out.println(util.getColor(.5f));
+}
+\end{java}
+
+Die Methode \codeQuote{createInstance(String, Object...)} erhält als erstes den
+kompletten Klassenname (mit Paket) und dann ein Array von Argumenten welche als
+Parameter für den Konstruktor benutzt werden. Dabei ist darauf zu achten dass
+die gegebenen Argumente exakt den Typ haben muss der vom Konstruktor erwartet
+wird. Ist der erwartete Typ \codeQuote{Control} so kann nicht
+\codeQuote{Composite} übergeben werden.
+
+\section{Util}
+\index{Util}
+In der Klasse \codeQuote{Util} finden sich einige Methoden die während der
+Entwicklung von \xirp~entstanden sind.
+
+\begin{itemize}
+  \item \codeQuote{getTimeAsString(Date)}: Formatiert das gegebene Datum im
+  Format \enquote{yyyy-MM-dd\_HH-mm-ss}.
+  \item \codeQuote{getTimeAsString(Date, String)}: Formatiert das gegebene Datum
+  im angegebenen Format.
+  \item \codeQuote{getTimeAsString(long)}: Formatiert den für ein Datum
+  stehenden long \\(\codeQuote{System.currentTimeMillis()}) im Format
+  \enquote{yyyy-MM-dd\_HH-mm-ss}.
+  \item \codeQuote{getTimeAsString(long, String)}: Formatiert den für ein Datum
+  stehenden long (\codeQuote{System.currentTimeMillis()}) im angegebenen Format.
+  \item \codeQuote{encrypt(String)}: Verschlüsselt den angegebenen String.
+  \item \codeQuote{decrypt(String)}: Entschlüsselt einen mit
+  \codeQuote{encrypt(String)} verschlüsselten String.
+  \item \codeQuote{convertObject(Object, Class<?>)}: Versucht das gegebenen
+  Objekt in eines der gegebenen Klasse zu umzuwandeln. Diese Konvertierung
+  funktioniert zwischen Zahlenklassen untereinander und immer zu Strings.
+  \item \codeQuote{getOptimalMapSize(int)}: Berechnet für die gewünschte Größe
+  einer \codeQuote{java.util.Map} und ihren normalen Load-Factor die optimale
+  Größe bei der die \codeQuote{Map} die Elemente ohne ein Rehashing aufnehmen kann.
+  \item \codeQuote{isEmpty(String)}: Prüft ob der gegebene String
+  \codeQuote{null} ist oder nur aus Leerzeichen besteht.
+  \item \codeQuote{getEnumNameOrNothing(Enum)}: Gibt für das gegebenen
+  enum-Element dessen Namen \codeQuote{name()} oder einen leeren String zurück
+  sofern das Element \codeQuote{null} war.
+  \item \codeQuote{scale(double, double, double, double, double)}: Skaliert
+  einen Wert aus einem Wertebereich auf einen anderen Wertebereich. Der
+  Eingabewertebereich ist dabei durch die ersten, der Ausgabebereich durch die
+  nächsten beiden Parameter gegeben. Die Wert durch den letzten.
+  \item \codeQuote{scale(long, long, long, long, long)}: siehe oben.
+\end{itemize}
+
+\begin{java}[caption=Die Methoden der Util-Klasse,label=code:util:class]
+public static void main(String[] args) {
+	System.out.println(Util.getTimeAsString(System.currentTimeMillis( )));
+	System.out.println(Util.getTimeAsString(System.currentTimeMillis( ),
+			"yyyy"));
+	final String encrypt = Util.encrypt("Hallo");
+	System.out.println(encrypt);
+	System.out.println(Util.decrypt(encrypt));
+	System.out.println(Util.convertObject("20", Integer.class));
+	System.out.println(Util.getEnumNameOrNothing(Robot.RobotType.WALK));
+	System.out.println(Util.scale(100, 200, 0, 100, 150));
+}
+\end{java}
+
+Die Ausgabe diese Codestücks würde zum Beispiel so aussehen:
+\begin{lstlisting}
+2007-07-03_23-29-03
+2007
+aSqVgLgp90U=
+Hallo
+20
+WALK
+50
+\end{lstlisting}
+
+\section{Versionen vergleichen}
+Die Klasse \codeQuote{VersionComparator} bietet die Möglichkeit Versionen
+miteinander zu vergleichen oder zu sortieren. Die Versionsnummern dürfen dabei nur
+aus durch Punkte getrennte Zahlen bestehen. Sortiert durch einen Vergleich der
+Zahlen zwischen den Punkten. Dabei werden erst alle Zahlen vor dem ersten Punkt,
+dann alle vor dem zweiten Punkt und so weiter miteinander verglichen. Buchstaben
+folgen immer nach allen Zahlen der selben Ebene:
+
+\begin{java}[caption=Sortierung von Versionsnummern,label=code:versioncomparator]
+VersionComparator comp = new VersionComparator( );
+List<String> versions = new ArrayList<String>( );
+versions.add("1");
+versions.add("2.3.1.2");
+versions.add("2.a.1.2");
+versions.add("1.3.1.2");
+versions.add("1.1.1.2");
+Collections.sort(versions, comp);
+System.out.println(versions);
+\end{java}
+
+ergibt folgende Ausgabe:
+\begin{lstlisting}
+[1, 1.1.1.2, 1.3.1.2, 2.3.1.2, 2.a.1.2]
+\end{lstlisting}
+
+\section{Serialisierung}
+\index{Serialisierung}
+\index{Serialisierung!deep copy}
+Um Java Objekte in eine \index{Datei!Java Objekte speicher in}Datei schreiben und
+zurück lesen zu können existieren in
+\xirp~zwei Klassen die dieses erleichtern sollen. Mit der Methode
+\codeQuote{writeToDisk(O, File)} der Klasse \codeQuote{ObjectSerializer} lassen
+sich Objekte welche \codeQuote{java.io.Serializable} implementieren in eine
+Datei schreiben. Mit der Methode \codeQuote{deepCopy(O)} lässt sich eine Kopie
+eines Objektes erstellen welche keine Verbindung mehr zu dem ursprünglichen
+Objekt hat.
+
+Mit der zweiten Klasse \codeQuote{ObjectDeSerializer} lassen sich über die
+Methoden \codeQuote{getObject(File)} und \codeQuote{getObject(InputStream)} geschriebene Objekte
+wieder aus einen Datei oder von einem Stream einlesen.
+
+\begin{java}[caption=Serialisierung und Deserialisierung,label=code:serial]
+public static void main(String[] args) {
+	String strg = "Hallo Welt!";
+	File f = new File("temp.dat");
+	try {
+		ObjectSerializer.<String> writeToDisk(strg, f);
+		String back = ObjectDeSerializer.<String> getObject(f);
+		System.out.println(back);
+	}
+	catch (IOException e) {
+		e.printStackTrace( );
+	}
+	catch (SerializationException e) {
+		e.printStackTrace( );
+	}
+
+	int array[] = new int[2];
+	array[0] = 5;
+	array[1] = 6;
+
+	try {
+		int[] copy = ObjectSerializer.<int[]> deepCopy(array);
+		copy[1] = 10;
+
+		System.out.println(Arrays.toString(array));
+		System.out.println(Arrays.toString(copy));
+	}
+	catch (IOException e) {
+		e.printStackTrace( );
+	}
+}
+\end{java}
+
+Ausgabe:
+\begin{lstlisting}
+Hallo Welt!
+[5, 6]
+[5, 10]
+\end{lstlisting}
+
+\section{Collections}
+\index{Collections}
+Bei der Entwicklung von \xirp~reichten die Standard-Collections aus von Java
+teilweise nicht aus, so dass einige Erweiterungen dazu entstanden sind.
+
+\subsection{BidiHashMap}
+\index{Collections!BidiHashMap}
+Bei einer normalen HashMap lässt sich nur in eine Richtung nämlich von Schlüssel
+nach einem Wert nachschlagen. Die \codeQuote{BidiHashMap} ermöglicht dies in
+zwei Richtungen, wobei dann Schlüssel und Wert eindeutig sein müssen. Es stehen
+daher neben den üblichen Methoden einer \codeQuote{HashMap} auch noch folgende
+zur Verfügung:
+\begin{itemize}
+  \item \codeQuote{removeValue(Object)}: Entfernt den angegebenen Wert und
+  seinen Schlüssel.
+  \item \codeQuote{getKey(V)}: Holt den Schlüssel zum gegebenen Wert.
+  \item \codeQuote{keys()}: Gibt eine Liste von Schlüsseln zurück.
+  \item \codeQuote{valueEntrySet()}: Gibt alle Wert-Schlüssel-Paare zurück.
+\end{itemize}
+
+\begin{java}[caption=Übersetzungsdatenbank mit BidiHashMap,label=code:bidihashmap]
+public static void main(String[] args) {
+	//Kleine Übersetzungsdatenbank
+	BidiHashMap<String, String> lookup = new BidiHashMap<String, String>( );
+	lookup.put("Hallo", "Hello");
+	lookup.put("Welt", "World");
+	lookup.put("Guten", "Good");
+	lookup.put("Morgen", "Morning");
+
+	//Englische Übersetzung für Hallo heraussuchen
+	System.out.println(lookup.get("Hallo"));
+	//Deutsche Übersetzung für Morning raussuchen
+	System.out.println(lookup.getKey("Morning"));
+
+	//Alle deutschen Übersetzungen für englisch anzeigen
+	System.out.println(lookup.valueEntrySet( ));
+
+	//Alle deutschen Wörter anzeigen
+	System.out.println(lookup.keys( ));
+
+	//Ein englisches Wort entfernen
+	lookup.removeValue("World");
+
+	//Auch das deutsche Wort is weg
+	System.out.println(lookup.keys( ));
+}
+\end{java}
+\newpage
+Ausgabe:
+\begin{lstlisting}
+Hello
+Morgen
+[Morning=Morgen, Good=Guten, World=Welt, Hello=Hallo]
+[Morgen, Guten, Welt, Hallo]
+[Morgen, Guten, Hallo]
+\end{lstlisting}
+
+\subsection{MultiValueHashMap}
+\index{Collections!MultiValueHashMap}
+In einer normalen \codeQuote{HashMap} lässt sich für jeden Schlüssel nur ein
+Wert ablegen. In der \newline\codeQuote{MultiValueHashMap} werden die Werte dagegen in
+einer Liste abgelegt, so dass mehrere Werte für einen Schlüssel erlaubt sind.
+
+Hinzugekommen sind die Methoden \codeQuote{containsValue(K, V)} und
+\codeQuote{remove(K, V)} welche prüfen ob ein Wert \texttt{V} für einen
+Schlüssel \texttt{K} vorhanden ist bzw. den Wert von dem Schlüssel löscht.
+
+Die Benutzung erfolgt ansonsten wie bei einer normalen \codeQuote{HashMap}, nur
+dass beim Abrufen der Werte für einen Schlüssel eine Liste zurückgegeben wird.
+\begin{java}[caption=Autodatenbank mit einer MultiValueHashMap,label=code:multivaluehashmap]
+public static void main(String[] args) {
+	MultiValueHashMap<String, String> cars = new MultiValueHashMap<String, String>( );
+	cars.put("VW", "Golf");
+	cars.put("VW", "Polo");
+	cars.put("Peugeot", "206");
+	cars.put("Peugeot", "207");
+	cars.put("Opel", "Manta");
+	cars.put("Opel", "Corsa");
+
+	System.out.println(cars.get("VW"));
+	System.out.println(cars.entrySet( ));
+}
+\end{java}
+
+Ausgabe:
+\begin{lstlisting}
+[Golf, Polo]
+[Peugeot=[206, 207], Opel=[Manta, Corsa], VW=[Golf, Polo]]
+\end{lstlisting}
+
+\subsection{ConcurrentMultiValueHashMap}
+\index{Collections!ConcurrentMultiValueHashMap}
+Die \codeQuote{ConcurrentMultiValueHashMap} ist eine \seegls{Thread}sichere Version der
+\codeQuote{MultiValueHashMap} funktioniert aber genau gleich.
+
+\section{Löschen von Dateien}
+\index{Datei!löschen}
+\index{Manager!DeleteManager}
+\xirp~bietet die Möglichkeit Dateien zur Löschung für die Beendigung des
+Programms \newline(\codeQuote{deleteOnShutdown()} oder den nächsten Start
+(\codeQuote{deleteOnStartup()} beim
+\codeQuote{DeleteManager} einzutragen. Können Dateien bei der  Beendigung
+nicht gelöscht werden, zum Beispiel weil sie noch benutzt werden, so werden sie
+beim nächsten Start gelöscht.
+
+\section{Externe Programme starten}
+\index{Programm!externes!starten}
+\index{Manager!ExternalProgramManager}
+Mit dem \codeQuote{ExternalProgramManager} lassen sich Programme starten.
+
+Soll ein im System registriertes Programm gestartet werden um eine Datei zu
+öffnen ist dies eventuelle auch mit \codeQuote{SWTUtil.openFile} möglich. 
+
+Eigene Programme lassen sich starten indem die Informationen über dieses
+Programm in ein \codeQuote{ExternalProgram}-Objekt eingetragen werden.
+
+\begin{java}[caption=Externes Programm definieren,label=code:externalprogram]
+ExternalProgram program = new ExternalProgram("AcrobatReader",
+		"C:/Programme/Adobe/Reader 8.0/Reader",
+		"AcroRd32.exe",
+		"",
+		50);
+\end{java}
+
+Das erste Argument ist dabei ein Name für das Programm. Dieser kann frei gewählt
+werden. Das zweite Argument ist der Pfad in welchem das Programm ausgeführt
+werden soll. Das dritte ist die ausführbare Datei, das fünfte die Argumente und das
+vierte die Zeit in Millisekunden die das Programm ungefähr zum Starten benötigt.
+
+Das Programm wird dann mit dem \codeQuote{ExternalProgramManager} gestartet:
+\begin{java}[caption=Starten von 2 externen Programmen,label=code:externalprogrammanager]
+ExternalProgram reader = new ExternalProgram("AcrobatReader",
+		"C:/Programme/Adobe/Reader 8.0/Reader",
+		"AcroRd32.exe",
+		"",
+		TimeUnit.SECONDS.toMillis(20));
+ExternalProgram firefox = new ExternalProgram("Firefox",
+		"C:/Programme/Mozilla Firefox",
+		"firefox.exe",
+		"http://xirp.berlios.de",
+		50);
+
+List<ExternalProgram> programs = new ArrayList<ExternalProgram>( );
+programs.add(reader);
+programs.add(firefox);
+
+ExternalProgramManager.start(programs);
+\end{java}
+In diesem Beispiel wird zunächst der Acrobat Reader und dann mit 20 Sekunden
+Abstand der Firefox gestartet.
+
+Bei der Beendigung von \xirp~werden alle vom \codeQuote{ExternalProgramManager}
+gestarteten Programme beendet sofern sie dies noch nicht sind.
+
+\section{Dateien drucken}
+\index{Datei!drucken}
+\index{Manager!PrintManager}
+Mit dem \codeQuote{PrintManager} lassen sich aus \xirp~heraus auch Dateien
+drucken. Dazu muss der \codeQuote{print()}-Methode einfache eine Datei oder eine
+Liste von Dateien die gedruckt werden sollen übergeben werden:
+
+\begin{java}[caption=Eine Datei ausdrucken,label=code:printmanager]
+PrintManager.print(new File(Constants.LOG_DIR + Constants.FS +
+		"xirp.log"));
+\end{java}
+
+% \begin{itemize}
+% \item Chart?
+% \item Datenbank
+% \item Mail?
+% \end{itemize}
+
+%\include{chapters/plugins/firstplugin}

@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<robot type="WHEEL" name="TesterBot" complete="true">
+    <robotspecs>
+        <height unit="MILLIMETER">200.0</height>
+        <width unit="MILLIMETER">500.0</width>
+        <length unit="MILLIMETER">700.0</length>
+        <weight unit="KILOGRAM">5.0</weight>
+    </robotspecs>
+    <actuators count="2">
+        <actuatorgroup name="drive">
+            <actuator name="left" unit="PERCENT" id="0">
+                <minimum>0.0</minimum>
+                <maximum>100.0</maximum>
+            </actuator>
+            <actuator name="right" unit="PERCENT" id="1">
+                <minimum>0.0</minimum>
+                <maximum>100.0</maximum>
+            </actuator>
+        </actuatorgroup>
+    </actuators>
+    <powersource datapoolKey="battery1" unit="AMPERE" max="5.0" warningValue="0.5">Battery1</powersource>
+    <powersource datapoolKey="battery2" unit="AMPERE" max="5.0" warningValue="0.5">Battery2</powersource>
+    <sensorgroup datapoolKey="speed" longName="Accelerometer" visible="true">
+        <sensor subKey="unique" unit="METERS_PER_HOUR" id="0">
+            <sensorspecs>
+                <position y="370" x="250" side="INSIDE" attached="TORSO"/>
+                <minimum>0.0</minimum>
+                <maximum>100.0</maximum>
+                <option name="warning">50.0</option>
+                <option name="critical">80.0</option>
+            </sensorspecs>
+        </sensor>
+    </sensorgroup>
+    <sensorgroup datapoolKey="ir" longName="Infrared" visible="true">
+        <sensor subKey="left_front" id="5" unit="CENTIMETER">
+            <sensorspecs>
+                <position y="0" x="0" side="LEFT" attached="TORSO"/>
+                <minimum>0.0</minimum>
+                <maximum>80.0</maximum>
+                <option name="direction">-45</option>
+                <option name="degree">40</option>
+                <option name="visible">true</option>
+                <option name="minRGB">255:0:0</option>
+                <option name="maxRGB">0:255:0</option>
+            </sensorspecs>
+        </sensor>
+        <sensor subKey="right_front" id="6" unit="CENTIMETER">
+            <sensorspecs>
+                <position y="0" x="700" side="RIGHT" attached="TORSO"/>
+                <minimum>0.0</minimum>
+                <maximum>80.0</maximum>
+                <option name="direction">45</option>
+                <option name="degree">40</option>
+                <option name="visible">true</option>
+                <option name="minRGB">255:0:0</option>
+                <option name="maxRGB">0:255:0</option>
+            </sensorspecs>
+        </sensor>
+        <sensor subKey="left_rear" id="7" unit="CENTIMETER">
+            <sensorspecs>
+                <position y="0" x="700" side="LEFT" attached="TORSO"/>
+                <minimum>0.0</minimum>
+                <maximum>80.0</maximum>
+                <option name="direction">-135</option>
+                <option name="degree">40</option>
+                <option name="visible">true</option>
+                <option name="minRGB">255:0:0</option>
+                <option name="maxRGB">0:255:0</option>
+            </sensorspecs>
+        </sensor>
+        <sensor subKey="right_rear" id="8" unit="CENTIMETER">
+            <sensorspecs>
+                <position y="0" x="0" side="RIGHT" attached="TORSO"/>
+                <minimum>0.0</minimum>
+                <maximum>80.0</maximum>
+                <option name="direction">135</option>
+                <option name="degree">40</option>
+                <option name="visible">true</option>
+                <option name="minRGB">255:0:0</option>
+                <option name="maxRGB">0:255:0</option>
+            </sensorspecs>
+        </sensor>
+    </sensorgroup>
+    <sensorgroup datapoolKey="gyro" longName="Gyroscope" visible="true">
+        <sensor subKey="roll_unique" unit="PERCENT" id="0">
+            <sensorspecs>
+                <position y="350" x="250" side="INSIDE" attached="TORSO"/>
+                <minimum>0.0</minimum>
+                <maximum>0.0</maximum>
+                <option name="direction">roll</option>
+            </sensorspecs>
+        </sensor>
+        <sensor subKey="nick_unique" unit="PERCENT" id="1">
+            <sensorspecs>
+                <position y="350" x="250" side="INSIDE" attached="TORSO"/>
+                <minimum>0.0</minimum>
+                <maximum>0.0</maximum>
+                <option name="direction">nick</option>
+            </sensorspecs>
+        </sensor>
+    </sensorgroup>
+    <sensorgroup datapoolKey="sonic" longName="Ultrasonic sensor" visible="true">
+        <sensor subKey="front" id="1" unit="CENTIMETER">
+            <sensorspecs>
+                <position y="0" x="250" side="FRONT" attached="TORSO"/>
+                <minimum>0.0</minimum>
+                <maximum>7500</maximum>
+                <option name="direction">0</option>
+                <option name="degree">40</option>
+                <option name="visible">true</option>
+                <option name="minRGB">255:0:0</option>
+                <option name="maxRGB">0:0:255</option>
+            </sensorspecs>
+        </sensor>
+        <sensor subKey="left" id="2" unit="CENTIMETER">
+            <sensorspecs>
+                <position y="0" x="350" side="LEFT" attached="TORSO"/>
+                <minimum>0.0</minimum>
+                <maximum>7500</maximum>
+                <option name="direction">-90</option>
+                <option name="degree">40</option>
+                <option name="visible">true</option>
+                <option name="minRGB">255:0:0</option>
+                <option name="maxRGB">0:0:255</option>
+            </sensorspecs>
+        </sensor>
+        <sensor subKey="right" id="3" unit="CENTIMETER">
+            <sensorspecs>
+                <position y="0" x="350" side="RIGHT" attached="TORSO"/>
+                <minimum>0.0</minimum>
+                <maximum>7500</maximum>
+                <option name="direction">90</option>
+                <option name="degree">40</option>
+                <option name="visible">true</option>
+                <option name="minRGB">255:0:0</option>
+                <option name="maxRGB">0:0:255</option>
+            </sensorspecs>
+        </sensor>
+        <sensor subKey="rear" id="4" unit="CENTIMETER">
+            <sensorspecs>
+                <position y="0" x="250" side="REAR" attached="TORSO"/>
+                <minimum>0.0</minimum>
+                <maximum>7500</maximum>
+                <option name="direction">180</option>
+                <option name="degree">40</option>
+                <option name="visible">true</option>
+                <option name="minRGB">255:0:0</option>
+                <option name="maxRGB">0:0:255</option>
+            </sensorspecs>
+        </sensor>
+    </sensorgroup>
+    <sensorgroup datapoolKey="temperature" longName="Temperature sensor" visible="true">
+        <sensor subKey="unique" unit="CELSIUS" id="0">
+            <sensorspecs>
+                <position y="0" x="200" side="FRONT" attached="TORSO"/>
+                <minimum>4.0</minimum>
+                <maximum>100.0</maximum>
+                <option name="orange">25.0</option>
+                <option name="red">35.0</option>
+            </sensorspecs>
+        </sensor>
+    </sensorgroup>
+    <sensorgroup datapoolKey="compass" longName="Compass" visible="true">
+        <sensor subKey="unique" unit="DEGREE" id="0">
+            <sensorspecs>
+                <position y="250" x="250" side="INSIDE" attached="TORSO"/>
+                <minimum>0.0</minimum>
+                <maximum>360.0</maximum>
+            </sensorspecs>
+        </sensor>
+    </sensorgroup>
+    <sensorgroup datapoolKey="co2" longName="CO2" visible="true">
+        <sensor subKey="unique" unit="PARTICLES_PER_MILLION" id="0">
+            <sensorspecs>
+                <position y="0" x="300" side="FRONT" attached="TORSO"/>
+                <minimum>0.0</minimum>
+                <maximum>20.0</maximum>
+            </sensorspecs>
+        </sensor>
+    </sensorgroup>
+    <sensorgroup datapoolKey="laser" longName="Laser Range Finder" visible="true">
+        <sensor subKey="unique" unit="CENTIMETER" id="0">
+            <sensorspecs>
+                <position y="500" x="250" side="TOP" attached="TORSO"/>
+                <minimum>20.0</minimum>
+                <maximum>4096.0</maximum>
+                <option name="degree">240</option>
+                <option name="resolution">681</option>
+                <option name="factor">1000</option>
+            </sensorspecs>
+        </sensor>
+    </sensorgroup>   
+    <sensorgroup datapoolKey="thermopile" longName="Thermopilearray" visible="true">
+        <sensor subKey="unique" id="0" unit="CELSIUS">
+            <sensorspecs>
+                <position y="0" x="350" side="FRONT" attached="TORSO"/>
+                <minimum>4.0</minimum>
+                <maximum>100.0</maximum>
+            </sensorspecs>
+        </sensor>
+    </sensorgroup> 
+    <communicationspecification>testerbot_spec</communicationspecification>
+    <multimedia>
+        <video simultaneous="false">
+            <camera>Head</camera>
+        </video>
+        <audio/>
+    </multimedia>
+    <plugins>
+        <plugin name="Laserscanner">
+	        <class>de.unibremen.rr.plugins.sensors.laser.LaserscannerSensorDisplay</class>
+	        <sensorname>Laser Range Finder</sensorname>
+	        <usemultimedia>false</usemultimedia>
+        </plugin>
+         <plugin name="Gyro">
+	        <class>de.unibremen.rr.plugins.sensors.pitch.PitchDisplay</class>
+	        <sensorname>Gyroscope</sensorname>
+	        <usemultimedia>false</usemultimedia>
+        </plugin>
+        <plugin name="Thermopilearray">
+            <class>de.unibremen.rr.plugins.sensors.thermo.ThermoDisplay</class>
+            <sensorname>Thermopilearray</sensorname>
+            <usemultimedia>false</usemultimedia>
+        </plugin>
+        <plugin name="Compass">
+            <class>de.unibremen.rr.plugins.sensors.compass.CompassDisplay</class>
+            <sensorname>Compass</sensorname>
+            <usemultimedia>false</usemultimedia>
+        </plugin>
+        <plugin name="Co2">
+            <class>de.unibremen.rr.plugins.sensors.co2.CO2Display</class>
+            <sensorname>CO2</sensorname>
+            <usemultimedia>false</usemultimedia>
+        </plugin>
+        <plugin name="Infrared">
+            <class>de.unibremen.rr.plugins.sensors.distance.DistanceSensorDisplay</class>
+            <sensorname>Infrared</sensorname>
+            <sensorname>Ultrasonic sensor</sensorname>
+            <usemultimedia>false</usemultimedia>
+        </plugin>
+        <plugin name="Message">
+            <class>de.unibremen.rr.plugins.misc.message.MessageDisplay</class>
+            <usemultimedia>false</usemultimedia>
+            <option name="datapoolKey">message_unique</option>
+        </plugin>    
+        <plugin name="TesterBot report">
+            <class>de.unibremen.rr.plugins.report.testerbot.TesterBotReport</class>
+            <usemultimedia>false</usemultimedia>
+        </plugin>              
+        <plugin name="Speed">
+            <class>de.unibremen.rr.plugins.sensors.speed.SpeedDisplay</class>
+            <sensorname>Accelerometer</sensorname>
+            <usemultimedia>false</usemultimedia>
+        </plugin>
+        <plugin name="Temperature">
+            <class>de.unibremen.rr.plugins.sensors.temperature.TemperatureDisplay</class>
+            <sensorname>Temperature sensor</sensorname>
+            <usemultimedia>false</usemultimedia>
+        </plugin> 
+        <plugin name="Hallo Welt">
+            <class>de.unibremen.rr.plugins.test.HalloWelt.HalloWelt</class>
+            <usemultimedia>false</usemultimedia>
+        </plugin>
+    </plugins>
+</robot>

@@ -1,0 +1,166 @@
+\section{Einstellungen}
+\label{sec:plugin:settings}
+\index{Plugin!Einstellungen!erstellen|(}
+\index{Einstellungen}
+\seegls{Plugins} können eigene Einstellungen definieren.
+
+Das Beispiel \seegls{Plugin} kann einfach um solche Einstellungen erweitert werden, indem
+die Methode \index{Plugin!IPlugable!getSettings()}\codeQuote{getSettings()} überschrieben wird.
+
+Die \seegls{API} für Einstellungen findet sich im Paket
+\codeQuote{de.unibremen.rr.xirp.settings}.
+
+Für dieses \seegls{Plugin} soll es einstellbar sein, was für ein Text ausgegeben wird.
+
+
+Zunächst muss dazu noch ein Jar hinzugefügt werden: das commons configuration
+jar, welches sich im Ordner \fileQuote{lib} der Installation befindet.
+\index{Manager!PluginManager}
+\begin{java}[caption=Einstellungen vom Plugin,
+				 label=lst:smplplug:settings_plugin_getSettings]
+	@Override
+	public Settings getSettings() {
+		// Nur neues Objekt erstellen wenn noch nicht vorhanden
+		if (settings == null) {
+			settings = new Settings(PluginManager.getProperties( ),
+					handler,
+					"MyPlugin.settings.main",
+					getRealKey( ));
+			// Neue Seite
+			SettingsPage settingsPage = settings.addPage("page",
+					null,
+					"description");
+			// Neue Option mit freiem Text
+			optionString = settingsPage.addOption("sysout",
+					Option.OptionType.TEXTFIELD);
+			// Default ist Hello World!
+			optionString.addStringValue("sysout", "Hello World!");
+
+			settings.addSettingsChangedListener(new SettingsChangedListener( ) {
+
+				@Override
+				public void settingsChanged(SettingsChangedEvent event) {
+					// Auslesen der gemachten Einstellungen
+					readSettings( );
+				}
+
+			});
+		}
+		return settings;
+	}
+\end{java}
+
+Damit sind wieder ein paar weitere Schlüssel für die 
+\index{Internationalisierung!Plugin}\index{Internationalisierung!Variable}Übersetzungen 
+hinzugekommen:\\
+\newpage\textbf{de}
+\begin{properties}[caption=Deutsche Übersetzungen,
+				 label=lst:smplplug:settings_props_de]
+MyPlugin.plugin.name=Mein Plugin
+MyPlugin.plugin.description=Ein Testplugin
+
+MyPlugin.toolbar.helloworld=Hallo Welt ausgeben
+MyPlugin.print.helloworld={0} sagt: "{1}"
+
+MyPlugin.settings.main=Mein Plugin
+MyPlugin.settings.main.page=Mein Plugin
+MyPlugin.settings.main.page.sysout=Ausgabe
+MyPlugin.settings.main.page.description=Das Plugin gibt den eingestellten String aus
+\end{properties}
+
+\textbf{en}
+\begin{properties}[caption=Englische Übersetzungen,
+				 label=lst:smplplug:settings_props_en]
+MyPlugin.plugin.name=My Plugin
+MyPlugin.plugin.description=A test plugin
+
+MyPlugin.toolbar.helloworld=Print out Hello World
+MyPlugin.print.helloworld={0} says: "{1}"
+
+MyPlugin.settings.main=My Plugin
+MyPlugin.settings.main.page=My Plugin
+MyPlugin.settings.main.page.sysout=Printout
+MyPlugin.settings.main.page.description=The plugin prints the given string
+\end{properties}
+
+Die Methode \codeQuote{readSettings()} wurde zum Auslesen der \index{Einstellungen!Optionen!auslesen}Einstellungen in
+lokale Variablen hinzugefügt, welche immer aufgerufen wird, wenn geänderte
+Einstellungen gespeichert werden.
+
+\begin{java}[caption=Einstellungen vom Plugin auslesen,
+				 label=lst:smplplug:settings_plugin_readSettings]
+	private void readSettings() {
+		getSettings( );
+		for (IValue value : optionString.getSelectedValues( )) {
+			toPrint = value.getDisplayValue( );
+		}
+	}
+\end{java}
+
+Hier wird der Wert der in den Einstellungen erstellten und geänderten \index{Einstellungen!Optionen!auslesen}Option
+ausgelesen und in das Feld \codeQuote{toPrint} übertragen.
+
+Damit in \codeQuote{toPrint} auch zu Beginn der richtige Wert steht, wird
+\codeQuote{readSettings()} auch in \index{Plugin!IPlugable!runInternal()}\codeQuote{runInternal()} aufgerufen.
+\begin{java}[caption=Einstellungen vom Plugin auslesen,
+				 label=lst:smplplug:settings_plugin_runInternal]
+	@Override
+	protected void runInternal() {
+		readSettings( );
+	}
+\end{java}
+\index{Toolbar}
+Nun muss in \index{Plugin!IPlugable!getToolbar()}\codeQuote{getToolbar()} nur noch das Feld bei der Ausgabe mit
+übergeben werden. Oben ist zu sehen, dass für die Übersetzungen des Ausgabeschlüssels
+nun ein zweiter Parameter benötigt wird. Dies wird das Feld \codeQuote{toPrint}
+sein. 
+\index{Manager!ImageManager}
+\begin{java}[caption=Log-Ausgabe eines Plugin konfigurieren,
+				 label=lst:smplplug:settings_plugin_getToolBar]
+	@Override
+	public XToolBar getToolBar(CoolItem parent) {
+		XToolBar tools = new XToolBar(parent.getParent( ), SWT.FLAT);
+		// Übersetzungshandler dieses Plugins mit übergeben
+		XToolItem helloWorld = new XToolItem(tools,
+				SWT.FLAT | SWT.PUSH,
+				handler);
+		// Key für den Tooltip setzen
+		helloWorld.setToolTipTextForLocaleKey("MyPlugin.toolbar.helloworld"); //$NON-NLS-1$
+		// Bild vom ImageManager holen
+		helloWorld.setImage(ImageManager.getPluginImage(this, "helloworld.png")); //$NON-NLS-1$
+		helloWorld.addSelectionListener(new SelectionAdapter( ) {
+
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+			 */
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				// Übersetzte Logausgabe mit einer Variablen
+				LOGGER.info(robotName,
+						getI18nString("MyPlugin.print.helloworld",
+								MyPlugin.this.getRobotName( ),
+								toPrint)
+								+ Constants.LINE_SEPARATOR);
+			}
+		});
+
+		return tools;
+	}
+\end{java}
+
+Erstellt man das \seegls{Plugin} nun neu und führt \xirp~damit aus, so kann man nun im
+Menü unter \menuQuote{Plugins} und \index{Menü!Plugins!Einstellungen}\menuQuote{Einstellungen} bei dem Plugin den
+Ausgabestring einstellen (\refFig{settings}).
+
+\kfig{plugin_settings}{1}{Einstellungen eines Plugins}{settings}
+
+Die Ausgabe könnte nun so aussehen:
+\begin{lstlisting}
+TesterBot: TesterBot sagt: "Ich bin ein eingestellter String"
+\end{lstlisting}
+
+Weitere Information finden sich in \autoref{cha:settings} ab Seite \autopageref{cha:settings}.
+
+\index{Plugin!Einstellungen!erstellen|)}

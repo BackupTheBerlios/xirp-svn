@@ -1,0 +1,105 @@
+\chapter{Sprachausgabe}
+\index{Sprachausgabe|(}
+\label{ref:speech}
+Das folgende Kapitel beschäftigt sich mit der Sprachausgabe die in 
+\xirp~integriert wurde. Es werden die folgenden Themen genauer betrachtet.
+
+\begin{itemize}
+  \item Voraussetzungen
+  \item Konfiguration
+  \item Standard-Stimmen
+  \item MBROLA-Stimmen
+\end{itemize}
+
+\newpage
+
+\section{Voraussetzungen}
+Es gibt zwei Voraussetzungen, um die Sprachausgabe nutzen zu können.
+
+\begin{itemize}
+  \item Soundkarte
+  \item Plugin welches die Sprachausgabe nutzt
+\end{itemize}
+
+\index{Soundkarte}
+\index{Plugins}
+\index{Einstellungen}
+Natürlich muss, um die Sprachausgabe hören zu können eine Soundkarte im System 
+installiert sein. Des Weiteren muss ein Plugin geladen werden, welches Texte 
+mittels des Sprachausgabesystems ausgibt. Momentan gibt es nur eine Stelle, an 
+der die Anwendung selbst die Sprachausgabe benutzt: Im \enquote{Über 
+\xirp~2}-Dialog. Dort gibt es die Möglichkeit sich einen Informationstext über 
+die Anwendung vorlesen zu lassen. Hierzu muss die Sprachausgabe in den 
+Einstellungen aktiviert sein. Der Text der ausgegeben werden kann ist momentan 
+nur auf Englisch verfügbar\footnote{In Version 3.0.0 ist geplant, dass auch 
+dieser Text übersetzt wird.}.
+
+\section{Konfiguration}
+\index{Sprachausgabe!Konfiguration}
+\index{Einstellungen}
+In den Einstellungen der Anwendung kann unter der Kategorie 
+\enquote{Speech-Einstellungen} die Sprachausgabe konfiguriert werden. Dort kann 
+die zu verwendende Sprache gewählt und die Sprachausgabe de- und aktiviert 
+werden. Welche Sprachen dort zur Auswahl stehen hängt von der momentan 
+in\xirp~eingestellten Sprache und den insgesamt installierten Sprachen ab.
+
+\section{Standard-Stimmen}
+\index{Stimmen}
+\xirp~liefert zwei Standard-Stimmen:
+
+\index{Stimmen!kevin}
+\index{Stimmen!kevin16}
+\begin{itemize}
+  \item kevin
+  \item kevin16
+\end{itemize}
+
+Beide Stimmen sind männliche Stimmen. Die Ausgabequalität ist bei der Stimme 
+\enquote{kevin16} besser als die der Stimme \enquote{kevin}. Die 
+Voreingestellte Stimme ist \enquote{kevin}.
+
+\section{MBROLA-Stimmen}
+\index{MBROLA}
+Mit Hilfe der Software und der vorhandenen Sprachdateien des 
+\href{http://tcts.fpms.ac.be/synthesis/mbrola.html}{MBROLA-Projektes}\footnote{Projekthomepage 
+von MBROLA:
+\href{http://tcts.fpms.ac.be/synthesis/mbrola.html}{http://tcts.fpms.ac.be/synthesis/mbrola.html}}
+ist es möglich zusätzliche Stimmen zu installieren.
+
+\subsection{Was ist MBROLA?}
+Das Ziel des Projektes wird von den Initiatoren (TCTS Lab of the Faculté 
+Polytechnique de Mons (Belgien)) wie folgt beschrieben.
+
+\begin{quote}
+The aim of the MBROLA project [\ldots] is to obtain a set of speech synthesizers
+for as many languages as possible, and provide them free for non-commercial 
+applications. \cite{MBROLA}
+\end{quote}
+
+\subsection{Installation der Stimmen}
+Um zusätzliche Stimmen zu installieren muss zunächst im Hauptordner von
+\xirp~ein Ordner \texttt{voice} angelegt werden. In diesen Ordner müssen dann
+die MBROLA-Executable (Ohne Dateiendung: \texttt{mbrola}) und die Stimmen-Ordner
+kopiert werden.
+\par
+Die MBROLA-Executable kann von
+\begin{quote}
+\href{http://tcts.fpms.ac.be/synthesis/mbrola/bin/pcdos/mbr301d.zip}
+{http://tcts.fpms.ac.be/synthesis/mbrola/bin/pcdos/mbr301d.zip} 
+\end{quote}
+heruntergeladen werden.
+Dies ist die DOS Version von MBROLA. Diese sollte unter Windows Systemen
+benutzt werden. Linux Executables sind auf der Downloadseite\footnote{\href
+{http://tcts.fpms.ac.be/synthesis/mbrola/mbrcopybin.html}
+{http://tcts.fpms.ac.be/synthesis/mbrola/mbrcopybin.html}} ebenfalls
+vorhanden. Die \texttt{mbrola.exe} die in der ZIP-Datei vorhanden ist muss in
+\texttt{mbrola} umbenannt werden.
+\par
+Zusätzliche Stimmen können von 
+\href{http://tcts.fpms.ac.be/synthesis/mbrola/mbrcopybin.html}
+{http://tcts.fpms.ac.be/synthesis/mbrola/mbrcopybin.html} heruntergeladen werden.
+\par
+\index{Einstellungen}
+Wurde alles korrekt benannt und erstellt, sind die neuen Stimmen im
+Einstellungsdialog vorhanden und auswählbar.
+\index{Sprachausgabe|)}

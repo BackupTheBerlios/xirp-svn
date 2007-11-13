@@ -1,0 +1,32 @@
+\chapter{Einstellungen}
+\label{cha:settings}
+\index{Einstellungen}
+
+\seegls{Plugins} können Einstellungen haben, um zum Beispiel \seegls{IP} und
+\seegls{Port} eines \seegls{Servers} einstellen zu können.
+
+Ein \seegls{Plugin} stellt seine Einstellungen durch das Überschreiben von
+\codeQuote{getSettings()} bereit. Ein kleine Beispiel hierzu findet sich in
+\autoref{sec:plugin:settings} ab \autopageref{sec:plugin:settings}.
+
+In diesem Kapitel sollen alle weiteren Funktionen der Einstellungen beschrieben 
+werden.
+
+Einstellungen können verschiedene Seiten haben, auf denen sich jeweils Optionen
+befinden. Jede Option kann mehrere Werte haben. Die Einstellungen sind komplett
+\index{Internationalisierung}internationalisierbar. Es können weiterhin
+Standardwerte zugewiesen werden, so dass es möglich ist Standardeinstellungen
+wiederherzustellen. Weiterhin können Einstellungen die noch nicht gespeichert
+sind rückgängig gemacht werden.
+
+Die Darstellung an der Oberfläche folgt durch verschiedene \seegls{Renderer}.
+
+Alle Klassen die für die Erstellung von Einstellungen benötigt werden finden
+sich im Paket \codeQuote{de.unibremen.rr.xirp.settings}.
+
+\include{chapters/settings/creation}
+\include{chapters/settings/values}
+\include{chapters/settings/renderer}
+\include{chapters/settings/validation}
+\include{chapters/settings/read}
+\include{chapters/settings/misc}

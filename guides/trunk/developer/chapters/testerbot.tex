@@ -1,0 +1,55 @@
+\chapter{TesterBot}
+\index{TesterBot}
+Um entwickelte \seegls{Sensor}plugins ohne einen realen Roboter testen zu können, stellt
+\xirp~den \robotQuote{TesterBot} zur Verfügung.
+
+Zum \robotQuote{TesterBot} lässt sich mittels des \seegls{IP}-Kommunikation und des
+\robotQuote{TesterBot}-Protokoll \seegls{Plugins} eine Verbindung herstellen. 
+
+Der \robotQuote{TesterBot} liefert dann folgende Daten (als \codeQuote{Number}
+wenn nicht anders beschrieben):
+\index{Datenpool!Schlüssel}
+\begin{center}
+\begin{longtable}{l|l|l|l}
+\bf{Bezeichnung} & \bf{Datenpool-Schlüssel} & \bf{Wertebereich} & \bf{Einheit}\\
+\hline\endhead
+Batterie 	& battery1 				& [0;5000]	& Ampere\\
+ 			& battery2 				& [0;5000]	& Ampere\\
+\hline
+Infrarot 	& ir\_left\_front 		& [0;80] 	& Zentimeter\\
+ 			& ir\_right\_front 		& [0;80] 	& Zentimeter\\
+ 			& ir\_left\_rear 		& [0;80] 	& Zentimeter\\
+ 			& ir\_right\_rear 		& [0;80] 	& Zentimeter\\
+\hline
+Gyroscope 	& gyro\_roll\_unique 	& [0;80] 	& \\
+		 	& gyro\_nick\_unique 	& [0;80] 	& \\
+\hline
+Ultraschall & sonic\_front 			& [0;7500] 	& Zentimeter\\
+			& sonic\_left 			& [0;7500] 	& Zentimeter\\
+			& sonic\_right 			& [0;7500] 	& Zentimeter\\
+			& sonic\_rear 			& [0;7500] 	& Zentimeter\\
+\hline
+Temperatur	& temperature\_unique	& [4;100] 	& Grad Celsius\\
+\hline
+Kompass		& compass\_unique		& [0;360] 	& Grad\\
+\hline
+CO$_2$		& co2\_unique			& [0;20] 	& Partikel pro Million\\
+\hline
+Laserscanner& laser\_unique			& [20;4096] & Zentimeter\\
+			& Float Array mit 681 Werten & 		&\\
+\hline
+Thermopile	& thermopile\_unique	& [4;100] 	& Grad Celsius\\
+			& double[8][32]			&			&\label{tab:testerbot}\\
+\hline
+\caption{Vom TesterBot gelieferte Werte}\\
+\end{longtable}
+\end{center}
+
+Für diese Werte sind Standardplugins in \xirp~bereits enthalten.
+
+Das \seegls{Profil} für den \robotQuote{TesterBot} wird ebenfalls mitgeliefert.
+
+Wie der \robotQuote{TesterBot} aufgerufen wird, lässt sich im
+\index{Benutzerhandbuch}Benutzerhandbuch
+nachlesen. Wie Daten vom \index{Datenpool}Datenpool empfangen werden können
+lässt sich in \autoref{sec:datapool} ab \autopageref{sec:datapool} nachlesen.

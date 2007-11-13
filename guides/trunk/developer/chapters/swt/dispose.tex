@@ -1,0 +1,29 @@
+\section{dispose}
+\label{sec:swt:dispose}
+\seegls{SWT} benutzt zur Darstellung der Oberflächenelemente 
+(\index{SWT!Widget|see {Widget}}Widgets) nach Möglichkeit die nativen
+vom aktuellen Betriebssystem zur Verfügung gestellten Elemente. Im Gegensatz zur
+normalen Programmierung mit Java können diese Widgets nicht vom \seegls{Garbage
+Collector} freigegeben werden, da dies vom Betriebssystem durchgeführt werden
+muss. Daher hat jedes Element von \seegls{SWT} welches vom Betriebssystem bereitgestellt
+wird eine Methode \index{SWT!dispose()}\codeQuote{dispose()} zum Freigeben.
+
+Normalerweise muss diese Methode nicht programmatisch aufgerufen werden, da wenn
+ein Widget \seegls{disposed} wird, automatisch auch die darauf liegenden
+Kindelemente freigegeben werden und das \codeQuote{dispose()} einer
+\codeQuote{Shell} beispielsweise durch das Schließen dieser aufgerufen wird.
+
+Eine Ausnahme davon bilden die Klassen, die von
+\codeQuote{org.eclipse.swt.graphics.Resource} erben. Werden diese von der
+Applikation erstellt, müssen sie auch wieder von dieser \seegls{disposed}
+werden, da sonst Speicherlecks entstehen würden.
+
+\xirp~bietet daher für \index{Manager!ColorManager}Farben,
+\index{Manager!FontManager}Schriften und \index{Manager!ImageManager}Bilder \codeQuote{Manager} an,
+bei deren Benutzung das \seegls{disposen} entfällt. Sie liegen alle im Paket
+\codeQuote{de.unibremen.rr.xirp.ui.util.ressource} und heißen:
+\begin{itemize}
+  \item \codeQuote{ColorManager}
+  \item \codeQuote{FontManager}
+  \item \codeQuote{ImageManager}
+\end{itemize}

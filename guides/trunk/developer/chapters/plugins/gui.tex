@@ -1,0 +1,110 @@
+\section{Benutzeroberfläche}
+\index{Plugin!Benutzeroberfläche!erstellen|(}
+Bisher hat das kleine Beispielplugin noch keine eigene Oberfläche, wenn man von
+dem \index{Bild!Icon}\seegls{Icon} in der \index{Toolbar}Toolbar einmal absieht. Dies soll sich nun ändern.
+
+Für die Oberfläche wird eine neue Klasse benötigt die
+\index{Plugin!Benutzeroberfläche!AbstractPluginGUI}\codeQuote{AbstractPluginGUI} erweitert.
+
+Die \index{Plugin!Hauptklasse}Basisklasse des \seegls{Plugins} \codeQuote{MyPlugin} ist eine Klasse die
+\index{generisch}\seegls{generisch} ist und eigentlich \index{generisch!Typparameter}\seegls{Typparameter} benötigt. Diese wurden bisher zur
+Vereinfachung weggelassen, werden nun aber benötigt. Die Klasse
+\codeQuote{MyPlugin} ist wie in \autoref{basicGUI} zu sehen zu erweitern.
+
+\kfig{plugin_basicGUI}{1}{Generische Typen in der Pluginklasse einstellen}{basicGUI}
+
+Nun muss in \codeQuote{MyPlugin} die Methode \index{Plugin!IPlugable!getGUIInternal()}\codeQuote{getGUIInternal()}
+überschrieben werden, so dass sie eine neue Instanz von \codeQuote{MyPluginGUI} zurückgibt.
+
+\begin{java}[caption=Oberfläche aus Plugin zurückgeben,
+				 label=lst:smplplug:gui_gui_getGUIInternal]
+	@Override
+	protected MyPluginGUI getGUIInternal(Composite parentPanel) {
+		return new MyPluginGUI(parentPanel, this);
+	}
+\end{java}
+
+Nun muss noch \xirp~mitgeteilt werden, dass dieses \seegls{Plugin} nun eine eigene
+Oberfläche besitzt. Dazu wird die Rückgabe von
+\index{Plugin!IPlugable!getVisualizationType()}\codeQuote{getVisualizationType()} verändert:
+
+\begin{java}[caption=Visualisierungstyp eines Plugin setzen,
+				 label=lst:smplplug:gui_gui_getVisualizationType]
+	@Override
+	public int getVisualizationType() {
+		return VisualizationType.ROBOT_TOOLBAR | VisualizationType.WINDOW;
+	}
+\end{java}
+\index{Manager!ColorManager}
+\index{Manager!FontManager}
+Nun muss nur noch die Oberfläche selbst ein wenig mit Leben gefüllt werden:
+\begin{java}[caption=Beispiel Plugin-Oberfläche,
+				 label=lst:smplplug:gui_gui_sample]
+package xirp.plugins;
+
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Composite;
+
+import de.unibremen.rr.xirp.plugin.AbstractPluginGUI;
+import de.unibremen.rr.xirp.ui.util.SWTUtil;
+import de.unibremen.rr.xirp.ui.util.ressource.ColorManager;
+import de.unibremen.rr.xirp.ui.util.ressource.FontManager;
+import de.unibremen.rr.xirp.ui.widgets.custom.XLabel;
+
+public class MyPluginGUI extends AbstractPluginGUI {
+
+	private MyPlugin plugin;
+
+	public MyPluginGUI(Composite parent, MyPlugin plugin) {
+		super(parent, plugin);
+		this.plugin = plugin;
+		init( );
+	}
+
+	private void init() {
+		SWTUtil.setGridLayout(this, 3, true);
+		setBackground(ColorManager.getColor(255, 0, 0));
+		XLabel first = new XLabel(this, SWT.NONE, plugin.getHandler( ));
+		first.setTextForLocaleKey("MyPluginGUI.firstLabel");
+		SWTUtil.setGridData(first,
+				true,
+				true,
+				GridData.CENTER,
+				GridData.CENTER,
+				1,
+				1);
+
+		XLabel second = new XLabel(this, SWT.NONE, plugin.getHandler( ));
+		second.setTextForLocaleKey("MyPluginGUI.secondLabel");
+		second.setFont(FontManager.getFont("Arial", 12, SWT.BOLD));
+		SWTUtil.setGridData(second,
+				true,
+				true,
+				GridData.FILL,
+				GridData.CENTER,
+				2,
+				2);
+	}
+}
+\end{java}
+
+Hier werden 4 weitere neue Methoden gezeigt:
+\begin{itemize}
+\item Das erstellen von Farben mit dem \index{Manager!ColorManager}\codeQuote{ColorManager}. Diese müssen
+nicht \index{SWT!dispose}\seegls{disposed} werden.
+\item Das erstellen von Schriften mit dem \index{Manager!FontManager}\codeQuote{FontManager}. Diese müssen
+ebenfalls nicht \seegls{disposed} werden.
+\item Zuweisen eines Layout mit \index{SWTUtil!setGridLayout()}\codeQuote{SWTUtil.setGridLayout()}
+\item Das zuweisen von Layout Daten mit \index{SWTUtil!setGridData()}\codeQuote{SWTUtil.setGridData()}
+\end{itemize}
+
+Das \seegls{Plugin} ist nun im \index{Menü!Plugins}\menuQuote{Plugins}-Menü zu finden und zeigt einen roten
+Hintergrund mit zwei Texten (\refFig{GUITest}).
+
+\kfig{plugin_GUITest}{1}{Eine kleine Benutzeroberfläche für ein Plugin}{GUITest}
+
+Damit das \seegls{Plugin} innerhalb des \index{Workspace}\seegls{Workspaces} des Roboters angezeigt wird
+und nicht über das Menü aufgerufen werden muss, muss nur der Visualisierungtyp
+von \codeQuote{WINDOW} auf \codeQuote{EMBEDDED} geändert werden.
+\index{Plugin!Benutzeroberfläche!erstellen|)}

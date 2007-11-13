@@ -1,0 +1,214 @@
+%
+% header.tex
+%
+\documentclass[%
+	pdftex,%              PDFTex verwenden
+	a4paper,%             A4 Papier
+	twoside,%             Einseitig
+	bibtotoc,%    Literaturverzeichnis nummeriert einfügen
+	idxtotoc,%            Index ins Verzeichnis einfügen
+	halfparskip,%         Europäischer Satz mit abstand zwischen Absätzen
+	chapterprefix,%       Kapitel anschreiben als Kapitel
+	headsepline,%         Linie nach Kopfzeile
+	%footsepline,%         Linie vor Fusszeile
+	12pt,%                 Grössere Schrift, besser lesbar am bildschrim
+	openright,
+	pointlessnumbers
+]{scrbook}
+
+\usepackage{scrpage2}
+
+\usepackage{textcomp}
+
+\newcommand{\xirp}{$\chi$irp\index{xirp@$\chi$irp}}
+\newcommand{\xirpname}{\enquote{eXtendable interface for robotic purposes}}
+\newcommand{\version}{2.4.0}
+\newcommand{\devguideurl}{http://developer.berlios.de/docman/display_doc.php?docid=1711&group_id=8442}
+\newcommand{\devguideurlname}{xirp.berlios.de}
+\newcommand{\seegls}[1]{\textuparrow{#1}}
+
+\usepackage{scrpage2}
+
+% \renewcommand{\partformat}{\partname~\thepart}
+% \renewcommand{\chapterformat}{\chapapp~\thechapter}
+% \renewcommand{\othersectionlevelsformat}[1]{\csname the#1\endcsname\enskip}
+% 
+% \renewcommand{\partmarkformat}{\thepart\enskip}
+% \renewcommand{\chaptermarkformat}{\chapapp~\thechapter\enskip}
+% \renewcommand{\sectionmarkformat}{\thesection\enskip}
+% \renewcommand{\subsectionmarkformat}{\thesubsection\enskip}
+% \renewcommand{\subsubsectionmarkformat}{\thesubsubsection\enskip}
+% \renewcommand{\paragraphmarkformat}{\theparagraph\enskip}
+% \renewcommand{\subparagraphmarkformat}{\thesubparagraphmarkformat\enskip}
+
+\renewcommand{\chaptermark}[1]{\markboth{\chaptermarkformat{#1}}{\chaptermarkformat{#1}}}
+
+\renewcommand{\chapterpagestyle}{scrheadings}
+\renewcommand{\indexpagestyle}{scrheadings}
+
+% kopf und fusszeilen
+\pagestyle{scrheadings}
+
+\clearscrheadfoot
+\rohead[\headmark~\pagemark]{\headmark~\pagemark}
+\lehead[\pagemark~\headmark]{\pagemark~\headmark}
+\setheadtopline{.4pt}
+\setheadsepline{.4pt}
+
+\setcounter{secnumdepth}{5}
+\setcounter{tocdepth}{5}
+
+% Paket für die Indexerstellung.
+\usepackage{makeidx}
+%Formattierungen für Indexfile
+%Erste Ebene
+\newcommand*{\indexdelim}{\ \hspace{0pt plus 1fil}\penalty0\null\nobreak
+  \dotfill~}
+%Zweite Ebene
+\newcommand*{\indexdelimi}{~\dotfill\penalty0\ }
+%Dritte Ebene
+\newcommand*{\indexdelimii}{~\dotfill\penalty0\ }
+
+%Abschnittsüberschrift
+\newcommand*{\indexsection}[1]{%
+  \ifx\empty#1\empty\else
+  \hspace{0pt plus 2fil}{{\usekomafont{sectioning} #1}}\hspace{0pt plus
+    1fil}\nopagebreak
+  \fi
+}
+% Paket für Übersetzungen ins Deutsche
+\usepackage[french,ngerman]{babel}
+
+% Pakete um Latin1 Zeichnensätze verwenden zu können und die dazu
+% passenden Schriften.
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+
+% Paket für Quotes
+\usepackage[babel,french=guillemets,german=swiss]{csquotes}
+
+% Paket um die Symbole des TS1 Zeichensatzes verwenden zu können.
+%\usepackage{textcomp}
+
+% Paket zum Erweitern der Tabelleneigenschaften
+\usepackage{array}
+
+% Paket um Grafiken einbetten zu können
+\usepackage[pdftex]{graphicx}
+
+% Spezielle Schrift verwenden.
+%\usepackage{goudysans}
+
+% Spezielle Schrift im Koma-Script setzen.
+%\setkomafont{sectioning}{\normalfont\bfseries}
+%\setkomafont{captionlabel}{\normalfont\bfseries}
+%\setkomafont{pagehead}{\normalfont\itshape}
+%\setkomafont{descriptionlabel}{\normalfont\bfseries}
+
+% Zeilenumbruch bei Bildbeschreibungen.
+\setcapindent{1em}
+
+% mathematische symbole aus dem AMS Paket.
+%\usepackage{amsmath}
+%\usepackage{amssymb}
+
+% Type 1 Fonts für bessere darstellung in PDF verwenden.
+%\usepackage{mathptmx}           % Times + passende Mathefonts
+%\usepackage[scaled=.92]{helvet} % skalierte Helvetica als \sfdefault
+%\usepackage{courier}            % Courier als \ttdefault
+
+% Paket um Textteile drehen zu können
+\usepackage{rotating}
+
+% Package für Farben im PDF
+\usepackage{color}
+\input{rgb}
+% Links innerhalb des PDF Dokuments
+\definecolor{LinkColor}{rgb}{0,0,0.5}
+\usepackage[unicode,
+	pdftitle={Xirp - User Guide},
+	pdfauthor={Matthias Gernand},
+	pdfcreator={MiKTeX, LaTeX with hyperref and KOMA-Script},
+	pdfsubject={Das Xirp Benutzerhandbuch},
+	pdfkeywords={Xirp, Robotik, Universität, Bremen}]{hyperref}
+\hypersetup{colorlinks=true,
+	linkcolor=LinkColor,
+	citecolor=LinkColor,
+	filecolor=LinkColor,
+	menucolor=LinkColor,
+	%pagecolor=LinkColor,
+	urlcolor=LinkColor}
+	
+% Paket um Listings sauber zu formatieren.
+\usepackage{listings}
+\lstloadlanguages{XML}
+
+% Listing Definitionen
+\lstset{language=XML,
+	numbers=none,
+	stepnumber=1,
+	numbersep=5pt,
+	numberstyle=\tiny,
+	breaklines=true,
+	breakautoindent=true,
+	postbreak=\space,
+	tabsize=2,
+	basicstyle=\ttfamily\footnotesize,
+	usekeywordsintag=true,
+	markfirstintag=true,
+	tagstyle=\color{SeaGreen},
+	keywordstyle=\color{DarkBlue},
+	commentstyle=\color{DarkRed},
+	stringstyle=\color{BlueViolet},
+	showspaces=false,
+	showstringspaces=false,
+	extendedchars=true,
+	backgroundcolor=\color{LightGrey}}
+
+\newenvironment{ListChanges}%
+	{\begin{list}{$\diamondsuit$}{}}%
+	{\end{list}}
+
+\usepackage[number=none,style=altlist,toc=true]{glossary}
+% Glossar erzeugen
+\makeglossary
+% Index erzeucgen
+\makeindex
+
+\addto\extrasngerman{%
+\def\partautorefname{Teil}
+\def\pageautorefname{\pagename}%
+\def\figureautorefname{\figurename}%
+\def\tableautorefname{\tablename}%
+\def\appendixautorefname{\appendixname}%
+\def\chapterautorefname{\chaptername}%
+\def\sectionautorefname{Abschnitt}%
+\def\subsectionautorefname{Abschnitt}%
+\def\subsubsectionautorefname{Abschnitt}%
+\def\paragraphautorefname{Abschnitt}%
+\def\subparagraphautorefname{Abschnitt}%
+\def\equationautorefname{Formel}%
+\def\appendixautorefname{\appendixname}
+\def\Itemautorefname{\itemname}
+\def\Hfootnoteautorefname{\footnotename}
+\def\AMSautorefname{\AMSname}
+\def\theoremautorefname{\theoremname}
+}
+
+\renewcommand{\lstlistingname}{Auflistung}
+\renewcommand{\lstlistlistingname}{Auflistungsverzeichnis}
+\renewcommand{\glossaryname}{Glossar}
+
+\setkomafont{caption}{\sffamily}
+\setkomafont{captionlabel}{\sffamily\bfseries}
+\setkomafont{footnote}{\sffamily}
+\setkomafont{pagehead}{\sffamily}
+\setkomafont{pagenumber}{\sffamily\bfseries}
+
+\usepackage{multicol}
+\renewcommand{\glossarypreamble}{\begin{multicols}{2}}
+\renewcommand{\glossarypostamble}{\end{multicols}}
+
+%
+% EOF
+%

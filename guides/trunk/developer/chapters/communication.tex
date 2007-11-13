@@ -1,0 +1,211 @@
+\chapter{Kommunikation}
+\label{sec:com}
+\index{Kommunikation}
+Die Kommunikation mit einem Roboter wird in \xirp~durch \seegls{Plugins} implementiert.
+
+Um möglichst wenige Teile doppelt schreiben zu müssen und die Kommunikation mit
+einem Roboter variabel zu gestalten ist diese in drei Teile aufgeteilt.
+
+Zum einen die \index{Kommunikation!Lowlevel}Lowlevel-Kommunikation welche Spezifika der für die Kommunikation
+genutzten Schnittstelle wie TCP/IP oder Serielle Schnittstelle umsetzt.
+
+Darüber folgt die \index{Kommunikation!Protokoll}Protokoll-Spezifikation des Roboters, welche zum Empfangen und
+Übertragen von Daten eine Lowlevel-Schnittstelle nutzt. Die Implementierung für
+einen Roboter ist somit nicht davon abhängig wie mit dem Roboter kommuniziert
+wird und muss daher nur einmal geschrieben werden.
+
+Für die Aufbereitung der Daten vom Roboter für die \seegls{Plugins} (und umgekehrt) wird
+ein so genannter \index{Kommunikation!Handler}\seegls{Handler} genutzt, welcher den Gesamten Datenverkehr vom/zum
+Roboter filtern kann. Dies bedeutet, dass das eigentlich Protokoll-Plugin für
+einen Roboter nicht geändert werden muss, wenn ein weiteres \seegls{Plugin} mit Daten
+versorgt werden soll.
+
+Die Basisklassen für diese drei Plugins sind:
+\begin{itemize}
+  \item Lowlevel:
+  \codeQuote{de.unibremen.rr.xirp.io.comm.lowlevel.AbstractCommunicationInterface}. Für
+  Stream-basierte Kommunikation sollte\newline
+  \codeQuote{de.unibremen.rr.xirp.io.comm.lowlevel.AbstractStreamCommunicationInterface}
+  benutzt werden.
+  \item Protokoll: 
+  \codeQuote{de.unibremen.rr.xirp.io.comm.protocol.AbstractProtocol} 
+  \item \seegls{Handler}: \codeQuote{de.unibremen.rr.xirp.io.comm.handler.AbstractHandler}
+\end{itemize}
+
+In \xirp~sind einige Beispielplugins für diese drei Typen enthalten, deren Code
+weiteren Aufschluss über die Entwicklung gibt.
+
+Damit der Roboter diese \seegls{Plugins} nutzen kann müssen diese in der
+Kommunikationsspezifikation des Roboters eingetragen werden.
+Für den \robotQuote{TesterBot} befindet sich diese in
+\fileQuote{conf/profiles/commspecs/testerbot\_spec.cms}.
+
+Weitere Informationen zur Kommunikationsspezifikation befinden sich in
+\autoref{sec:comspecs} ab \autopageref{sec:comspecs}.
+
+\section{Hilfsklassen}
+\index{Kommunikation!Hilfsklassen}
+Für die Kommunikationsplugins stehen einige Hilfsklassen zur Verfügung, welche
+das Einlesen und schreiben von Daten vereinfachen sollen.
+
+\subsection{ByteParser}
+\index{Kommunikation!Hilfsklassen!ByteParser}
+Wird mit dem Roboter über Bytestreams kommuniziert müssen diese auf der Seite
+von \xirp~wieder in lesbare Informationen umgewandelt werden. Hierzu kann die
+Klasse \codeQuote{ByteParser} bzw. \codeQuote{ByteParserLittleEndian} genutzt
+werden.
+
+Diesen werden die vom Bytestream in ein byte-Array gelesenen Daten übergeben und
+sie bieten dann Methoden zum von Zahlen und Strings an (siehe
+\autoref{code:bytearrays}).
+
+\subsection{Conversion}
+\index{Kommunikation!Hilfsklassen!Conversion}
+Das Schreiben von Daten in ein byte-Array kann mit der Klasse
+\codeQuote{Conversion} umgesetzt werden.
+
+Diese bietet einerseits statische Methoden um Zahlen und Strings in ein
+Bytearray und wieder zurück umwandeln zu können, andererseits lässt sich die
+Klasse auch instantiieren um ein byte-Arrays aus mehreren Daten zu erstellen.
+
+\begin{java}[caption=Byte-Array erstellen und Parsen,label=code:bytearrays]
+// Conversion-Instanz erstellen und Daten anhängen
+Conversion conversion = Conversion.allocate( )
+		.addString("Ein String")
+		.addDouble(55.55)
+		.addInt(200)
+		.append(Conversion.longToByteArray(900099))
+		.addString("noch ein String");
+// Daten in Byte-Array umwandeln
+byte[] byteArray = conversion.getByteArray( );
+
+// Daten wieder parsen und Ausgeben
+ByteParser parser = new ByteParser(byteArray);
+System.out.println(parser.getNextString(10) + " " +
+		parser.getNextDouble( ) + " " + parser.getNextInt( ) + " " +
+		parser.getNextLong( ) + " " + parser.getNextString( ));
+\end{java}
+
+\subsection{FormatParser}
+\label{sec:format}
+\index{Kommunikation!Hilfsklassen!FormatParser}
+Um einen Bytestream eines ganz bestimmten Formates zu parsen kann die Klasse
+\codeQuote{FormatParser} benutzt werden.
+
+Um das byte-Array aus \autoref{code:bytearrays} zu parsen geht man wie folgt vor:
+\begin{java}[caption=Byte-Array mit bestimmtem Format parsen,label=code:formatparser]
+ByteParser parser = new ByteParser(byteArray);
+
+FormatParser formatParser = new FormatParser("%c{10}%d{2}%i%l%c");
+final Object formatData = formatParser.formatData(parser);
+System.out.println(formatData);
+\end{java}
+
+Die zur Verfügung stehenden Formattypen die an den \codeQuote{FormatParser}
+übergeben werden können sind in der Dokumentation zur Klasse \codeQuote{Format}
+angegeben. 
+
+Die Formatdaten können in der Kommunikationsspezifikation des Roboters hinterlegt
+werden: \autoref{lst:cmsdtd:communicationprotocol:valid} auf
+\autopageref{lst:cmsdtd:communicationprotocol:valid}.
+
+\subsection{CommunicationManager}
+\index{Kommunikation!Hilfsklassen!CommunicationManager}
+\index{Manager!CommunicationManager}
+\index{Manager!CommunicationManager!Listener}
+\index{Roboter!Verbindung zu}
+Um darüber informiert zu werden wenn eine Verbindung zu einem Roboter
+hergestellt wurde ist es möglich einen Listener beim
+\codeQuote{CommunicationManager} anzumelden.
+
+Dieser wird dann über eine \codeQuote{ConnectionEvent} informiert wenn die
+Verbindung zu einem Roboter hergestellt oder beendet wurde. In dem Event ist der
+Robotername enthalten, welcher ausgewertet werden kann, wenn nur die
+Informationen für einen bestimmten Roboter von Interesse sind.
+
+\begin{java}[caption=Informationen über Verbindungsherstellung zu einem Roboter,label=code:comm:communicationmanager]
+CommunicationManager.addConnectionListener(new ConnectionListener( ) {
+
+	@Override
+	public void connectionEstablished(ConnectionEvent evt) {
+		System.out.println("Verbindung zum Roboter " +
+				evt.getRobotName( ) + " wurde hergestellt.");
+	}
+
+	@Override
+	public void disconnected(ConnectionEvent evt) {
+		System.out.println("Verbindung zum Roboter " +
+				evt.getRobotName( ) + " wurde beendet.");
+
+		DataAmount bytesReceived = CommunicationManager.getBytesReceived(evt.getRobotName( ));
+		DataAmount bytesSend = CommunicationManager.getBytesSend(evt.getRobotName( ));
+
+		System.out.println(bytesReceived + " wurden empfangen und " +
+				bytesSend + " wurden gesendet.");
+	}
+
+});
+\end{java}
+
+Hier werden bei der Beendigung einer Verbindung weiterhin noch Informationen
+über den Umfang der gesendeten und empfangenen Daten  von
+\codeQuote{CommunicationManager} abgefragt.
+
+
+\subsection{DataAmount}
+\index{Kommunikation!Hilfsklassen!DataAmount}
+Mit der Klasse \codeQuote{DataAmount} lassen sich empfangene oder gesendete
+Bytes in der richtigen Einheit ausdrücken. 1024 Bytes werden z.B. als 1 KB
+dargestellt. 
+
+Insgesamt reicht die Darstellung von Byte bis Yottabyte (entspricht $2^{80}$ Byte).
+
+Zur Erstellung einer Instanz stehen ein Konstruktor ohne Argumente und einer mit
+einem double Argument zur Verfügung. Der leere Konstruktor entspricht einem
+Byte, der für den ein double übergeben werden kann nimmt den double als Wert in
+Bytes an.
+
+Immer wenn durch die Methode \codeQuote{add} Bytes oder wiederum ein
+\codeQuote{DataAmount}-Objekt selbst addiert wird, wird die aktuelle Einheit
+überprüft und auf die nächst passende Einheit übertragen.
+
+Um also 1024 Byte als 1 Kb darstellen zu lassen muss man einmal 0 Byte addieren:
+\begin{java}[caption=1024 Byte formatieren,label=code:dataamount:format]
+DataAmount amount = new DataAmount(1024);
+System.out.println(amount);
+amount.add(0);
+System.out.println(amount);
+
+amount.add(amount).add(amount);
+System.out.println(amount);
+\end{java}
+
+Ausgabe:
+\begin{lstlisting}
+1024,00 b
+1,00 kb
+4,00 kb
+\end{lstlisting}
+
+Bei der Anwendung von \codeQuote{add} wird immer das zugrunde liegende Objekt
+geändert und zurückgegeben. Daher sollte darauf acht gegeben werden wiederum
+addiert wird, damit keine weiter benötigten Daten überschrieben werden.
+
+In obigem Beispiel wird daher aus 1 Kilobyte mit nur zwei Additionsschritten 4
+Kilobyte da im ersten Schritt 1+1 zu 2 addiert wird und dann wiederum 2+2 4
+Kilobyte ergibt.
+
+\subsection{Message}
+\index{Kommunikation!Hilfsklassen!Message}
+Zur Strukturierung von Daten steht die Klasse \codeQuote{Message} zur
+Verfügung. Mit dieser lassen sich mehrere Objekte zu einer benamten Nachricht
+zusammenfassen. 
+
+Der Konstruktor der Klasse \codeQuote{Message} bekommt zunächst den Namen der
+Nachricht. Danach können Objekte zu einem Schlüssel mit der Methode
+\codeQuote{addData(String, Object)} hinzugefügt und später wieder zu diesem
+Schlüssel mit der Methode \codeQuote{getData(String)} abgerufen werden.
+
+So lassen sich Daten von einem \seegls{Plugin} strukturiert an einen \seegls{Handler} übertragen.
+Von dort können dann die einzelnen Daten wieder abgerufen und für den Roboter
+formatiert werden.

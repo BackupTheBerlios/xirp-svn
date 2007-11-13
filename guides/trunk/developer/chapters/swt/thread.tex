@@ -1,0 +1,22 @@
+\section{Thread}
+\label{sec:swt:thread}
+\seegls{SWT} hat nur einen \index{SWT!Thread}Thread, welchem der Zugriff auf die \seegls{SWT}
+Oberflächen Elemente erlaubt ist. Alle anderen Threads bekommen bei einem
+Zugriff eine \codeQuote{SWTException} mit der Meldung \enquote{Invalid thread
+access}. Um aus anderen Threads heraus Oberflächenelemente manipulieren zu können muss der Code, der auf ein Oberflächenelement
+zugreift, mit einem \index{SWT!SWTUtil!asyncExec()}\codeQuote{SWTUtil.asyncExec()} 
+oder \index{SWT!SWTUtil!syncExec()}\codeQuote{SWTUtil.syncExec()} gekapselt werden.
+Der auszuführende Code wird dabei in einem \codeQuote{Runnable} übergeben und in
+die \codeQuote{Queue} des \seegls{SWT}-Thread zur Ausführung eingehängt.
+
+Während \index{SWT!SWTUtil!syncExec()}\codeQuote{SWTUtil.syncExec()} wartet bis der
+Code tatsächlich ausgeführt wurde, kehrt der Aufruf von
+\index{SWT!SWTUtil!asyncExec()}\codeQuote{SWTUtil.asyncExec()} sofort zurück, während
+der übergebene Code erst in der Zukunft ausgeführt wird.
+
+Ein Beispiel ist in \autoref{sec:sensor} auf \autopageref{sec:sensor} zu finden.
+
+Wichtig ist den Code, der an \codeQuote{SWTUtil.asyncExec()} oder
+\codeQuote{SWTUtil.syncExec()} übergeben wird, so minimal und wenig zeitaufwendig
+wie möglich zu halten, da länger dauernde Codestücke die ganze Oberfläche lahm
+legen können (siehe auch \autoref{sub:swtcalc} auf \autopageref{sub:swtcalc}).

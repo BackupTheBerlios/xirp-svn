@@ -1,0 +1,46 @@
+\section{.. oder doch Swing?}
+Bibliotheken wie zum Beispiel JMF (\enquote{Java Media Framework}) bieten zur
+Darstellung eines Videostream nur die Möglichkeit an diesen auf einem \seegls{Swing}
+Composite darzustellen. Dieses ist kein Hinderungsgrund \xirp~bzw. \seegls{SWT} zu
+nutzen, da \seegls{SWT} über die Klasse \codeQuote{SWT_AWT} die Möglichkeit bietet \seegls{Swing}
+oder \seegls{AWT} Komponenten auf \seegls{SWT} Komponenten abzulegen.
+
+Ein Beispiel für JMF (\codeQuote{this} ist ein SWT \codeQuote{Composite}):
+\begin{java}
+private void initCameraView() {
+		if (player != null) {
+			player.start( );
+			Component comp;
+			if ((comp = player.getVisualComponent( )) != null) {
+				this.setSize(700, 480);
+				Frame f = SWT_AWT.new_Frame(this);
+				if (f != null) {
+					GridBagConstraints gridBagMain = new GridBagConstraints( );
+					gridBagMain.gridx = 0;
+					gridBagMain.fill = java.awt.GridBagConstraints.BOTH;
+					gridBagMain.weightx = 1.0D;
+					gridBagMain.weighty = 1.0D;
+					gridBagMain.gridy = 1;
+
+					GridBagConstraints gridBagNavi = new GridBagConstraints( );
+					gridBagNavi.gridx = 0;
+					gridBagNavi.fill = java.awt.GridBagConstraints.HORIZONTAL;
+					gridBagNavi.weightx = 1.0D;
+					gridBagNavi.weighty = 0.0D;
+					gridBagNavi.gridy = 0;
+
+					f.setLayout(new GridBagLayout( ));
+					f.setSize(300, 200);
+					f.add(getJPanelNavi( ), gridBagNavi);
+					f.add(comp, gridBagMain);
+
+					f.setVisible(true);
+				}
+				else {
+					logClass.debug(camera.getRobotName( ),
+							"Could not get java.awt.Frame to Display Camera." + Constants.LINE_SEPARATOR); //$NON-NLS-1$
+			}
+		}
+	}
+}
+\end{java}

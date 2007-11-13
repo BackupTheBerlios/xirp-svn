@@ -1,0 +1,259 @@
+\chapter{Report}
+\label{sec:report}
+\index{Report}
+
+\xirp~ermöglicht es dem \seegls{Plugin}-Entwickler eine Reportdatenstruktur zu benutzen,
+um einen \seegls{PDF}-Report erstellen zu lassen. Ein Beispiel, wie ein solcher Report in
+ein \seegls{Plugin} eingebaut werden kann bindet sich unter \autoref{sec:plugin:report}
+auf \autopageref{sec:plugin:report}.
+\index{Manager!ReportManager}
+In diesem Kapitel wird näher auf die mit Inhalt zu füllende Datenstruktur
+\texttt{Report} und deren abhängige Klassen eingegangen. Danach wird kurz auf den
+\texttt{ReportManager} eingegangen.
+
+\newpage
+
+\section{Die Report-Datenstruktur}
+Die Report-Datenstruktur ist in Abbildung \autoref{img:report:datastructure}
+auf \autopageref{img:report:datastructure} schematisch zu sehen. Es ist
+erkennbar, dass die Klasse \texttt{Report} mit einem \texttt{Content},
+\texttt{Header} und dem Namens-\texttt{String} komplett gefüllt ist.
+
+\kfig{report-datastructure}{.5}{Eine schematische Darstellung der
+Report-Datenstruktur}{img:report:datastructure}
+
+Daher lässt sich ein \texttt{Report}-Objekt nicht mittels des
+Default-Konstruktors erzeugen, sondern nur mit dem in
+\autoref{lst:report:constr} auf \autopageref{lst:report:constr}.
+
+\begin{java}[caption=Der zu benutzende Konstruktor für Reporte,
+label=lst:report:constr]
+public Report(Header header, Content content, String name){
+	[...]
+}
+\end{java}
+
+Auf die Erstellung der \texttt{Header} und \texttt{Datenstrukturen} wird in den
+folgenden Abschnitten eingegangen.
+
+\section{Die Header-Datenstruktur}
+Die Kopfdaten des Reportes werden in der Datenstruktur \texttt{Header}
+gesammelt. Um einen Header zu erstellen kann einer der in
+\autoref{lst:report:head:constr} auf \autopageref{lst:report:head:constr}
+gezeigten Konstruktoren benutzt werden. Der Default-Konstruktor
+ist auch hier nicht verfügbar, da die Kopfinformationen komplett sein müssen.
+
+\begin{java}[caption=Die zu benutzenden Konstruktoren für Header,
+label=lst:report:head:constr]
+public Header(String title, Robot robot) {
+	[...]
+}
+
+public Header(String title, Robot robot, IPlugable plugin) {
+	[...]
+}
+\end{java}
+
+Es muss also mindestens der Titel des Reportes und der Roboter für den der
+Report erstellt wird angegeben werden. Als Zusatzinformation kann noch das
+Erstellende \seegls{Plugin}\index{Plugin} angegeben werden.
+
+\section{Die Content-Datenstruktur}
+Der Inhalt des Reportes wird in der Datenstruktur \texttt{Content} gesammelt.
+Ein \texttt{Content}-Objekt kann mittels des Default-Konstruktors erstellt
+werden. Die Inhaltsteile werden dann nach und nach hinzugefügt. Um einen
+Inhaltsteil zum Inhalt hinzuzufügen kann die Methode
+\codeQuote{addReportPart(ContentPart)} benutzt werden.
+
+\subsection{Die ContentPart-Datenstruktur}
+Einem \texttt{ContentPart} können \texttt{IContentPartItem}-Objekte hinzugefügt
+werden. Momentan gibt es fünf Implementierungen des
+\texttt{IContentPartItem}-Interfaces. 
+
+\begin{itemize}
+  \item \texttt{ContentPartImage} - Ein Bild im Report.
+  \item \texttt{ContentPartList} - Eine Aufzählung im Report.
+  \item \texttt{ContentPartTable} - Eine Tabelle im Report.
+  \item \texttt{ContentPartText} - Ein Text im Report.
+  \item \texttt{ContentPartVideo}\footnote{Das Hinzufügen wird momentan noch
+  nicht unterstützt.} - Ein Video im \seegls{PDF}.
+\end{itemize}
+
+Um die \texttt{IContentPartItem}-Objekte hinzuzufügen gibt es fünf
+korrespondierende und eine allgemeine Methode.
+
+\begin{itemize}
+  \item \codeQuote{addReportImage(ContentPartImage)}
+  \item \codeQuote{addReportList(ContentPartList)}
+  \item \codeQuote{addReportTable(ContentPartTable)}
+  \item \codeQuote{addReportText(ContentPartText)}
+  \item \codeQuote{addReportVideo(ContentPartVideo)}\footnote{Die Methode fügt
+  momentan das Item nicht hinzu, da das Einbetten von Video noch nicht
+  unterstützt ist. Dies soll ab Version 3.0.0 möglich sein.}
+  \item \codeQuote{addReportItem(IContentPartItem)}
+\end{itemize}
+
+\subsubsection{Die ContentPartImage-Datenstruktur}
+Ein Objekt der \texttt{ContentPartImage}-Datenstruktur kann ebenfalls nur
+mittels eines speziellen Konstruktors erstellt werden, um zerstörte Bildeinträge
+zu minimieren. Um ein Objekt zu erstellen kann der Konstruktor aus 
+\autoref{lst:report:content:image:constr} auf
+\autopageref{lst:report:content:image:constr} benutzt werden.
+
+\begin{java}[caption=Der zu benutzende Konstruktor für ein Bild im Inhalt,
+label=lst:report:content:image:constr]
+public ContentPartImage(String path, String shortDescription) {
+	[...]
+}
+\end{java}
+
+\subsubsection{Die ContentPartList-Datenstruktur}
+Ein \texttt{ContentPartList}-Objekt kann mittels des Default-Konstruktors
+erstellt werden. Danach kann der Listentyp gesetzt werden und Einträge
+hinzugefügt werden. Ein Beispiel hierfür ist in
+\autoref{lst:report:content:list:bsp} auf
+\autopageref{lst:report:content:list:bsp} zu sehen. Es gibt drei Listentypen:
+
+\begin{itemize}
+  \item \codeQuote{BULLET} - Jeder Eintrag beginnt mit einem Bullet, einem dicken
+  Punkt.
+  \item \codeQuote{NUMBER} - Eine nummerierte Liste.
+  \item \codeQuote{DASH} - Jeder Eintrag beginnt mit einem Spiegelstrich.
+\end{itemize}
+
+Der Standard-Listentyp ist eine Liste mit Spiegelstrichen.
+
+\begin{java}[caption=Ein Beispiel für eine Liste im Report,
+label=lst:report:content:list:bsp]
+ContentPartList list = new ContentPartList( );
+list.setType(ListType.NUMBER); // Eine nummerierte Liste
+list.addEntry(Apfel);
+list.addEntry(Orange);
+list.addEntry(Pullover);
+\end{java}
+
+Da hier durch keinen Konstruktor für Vollständigkeit der Liste gesorgt werden
+kann, obliegt die Kontrolle hierüber dem Programmierer.
+
+\subsubsection{Die ContentPartTable-Datenstruktur}
+Ein \texttt{ContentPartTable}-Objekt kann mit dem Default-Konstruktor erstellt
+werden. Danach müssen der Tabellenkopf, die Einträge und eine Kurzbeschreibung
+der Tabelle gesetzt werden. Alternativ kann der zweite Kontruktor benutzt
+werden, dem diese drei Argumente übergeben werden müssen.
+
+Der Kopf der Tabelle wird in einem \texttt{ContentPartTableHeader}-Objekt
+angegeben. Durch die eingegebenen Spaltenüberschriften ergibt sich die Anzahl
+der Spalten der Tabelle. Wird das Tabelle dann eine Zeile hinzugefügt, die zu
+viele Spalten hat, wird eine \texttt{ReportException} geworfen. Es steht der
+Default-Konstruktor und ein weiterer zur Verfügung. Mit der Methode
+\codeQuote{addColumn(String)} kann eine weitere Spalte hinzugefügt werden. Dem
+zweiten Konstruktor kann eine variable Anzahl Strings übergeben werden, die dann
+die Spaltenüberschriften darstellen. Trotzdem können danach weitere Spalten mit
+den Methode \codeQuote{addColumn(String)} hinzugefügt werden.
+
+Ein Tabelleneintrag wird durch Objekte der Klasse \texttt{ContentPartTableRow}
+repräsentiert. Objekte dieser Klassen können mittels des Default-Konstruktors
+oder eines zweiten Kontruktors erstellt werden. Dem zweiten Konstruktor kann ein
+String-Array übergeben werden. Diese Eintrage werden dann der Reihe nach
+hinzugefügt. Wird der Default-Konstruktor benutzt werden die Einträge entweder
+mit \codeQuote{addEntry(String)} nach und nach, oder mit
+\codeQuote{setEntrys(String[])} alle auf einmal gesetzt.
+
+Beispiele für die Tabellenerstellung sind in
+\autoref{lst:report:content:tab:bsp} auf
+\autopageref{lst:report:content:tab:bsp} zu sehen.
+
+\begin{java}[caption=Ein Beispiel für eine Tabelle im Report,
+label=lst:report:content:tab:bsp]
+// Die Tabelle
+ContentPartTable table; 
+// Der Tabellenkopf
+ContentPartTableHeader header = new ContentPartTableHeader("Eins", "Zwei", "Drei");
+// Die Reihen mit dem Inhalt
+Vector<ContentPartTableRow> rows = new Vector<ContentPartTableRow>( );
+
+// Ein Reihe
+ContentPartTableRow row;		
+
+/* Reihen mit Inahlt füllen. Darauf achten, dass
+ * nicht mehr Felder gefüllt werden, als Spalten zur
+ * Verfügung stehen. Ansonten wird eine ReportExeception
+ * geworfen, wenn die Reihen der Tabelle hinzugefügt werden.
+ */
+row = new ContentPartTableRow("Inhalt", "Inhalt", "Inhalt");
+rows.add(row);
+
+row = new ContentPartTableRow("Inhalt", "Inhalt", "Inhalt");
+rows.add(row);
+
+row = new ContentPartTableRow("Inhalt", "Inhalt", "Inhalt");
+rows.add(row);
+
+row = new ContentPartTableRow("Inhalt", "Inhalt", "Inhalt");
+rows.add(row);
+
+// Tabelle mit den gesammelten Daten erstellen.
+try {
+	table = new ContentPartTable(header, rows, "Beschreibung");
+}
+catch (ReportException e) {
+	e.printStackTrace( );
+}
+\end{java}
+
+Da hier durch keinen Konstruktor für Vollständigkeit der Tabelle gesorgt werden
+kann, obliegt die Kontrolle hierüber dem Programmierer.
+
+\subsubsection{Die ContentPartText-Datenstruktur}
+Ein Textteil eines Reports kann aus mehreren Abschnitten bestehen. Daher können
+einem \texttt{ContentPartText}-Objekt beliebig viele
+\texttt{ContentPartTextParagraph}-Objekte hinzugefügt werden. Die Reihenfolge
+in der diese hinzugefügt werden entspricht nach der Erzeugung des Reports der
+Reihenfolge im Dokument. Ein \texttt{ContentPartTextParagraph}-Objekt kann
+mittels seines Default-Konstruktors erstellt werden. Dann kann der Text und eine
+optionale Überschrift gesetzt werden. Die Erstellung eines
+\texttt{ContentPartText}-Objektes mit zwei Abschnitten ist in
+\autoref{lst:report:content:text:bsp} auf 
+\autopageref{lst:report:content:text:bsp} zu sehen.
+
+\begin{java}[caption=Ein Beispiel für Textabschnitte im Report,
+label=lst:report:content:text:bsp]
+ContentPartText text = new ContentPartText( ); // Der Textteil
+ContentPartTextParagraph para; // Ein Abschnittsobjekt
+/* [...]: Ein sinnvoller Text */
+String foo = "[...]";
+String bar = "[...]";
+
+// 1. Abschnitt mit Überschrift
+para = new ContentPartTextParagraph( );
+para.setHeader("Überschrift");
+para.setText(foo);
+text.addParagraph(para); // Abschnitt hinzufügen
+
+// 2. Abschnitt ohne Überschrift
+para = new ContentPartTextParagraph( );
+para.setText(bar);
+text.addParagraph(para); // Abschnitt hinzufügen
+\end{java}
+
+Da hier durch keinen Konstruktor für Vollständigkeit des Textes gesorgt werden
+kann, obliegt die Kontrolle hierüber dem Programmierer.
+
+\subsubsection{Die ContentPartVideo-Datenstruktur}
+Ab Version 3.0.0 soll es möglich sein auch Videos in das \seegls{PDF} Dokument
+einzubetten. Momentan jedoch ist diese Funktionalität nicht implementiert.
+
+\section{Der Reportmanager}
+\index{Manager!ReportManager}
+Mittels des Reportmanagers kann ein \seegls{PDF} zum Betrachten geöffnet\footnote{Weitere
+Funktionen folgen evtl. in späteren Versionen.} werden. Hierzu kann die
+statische Methode \codeQuote{viewReport(ReportDescriptor)} aufgerufen werden.
+Ein \newline\texttt{ReportDescriptor} kann mittels des Default-Konstruktors erstellt
+werden. Dann muss das \texttt{byte[]} des \seegls{PDF}-Dokumentes gesetzt werden, da die
+Daten benötigt werden, um das \seegls{PDF} zu öffen. Hierzu können die Daten nicht direkt
+sondern über den Dateinamen der \seegls{PDF}-Datei gesetzt werden. Hierzu muss die
+Methode \codeQuote{setFileName(String)} aufgerufen werden. Es muss der Dateiname
+des generiertes Reports übergeben werden. Es darf \emph{kein} Pfad vorhanden
+sein, denn dieser ist durch die zentrale Speicherung bekannt. Sollte z.B. die
+Datei nicht mehr vorhanden sein, wird ein leeres \texttt{byte[]} als Inhalt
+erstellt, was dann zu einem Fehler beim Öffnen der Datei führt.

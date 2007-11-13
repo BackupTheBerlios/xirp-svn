@@ -1,0 +1,270 @@
+\chapter{Mail- und Kontaktverwaltung}
+\index{Mail|(}
+\index{Kontakte|(}
+\index{Rekorder}
+\index{Diagramme}
+\xirp~bietet dem Anwender die Möglichkeit direkt aus der Anwendung heraus
+E-Mails zu versenden\footnote{Der Mailempfang ist nicht möglich.}, ohne dass es
+eines speziellen Mailprogrammes bedarf. Das
+System ist weiterhin daraus ausgelegt die bei der Arbeit mit einem Roboter
+gewonnenen Daten und Dateien als Anhänge mit den Mails zu versenden.
+Hierzu können Dateien aus dem Dateisystem, generierte Diagrammdateien, in der
+Datenbank befindliche Reporte und Aufzeichnungen des Rekorders an E-Mails
+angehängt werden.
+\par
+Ein System zum Versenden und Verwalten von E-Mails führt oftmals eine
+Kontaktverwaltung mit sich, so auch in \xirp. Es ist möglich neue Kontakte
+anzulegen, zu löschen und zu bearbeiten.
+\par
+Das folgende Kapitel führt in die Benutzung der Mail- und Kontaktverwaltung in
+\xirp~ein und beschreibt alle in diesem System benutzen Dialoge und
+Möglichkeiten.
+
+\newpage
+
+\section{Mailverwaltung}
+\index{Mail}
+In \xirp~ist es möglich E-Mails über einen bestehenden SMTP-\seegls{Server} zu
+verschicken. Hierdurch ist es möglich Ergebnisse die mit dem Rekorder-,
+Diagramm- oder Live-Diagrammwerkzeug gewonnen wurden, aber auch Reporte die von
+einem entsprechenden Report-Plugins eines Roboters erzeugt wurden, per E-Mail an
+Kollegen zu versenden. Des Weiteren kann wie gewohnt jede Datei aus dem
+Dateisystem als Anhang an die E-Mail angehängt werden.
+\par
+Die Oberfläche der Mailverwaltung ist in Abbildung \ref{img:mail:vw} auf Seite
+\pageref{img:mail:vw} zu sehen.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=.75\textwidth]{images/mailvw}
+    \caption{Die Mailverwaltung}
+    \label{img:mail:vw}
+\end{figure}
+
+\subsection{Bereiche der Mailverwaltung}
+Die Mailverwaltung lässt sich in vier Hauptbereiche aufteilen. Diese Bereiche
+werden im folgenden genauer beschrieben.
+
+\begin{itemize}
+  \item Werkzeugleiste
+  \item E-Mail Informationstabelle
+  \item E-Mail Textbereich
+  \item Liste der Anhänge
+\end{itemize}
+
+\subsubsection{Werkzeugleiste}
+Die Funktionen der Werkzeugleiste werden in Abschnitt \ref{ref:mail:functions}
+ab Seite \pageref{ref:mail:functions} eingehend beschrieben.
+
+\subsubsection{E-Mail Informationstabelle}
+Die Informationstabelle - linke Seite, oberer Teil des Dialogs - enthält für jede
+gespeicherte E-Mail einen Eintrag mit den wichtigsten Informationen über die
+Mail. Die angebotenen Informationen sind:
+
+\begin{itemize}
+  \item Versendestatus
+  \item Erster \enquote{An} Empfängername
+  \item Erster \enquote{Cc} Empfängername
+  \item Betreff
+  \item Sendedatum
+\end{itemize}
+
+\paragraph{Versendestatus}
+Der Versendestatus wird durch ein rotes oder ein grünes \seegls{Icon} signalisiert. Ein
+rotes \seegls{Icon} zeigt an, dass die Mail (noch) nicht versendet werden konnte. Dies
+kann z.B. im Fehlerfall passieren. Die Mail kann in einem solchen Fall dann mit
+der \enquote{Weiterleiten} Funktion versendet werden. Ist das \seegls{Icon} grün wurde
+die Mail versendet.
+
+\paragraph{Erster \enquote{An} Empfängername}
+Diese Tabellenspalte enthält den ersten Namen der Empfängerliste. Dies dient
+der Übersicht\footnote{In Version 3.0.0 wird eine Funktion hinzukommen, die es
+erlaubt die weiteren Empfänger der Mail einzusehen}.
+
+\paragraph{Erster \enquote{Cc} Empfängername}
+Diese Tabellenspalte enthält den ersten Namen der \enquote{Carbon copy}
+Empfängerliste. Dies dient der Übersicht\footnote{In Version 3.0.0 wird eine
+Funktion hinzukommen, die es erlaubt die weiteren \enquote{Carbon copy}
+Empfänger der Mail einzusehen}.
+
+\paragraph{Betreff}
+Die Betreffzeile der Mail. Diese fängt immer mit \enquote{[\xirp~2 NOREPLY]} an,
+um zum Einen anzuzeigen, dass diese E-Mail über \xirp~versendet wurde und zum
+Anderen um zu zeigen, dass der Empfänger nicht auf diese E-Mail antworten soll,
+da eine Antwort nicht beim Absender ankommen würde, sondern an die spezifizierte
+\enquote{no-reply} Adresse geleitet wird.
+
+\paragraph{Sendedatum}
+Das sekundengenaue Sendedatum der E-Mail.
+
+\subsubsection{E-Mail Textbereich}
+Wird eine E-Mail aus der Informationstabelle angeklickt, wird in diesem Bereich
+der Text der E-Mail geladen. Der Text kann hier nur angesehen und nicht
+verändert werden.
+
+\subsubsection{Liste der Anhänge}
+Wird eine E-Mail aus der Informationstabelle angeklickt, werden in diesem Bereich
+Einträge für jeden Anhang der Mail angezeigt. Jedes dieser Elemente informiert
+über den Dateinamen, den Dateityp und die Größe der Datei. handelt es sich um
+einen \xirp~bekannten Dateityp wird ein entsprechendes \seegls{Icon} angezeigt. Bekannte
+Dateitypen sind:
+
+\index{Mail!PDF}
+\index{Mail!PNG}
+\index{Mail!JPG}
+\index{Mail!CSV}
+\begin{itemize}
+  \item PDF
+  \item PNG
+  \item JPG
+  \item CSV
+\end{itemize}
+
+An eine Mail können nur Dateien der oben aufgezählten Dateitypen angehängt
+werden\footnote{An Version 3.0.0 wird es auch möglich sein andere Dateitypen
+anzuhängen}.
+
+\subsection{Funktionen}
+\label{ref:mail:functions}
+In der Mailverwaltung stehen diverse Funktionen zur Verfügung. Diese Funktionen
+sind über die Werkzeugleiste verfügbar. In Abbildung \ref{img:mail:vw:tools}
+auf Seite \pageref{img:mail:vw:tools} ist die Werkzeugleiste als Ganzes zu sehen.
+Die Funktionen der Werkzeugleiste sind von links nach rechts gesehen:
+
+\begin{itemize}
+  \item Neue Mail schreiben
+  \item Mail weiterleiten
+  \item Markierte Mails drucken
+  \item Markierte Mails speichern
+  \item Markierte Mails löschen
+  \item Kontaktpflege
+  \item Neuen Kontakt anlegen
+\end{itemize}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=.75\textwidth]{images/mailsvwtools}
+    \caption{Die Werkzeugleiste der Mailverwaltung}
+    \label{img:mail:vw:tools}
+\end{figure}
+
+Im Tabelle \ref{tab:mailvwtools} auf Seite \pageref{tab:mailvwtools} werden die
+Funktionen im einzelnen beschrieben.
+
+\begin{table}[htp]
+    \centering
+    \begin{tabular}{c|l}
+    Werkzeugelement & Beschreibung\\
+    \hline
+    \includegraphics{images/send_mail} & Eine neue E-Mail schreiben/senden.\\
+    \includegraphics{images/forward_mail} & Eine markierte E-Mail weiterleiten.\\
+    \includegraphics{images/print} & Eine markierte E-Mail drucken. Es werden der
+    Text\\
+    & der E-Mail und alle Anhänge gedruckt.\\
+    \includegraphics{images/save} & Eine markierte E-Mail speichern. Es wird
+    unter\\
+    & dem ausgewählten Ordner alle Anhänge und der Text\\
+    & der Mail abgelegt.\\
+    \includegraphics{images/delete} & Eine markierte E-Mail löschen.\\
+    \includegraphics{images/contacts} & Die Kontaktverwaltung öffnen.\\
+    \includegraphics{images/add_contact} & Einen neuen Kontakt anlegen\\
+    \end{tabular}
+    \caption{Die Elemente der Werkzeugliste der Mailverwaltung}
+    \label{tab:mailvwtools}
+    \index{Kontakte}
+\end{table}
+
+\section{Mailbearbeitung}
+\index{Mail}
+Der Dialog zum Bearbeiten/Weiterleiten von E-Mails ist in Abbildung
+\ref{img:mail:edit} auf Seite \pageref{img:mail:edit} zu sehen. Der Dialog zum
+Erstellen ist der Selbe, nur ohne vorausgefüllte Felder.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=.75\textwidth]{images/mailedit}
+    \caption{Die Mailbearbeitung}
+    \label{img:mail:edit}
+\end{figure}
+
+\subsection{Funktionen}
+Es gibt vier Funktionen, die auch schon von der Mailverwaltung bekannt sind. Nur
+die \enquote{Löschen} Funktion bezieht sich auf markierte Empfänger und Anhänge.
+\par
+Die Funktion zum Hinzufügen von Kontakten zu den \enquote{An}- und
+\enquote{Cc}-Empfängerlisten kann über die Knöpfe \texttt{An ->} und
+\texttt{Cc ->} aufgerufen werden.
+\par
+Ist die E-Mail komplett zusammengestellt, d.h. wurde mindestens ein Empfänger
+angegeben, kann diese über das entsprechende \seegls{Icon} gesendet oder weitergeleitet
+werden. Die entsprechenden \seegls{Icon}s werden äquivalent zu den Beschreibungen in
+Tabelle \ref{tab:mailvwtools} auf Seite \pageref{tab:mailvwtools} benutzt.
+
+\section{Kontaktverwaltung}
+\index{Kontakte}
+Die Kontaktverwaltung ist in Abbildung \ref{img:contact:vw} auf Seite
+\ref{img:contact:vw} zu sehen. Auf der linken Seite befindet sich eine Liste mit
+allen gespeicherten Kontakten. Jeder der Elemente der Liste stellt einen Kontakt
+dar und informiert über Name, E-Mail Adresse und Telefonnummer des Kontaktes.
+Das Geschlecht der Person des Kontaktes wird über drei Bilder angezeigt. Die
+möglichen Geschlechter sind \enquote{männlich}, \enquote{weiblich} und
+\enquote{undefiniert}.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=.75\textwidth]{images/contactvw}
+    \caption{Die Kontaktverwaltung}
+    \label{img:contact:vw}
+\end{figure}
+
+Auf der rechten Seite befindet sich der Bereich in dem die kompletten
+Informationen des momentan ausgewählten Kontaktes angezeigt werden. Am unteren
+Rand des rechten Bereiches befinden sich vier Knöpfe mit denen Funktionen
+aufgerufen werden können.
+
+\begin{itemize}
+  \item \texttt{Neuer Kontakt}
+  \item \texttt{Bearbeiten}
+  \item \texttt{Löschen}
+  \item \texttt{Schließen}
+\end{itemize}
+
+Die ersten beiden Funktionen beziehen sich auf das Erstellen und Bearbeiten von
+Kontakten. Wie genau dies mittels der Kontaktbearbeitung geschieht, kann in
+Abschnitt \ref{ref:mail:contact} ab Seite \pageref{ref:mail:contact} nachgelesen
+werden. Die \enquote{Löschen}-Funktion entfernt den in der Liste der Kontakte
+markierten Kontakt. Mit dem \texttt{Schließen}-Knopf wird die Kontaktverwaltung
+geschlossen.
+
+\newpage
+
+\section{Kontaktbearbeitung}
+\label{ref:mail:contact}
+\index{Kontakte}
+Der Eingabe-/Bearbeitungsdialog für Kontakte ist in Abbildung
+\ref{img:mail:contact:edit} auf Seite \pageref{img:mail:contact:edit} zu sehen.
+
+Es gibt sieben Angaben die für einen Kontakt gemacht werden können. Um den
+Kontakt speichern zu können muss mindestens eine der Angaben gemacht werden.
+Um E-Mails an den Kontakt versenden zu können muss natürlich einen E-Mail Adresse
+angegeben werden.
+
+\begin{itemize}
+  \item Vorname
+  \item Nachname
+  \item Spitzname
+  \item Abteilung
+  \item Telefon \#
+  \item E-Mail Adresse
+  \item Geschlecht
+\end{itemize}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=.75\textwidth]{images/editcontact}
+    \caption{Die Kontaktbearbeitung}
+    \label{img:mail:contact:edit}
+\end{figure}
+
+\index{Mail|)}
+\index{Kontakte|)}

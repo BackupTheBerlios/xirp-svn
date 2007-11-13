@@ -1,0 +1,298 @@
+\chapter{Extras}
+\index{Extras|(}
+In diesem Kapitel sollen all jene Funktionalitäten besprochen werden, die
+hilfreich und nützlich sind, aber nicht so umfangreich sind, als dass sie in ein
+eigenes Kapitel passen würden. Zu diesen Extras gehören die folgenden Features.
+
+\begin{itemize}
+  \item Reportsuche
+  \item Hilfe
+  \item Roboterübersicht
+  \item Systemprotokoll
+  \item Kommandos
+  \item Internationalisierung
+  \item Plugin-Schnittstelle
+\end{itemize}
+
+Auf die oben genannten Funktionen wird im folgenden genauer eingegangen.
+
+\newpage
+
+\section{Reportsuche}
+\index{Reporte|(}
+\index{Reportsuche|(}
+\index{PDF}
+\xirp~bietet Plugins die Möglichkeit Reporte in \seegls{PDF}-Form zu Erstellen. Diese
+Reporte werden im Dateisystem im Order \texttt{<xirp>/reports} und in der
+Datenbank abgelegt. Um nun zu einem späteren Zeitpunkt einen Report, der bereits
+vom Dateisystem gelöscht wurde, wiederzufinden gibt es die Reportsuche. Sie kann
+über den Menüpunkt \texttt{Reporte --> Reportsuche} aufgerufen werden. In
+Abbildung \ref{img:report:search} auf Seite \pageref{img:report:search} ist die
+Konfigurationsoberfläche der Suchfunktion zu sehen. Hier wurden bisher noch
+keine Einstellungen vorgenommen.
+
+\begin{figure}[htp]
+	\centering
+	\includegraphics[width=.75\textwidth]{images/reportsearch}
+	\caption{Die Reportsuche}
+	\label{img:report:search}
+\end{figure}
+
+\subsection{Suchkonfiguration}
+Es können zwei Suchkriterien konfiguriert werden:
+
+\begin{itemize}
+  \item Zeitraum
+  \item Roboter
+\end{itemize}
+
+\newpage
+
+Keine der beiden Kriterien müssen konfiguriert werden. Wird keine Änderung an
+der Standard-Einstellung des Dialogs vorgenommen, werden alle in der Datenbank
+befindlichen Reporte in der Ergebnistabelle angezeigt. Diese Tabelle enthält
+die folgenden Informationen:
+
+\begin{itemize}
+  \item Id - Die interne ID des Reports
+  \item Reportname - Der Name des Reports.
+  \item Erstellzeit - Der Zeitpunkt der Erstellung des Reports
+  \item Robotername - Der Name des Roboters für den der Report erstellt wurde
+  \item Dateiname - Der Dateiname unter dem der Report im Dateisystem
+  gespeichert wurde
+\end{itemize}
+
+Um die Ergebnissmenge einzugrenzen kann ein Zeitraum gewählt werden. Hierzu muss
+die Option \enquote{Zeitoptionen für Suche aktivieren} aktiviert werden. dann
+können Start- und Endzeitpunkt des gewünschten Zeitraumes gewählt werden. Bleibt
+die Option deaktiviert, wird kein Zeitraum mit in die Suche einbezogen.
+\par
+Die Ergebnissmenge kann auch durch die Wahl eines Roboters aus der Auswahlliste
+\enquote{Roboter in Datenbank} eingeschränkt werden. Die Auswahlliste enthält
+die Namen der Roboter für die sich mindestens ein Report in der Datenbank
+befindet. Wird kein Roboter ausgewählt werden alle Roboter mit in die Suche
+einbezogen. 
+\par
+Da eine Suche ohne gewählten Roboter alle Roboter mit einbezieht und eine
+Deaktivierung der Zeitoptionen bewirkt, dass kein Zeitraum mit in die Suche
+einbezogen wird, ist es hierdurch implizit möglich alle Reporte anzeigen zu
+lassen die sich in der Datenbank befinden.
+
+\subsection{Suchergebnisse}
+Wurde eine Suchabfrage mit einem Ergebnis durchgeführt (klicken des Knopfes
+\enquote{Suche nach Reporten}, stehen dem Benutzer
+verschiedene Optionen zur Auswahl, wie mit einem in der Ergebnistabelle
+markiertem Report umgegangen werden soll. In Abbildung
+\ref{img:report:search:result} auf Seite \ref{img:report:search:result}
+ist ein Suchergebnis für eine Suche mit Zeitraum und Roboter zu sehen.
+
+\begin{figure}[htp]
+	\centering
+	\includegraphics[width=.75\textwidth]{images/reportsearchresult}
+	\caption{Suchergebnis der Reportsuche}
+	\label{img:report:search:result}
+\end{figure}
+
+Neben den immer verfügbaren Knöpfen \enquote{OK}, \enquote{Suche nach Reporten} und 
+\enquote{Schließen} werden zwei weitere Knöpfe verfügbar, wenn ein Report in der
+Ergebnistabelle markiert wird.
+
+\index{PDF}
+\begin{itemize}
+  \item Report öffnen - Öffnet den Report im \seegls{PDF}-Betrachter des Betriebssystems.
+  \item Report drucken - Druckt den Report über den \seegls{PDF}-Betrachter des
+  Betriebssystems.
+\end{itemize}
+
+\index{Reporte|)}
+\index{Reportsuche|)}
+
+\section{Hilfe}
+\index{Hilfe|(}
+\xirp~bietet Plugins die Möglichkeit Hilfetexte in \seegls{HTML}-Form anzubieten. Des
+Weiteren wird in der Standard Installation eine Kurzhilfe für die Anwendung
+mitgeliefert. Diese Hilfetexte können mittels des Hilfedialogs angezeigt werden.
+Die Hilfe ist in Englisch gehalten\footnote{Internationalisierung der Hilfe
+ist für Version 3.0.0 geplant}.
+\par
+In Abbildung \ref{img:report:help} auf Seite \pageref{img:report:help} ist der
+Hilfedialog zu sehen. Auf der linken Seite befindet sich die Navigationsleite
+mit den Einträgen der vorhandenen Hilfethemen. Der rechte Bereich zeigt den
+Inhalt des gewählten Hilfethemas an. Die Hilfe hat drei Funktionen, die über
+drei Werkzeugicons zur Verfügung gestellt werden:
+
+\begin{itemize}
+  \item Ein Pfeil nach links - Eine Seite zurück
+  \item Ein Pfeil nach rechts - Ein Seite vor
+  \item Ein Haussymbol - Zurück zur Startseite
+\end{itemize}
+
+\begin{figure}[htp]
+	\centering
+	\includegraphics[width=1\textwidth]{images/help}
+	\caption{Die HTML-Hilfe von \xirp}
+	\label{img:report:help}
+\end{figure}
+
+\index{Hilfe|)}
+
+\section{Roboterübersicht}
+\index{Roboterübersicht|(}
+\index{Sensorgruppe}
+\index{Sensor}
+\index{Roboter}
+\index{Testerbot}
+Die Roboterübersicht zeigt in grober Form die Umrisse des Roboters von oben
+gesehen zweidimensional\footnote{Eine Ansicht in 3D ist für Version 4.0.0
+geplant. In dieser Version soll dann auch die Lage des Roboters im Raum
+angezeigt werden.} an. Jeder \seegls{Sensor} des Roboters wird schematisch an der
+korrekten Stelle in der Übersicht als Quadrat angezeigt. Jede Sensorgruppe
+erhält hierbei eine einheitliche Farbe. Fährt man mit dem Mauszeiger auf einen
+\seegls{Sensor} oder auf den Umriss des Roboters, öffnet sich ein kleines
+Informationsfenster mit der Spezifikation des \seegls{Sensor}s oder Roboters.
+In Abbildung \ref{img:robot:overview} auf Seite \pageref{img:robot:overview}
+ist die Roboterübersicht des \seegls{Testerbot} zu sehen.
+
+\begin{figure}[htp]
+	\centering
+	\includegraphics[width=.4\textwidth]{images/robotoverview}
+	\caption{Die Roboterübersicht des Testerbot}
+	\label{img:robot:overview}
+\end{figure}
+
+\index{Roboterübersicht|)}
+
+\section{Systemprotokoll}
+\index{Systemprotokoll|(}
+Das Systemprotokoll zeigt Informationen, Hinweise, Warnungen und Fehler in
+Textform an. Es kann auch von Plugins benutzt werden, um Informationen
+den Benutzer in Textform weiterzugeben. Nachrichten die im
+Systemprotokoll angezeigt werden, sind farblich codiert, um so den Status der
+Nachricht zu visualisieren.
+
+\begin{itemize}
+  \item Schwarz - Informationen
+  \item Orange - Warnungen
+  \item Rot - Fehler
+  \item Dunkelrot - Schwere Fehler
+\end{itemize}
+
+In Abbildung \ref{img:system:proto} auf Seite \pageref{img:system:proto} sind
+Beispiele für den Status von Nachrichten im Systemprotokoll zu sehen.
+
+\begin{figure}[htp]
+	\centering
+	\includegraphics[width=.6\textwidth]{images/sysprot}
+	\caption{Das Systemprotokoll mit Beispielen}
+	\label{img:system:proto}
+\end{figure}
+
+\index{Systemprotokoll|)}
+
+\section{Kommandos}
+\index{Kommandos|(}
+\index{Gamepad}
+\index{Testerbot}
+\index{Sprachausgabe}
+\index{Reporte}
+\xirp~bietet Plugins die Möglichkeit ausgewählte Funktionalitäten für Kommandos
+zur Verfügung zu stellen. Dies bedeutet, dass man eine Funktion eines Plugins
+über eine beliebige Taste der Tastatur oder eines \seegls{Gamepad}s aufgerufen werden
+kann. Mit dem \seegls{Testerbot} werden ein Reihe von Standard-Plugins ausgeliefert.
+Darunter befindet sich das \enquote{Nachrichten}-Plugin. Dieses Plugins soll die
+Funktion der Sprachausgabe und der Reporterstellung zeigen. Zusätzlich
+exportiert dieses Plugin eine Funktion zum Löschen des Nachrichtenfensters.
+Diese Funktion kann also als Kommando genutzt werden.
+\par
+\index{Einstellungen}
+Um die Funktion einer Taste zuzuweisen, muss das Plugin geladen sein und die
+Einstellngen der Anwendung müssen geöffnet werden. In der Katoegorie
+\enquote{Tastenkürzel} kann dann im Reiter \enquote{Kommando Tastenkürzel} der
+in der Tabelle befindlichen Funktion des Plugins eine Taste der Tastatur und des
+\seegls{Gamepad}s zugewiesen werden.
+\par
+Im Beispiel in Abbildung \ref{img:kommanods} auf Seite \pageref{img:kommanods}
+wurde der Funktion \enquote{Lösche den Nachrichtenverlauf} die Taste
+\enquote{F12} zugewiesen. Wird nun im laufenden Betrieb des Plugins die Taste
+\enquote{F12} gedrückt, wird der Nachrichtenverlauf gelöscht. So kann mit jeder
+erdenklichen Funktion verfahren werden.
+
+\begin{figure}[htp]
+	\centering
+	\includegraphics[width=.6\textwidth]{images/kommando}
+	\caption{Die Kommandokonfiguration}
+	\label{img:kommanods}
+\end{figure}
+
+\index{Kommandos|)}
+
+\section{Internationalisierung}
+\index{Internationalisierung|(}
+\xirp~ist zur weltweiten Verwendung gedacht. Daher unterstützt die Anwendung
+diverse Sprachen. Momentan existieren Pakete für die folgenden Sprachen:
+
+\begin{itemize}
+  \item Deutsch
+  \item Englisch
+\end{itemize}
+
+Die Sprache kann mittels der Einstellungen geändert werden. Wird dort eine
+andere Sprache gewählt, wird diese sofort wirksam. Die Anwendung wird sofort
+übersetzt und ist dann in der neuen Sprache benutzbar. Sollte eine Sprache nicht
+verfügbar sein, ist es möglich selbst eine Übersetzung anzufertigen. Hierzu
+müssen nur die in einer speziellen Datei befindlichen Texte in die gewünschte
+Sprache übersetzt werden. Näheres hierzu findet sich im 
+\href{\devguideurl}{Developer Guide}. Dieser kann von 
+\href{\devguideurl}{\devguideurlname} heruntergeladen werden. 
+
+\index{Internationalisierung|)}
+
+\section{Plugin-Schnittstelle}
+\index{Plugin-Schnittstelle|(}
+\index{Plugins}
+\xirp~baut auf einem Pluginsystem auf. Zu jedem Roboter können diverse Plugins
+zugeordnet werden. Diese Plugins werden in neun Typen aufgeteilt:
+
+\index{Plugins!Typ}
+\index{Plugins!Verschiedenes}
+\index{Plugins!Sensorplugin}
+\index{Plugins!Kommunikationsplugin}
+\index{Plugins!Protokollplugin}
+\index{Plugins!Roboterkontrolle}
+\index{Plugins!Reportplugin}
+\index{Plugins!Nachrichtenhandhaberplugin}
+\index{Plugins!Multimediaplugin}
+\index{Plugins!Werkzeugleiste}
+\begin{itemize}
+  \item Verschiedenes
+  \item Sensorplugin
+  \item Kommunikationsplugin
+  \item Protokollplugin
+  \item Roboterkontrolle
+  \item Reportplugin
+  \item Nachrichtenhandhaberplugin
+  \item Multimediaplugin
+  \item Werkzeugleiste
+\end{itemize}
+
+Ein einzelnes Plugin kann zu mehr als einem der oben genannten Plugintypen
+gehören, dies ermöglicht die Entwicklung von einfachen bis hin zu universellen
+Plugins. Manche Plugins bieten eine graphische Oberfläche und einige nicht. Ob
+und wie ein Plugin visualisiert wird, wird über den Visualisierungstyp
+angegeben. Es gibt vier Arten der Visualisierung:
+
+\index{Plugins!Visualisierung}
+\begin{itemize}
+  \item Eingebettet
+  \item Fenster
+  \item Werkzeugleiste
+  \item Keine
+\end{itemize}
+
+Plugins können daher dem Benutzer in verschiedenster Gestalt begegnen.
+Mehr zum Pluginsystem findet sich im  \href{\devguideurl}{Developer Guide}.
+Dieser kann von \href{\devguideurl}{\devguideurlname} heruntergeladen werden.
+
+\index{Plugin-Schnittstelle|)}
+
+\index{Extras|)}

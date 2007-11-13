@@ -1,0 +1,8 @@
+Benutze den Glossar:
+\glossary{name={Schnauze},description={Fachausdruck für die Hundenase.},}
+
+Benutze den Index:
+\index{Leute!Holger}
+
+\enquote{} benutzen für <<französische>> Anführungszeichen, dies bitte
+konsistent benutzen.

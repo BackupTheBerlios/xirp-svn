@@ -1,0 +1,34 @@
+\section{Bibliotheken}
+\index{Plugin!Bibliotheken}
+
+\seegls{Plugins} bieten die Möglichkeit zusätzliche \seegls{Bibliotheken} zu nutzen. Dazu müssen
+diese im \seegls{Plugin} in einem Ordner \fileQuote{lib} liegen. Dieser Ordner enthält
+die Unterordner \fileQuote{windows},\fileQuote{linux},\fileQuote{dll} und
+\fileQuote{so}. 
+
+Platformunabhängige Jars können dabei direkt im Ordner \fileQuote{lib} abgelegt
+werden. Jars die speziell für ein Betriebssystem sind entsprechend in den
+Unterordner \fileQuote{windows} und \fileQuote{linux}. Native \seegls{Bibliotheken} wie
+\seegls{DLL}'s und \seegls{SO}'s können in den anderen Ordner abgelegt werden.
+
+Vor der Ausführung des \seegls{Plugins} ermittelt \xirp~das aktuelle Betriebssystem und
+lädt die entsprechenden Jars. Native \seegls{Bibliotheken} werden in den library path
+kopiert müssen aber zur Benutzung mit \codeQuote{System.loadLibrary()} ggfs. 
+selber geladen werden.
+
+Um das Vorhandensein bestimmten \seegls{Bibliothek}en oder anderer \seegls{Plugins} sicherzustellen kann ein Plugin die Methode
+\index{Plugin!IPlugable!requiredLibs()}\codeQuote{requiredLibs()} überschreiben.
+Diese Methode gibt eine Liste von \codeQuote{String}s zurück. Bei der Suche nach
+\seegls{Plugins} wird diese Liste überprüft. Ist eine der
+\index{Plugin!Abhängigkeiten}Abhängigkeiten des \seegls{Plugins} nicht vorhanden, wird
+das \seegls{Plugin} nicht geladen. Entsprechend werden \seegls{Plugins} die dieses \seegls{Plugin} in ihren
+Abhängigkeiten aufgeführt haben auch nicht geladen. Im \index{Logging!Systemprotokoll}\seegls{Log} 
+sind in diesem Fall Ausschriften zu finden die über die Gründe Auskunft geben.
+
+Die Liste von Strings kann folgenden Inhalt haben:
+\begin{itemize}
+  \item Endet ein String mit \enquote{.jar} so wird der Classpath nach einem Jar
+  mit dem gegebenen Namen durchsucht
+  \item Andernfalls wird der String als Klassenname eines \seegls{Plugins} interpretiert
+  und versucht das \seegls{Plugin} zu finden
+\end{itemize}

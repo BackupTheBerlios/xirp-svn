@@ -1,0 +1,124 @@
+\section{Validierung}
+\label{sec:settings:valid}
+\index{Einstellungen!Validierung}
+Bei allen Darstellungsmethoden von Einstellungen ist es möglich einen 
+\codeQuote{Validator} zur Validierung von Eingaben hinzuzufügen. Sinn macht 
+dies daher nur bei einem \seegls{Renderer} der auch tatsächlich Möglichkeiten 
+zur Eingabe bereitstellt, wie z.B. der zuvor erstellte 
+\newline\codeQuote{PersonNameRenderer} (siehe \autoref{code:settings:renderer} 
+auf \autopageref{code:settings:renderer}).
+
+Die \codeQuote{ModifyListener} des \index{Einstellungen!Renderer}\seegls{Renderer} müssen für die Unterstützung der
+Validierung wie folgt verändert werden:
+
+\begin{java}[caption=Validierender Renderer,label=code:settings:renderer:validation]
+// Änderungen in der Oberfläche an den Wert übertragen
+forename.addModifyListener(new ModifyListener( ) {
+
+	public void modifyText(@SuppressWarnings("unused")
+	ModifyEvent e) {
+		String newForename = forename.getText( );
+		String newSurename = surename.getText( );
+
+		// Wenn eingegebener Wert nicht zulässig
+		// dann zurücksetzen auf letzten Wert
+		if (!validate(newForename)) {
+			newForename = currentSelection.getDisplayPerson( )
+					.getForename( );
+			int pos = forename.getCaretPosition( );
+			forename.setText(newForename);
+			forename.setSelection(pos, pos);
+
+		}
+
+		PersonName person = new PersonName(newForename, newSurename);
+		currentSelection.setCurrentPerson(person, true);
+	}
+});
+surename.addModifyListener(new ModifyListener( ) {
+
+	public void modifyText(@SuppressWarnings("unused")
+	ModifyEvent e) {
+		String newForename = forename.getText( );
+		String newSurename = surename.getText( );
+
+		// Wenn eingegebener Wert nicht zulässig
+		// dann zurücksetzen auf letzten Wert
+		if (!validate(newSurename)) {
+			newSurename = currentSelection.getDisplayPerson( )
+					.getSurename( );
+			int pos = surename.getCaretPosition( );
+			surename.setText(newSurename);
+			surename.setSelection(pos, pos);
+		}
+
+		PersonName person = new PersonName(newForename, newSurename);
+		currentSelection.setCurrentPerson(person, true);
+	}
+
+});
+\end{java}
+
+Bei jeder Zeicheneingabe wird der neue Text mit dem Aufruf von
+\codeQuote{validate()} mit dem gesetzten \index{Einstellungen!Validation}Validierer validiert. Ist der neue Text
+nicht korrekt, so wird das Textfeld auf den alten Text zurückgesetzt.
+
+So ist es nun möglich zum Beispiel nur Buchstaben im Namen zu erlauben:
+\index{Manager!PluginManager}
+\begin{java}[caption=Validierung von Einstellungen,label=code:settings:validation]
+@Override
+public Settings getSettings() {
+	if (settings == null) {
+		settings = new Settings(PluginManager.getProperties( ),
+				handler,
+				"MyPlugin.settings.main",
+				getRealKey( ));
+
+		SettingsPage settingsPage = settings.addPage("page",
+				"shortdescription",
+				"description");
+
+		Option option = settingsPage.addOption("person", OptionType.UNKNOWN);
+		PersonNameValue value = new PersonNameValue("personkey",
+				"Max",
+				"Musterman");
+		option.addValue(value);
+		final PersonNameRenderer personNameRenderer = new PersonNameRenderer( );
+		option.setRenderer(personNameRenderer);
+		personNameRenderer.addValidator(new IValidator( ) {
+
+			@Override
+			public String checkString(String strg) {
+				// wird nicht genutzt
+				return strg;
+			}
+
+			@Override
+			public boolean validate(String strg) {
+				for (char chr : strg.toCharArray( )) {
+					if (!Character.isLetter(chr)) {
+						return false;
+					}
+				}
+				return true;
+			}
+
+		});
+
+	}
+	return settings;
+}
+\end{java}
+
+Eine Eingabe von Zahlen im Namen würde nun keinen Effekt mehr haben. Sie würden
+nicht akzeptiert und den Namen nicht verändern.
+
+\subsection{Unterstützung}
+Zur Zeit unterstützt von den von \xirp~bereitgestellten \seegls{Renderern} nur der für
+den \index{Einstellungen!Optionen!Optionstyp}Optionstyp \codeQuote{TEXTFIELD} noch eine Validierung.
+
+Dort wird bei jeder Eingabe \codeQuote{validate()} des Validators aufgerufen.
+Ist die \index{Einstellungen!Validierung}Validierung erfolgreich so wird \codeQuote{checkString()} aufgerufen.
+Hat sich der String dadurch verändert, so wird das Textfeld auf diesen Wert
+gesetzt. Schlägt die Validierung fehl, so wird das Textfeld auf den letzten Wert
+zurückgesetzt.

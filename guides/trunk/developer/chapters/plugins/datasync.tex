@@ -1,0 +1,103 @@
+\section{Synchronisation mit Daten}
+\index{Plugin!Plugindaten!synchronisieren mit Oberfläche}
+\index{Plugin!Benutzeroberfläche!synchronisieren mit Plugindaten}
+Noch einfacher als das zuvor gezeigte Beispiel ist die Synchronisation von
+\index{Widget}Widgets mit den Daten eines \seegls{Plugins}.
+\par
+Um dies zu Testen wird nun ein weiteres Feld zu den \index{Plugin!Plugindaten!notifyUI()}Daten hinzugefügt:
+\begin{java}[caption=Plugindaten notifizieren GUI,label=lst:smplplug:datasync:data:notifyUI]
+	private int clickCount;
+
+	public int getClickCount() {
+		return clickCount;
+	}
+
+	public void setClickCount(int clickCount) {
+		plugin.notifyUI("clickCount",
+				this.clickCount,
+				this.clickCount = clickCount);
+	}
+
+	public void incrementClickCount() {
+		plugin.notifyUI("clickCount",
+				this.clickCount,
+				this.clickCount = clickCount + 1);
+	}
+\end{java}
+
+Im \seegls{Plugin} wird nun zusätzlich bei jedem Klick auf das \index{Bild!Icon}\seegls{Icon} noch
+\codeQuote{incrementClickCount()} aufgerufen.
+
+\begin{java}[caption=Plugindaten aus GUI setzen,label=lst:smplplug:datasync:gui:listener]
+	helloWorld.addSelectionListener(new SelectionAdapter( ) {
+
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+			 */
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				// Übersetzte Logausgabe mit einer Variablen
+				String string = getI18nString("MyPlugin.print.helloworld",
+						MyPlugin.this.getRobotName( ),
+						toPrint)
+						+ Constants.LINE_SEPARATOR;
+				LOGGER.info(robotName, string);
+				pluginData.setToPrint(string);
+				pluginData.incrementClickCount( );
+
+			}
+		});
+\end{java}
+
+Um die Anzahl der Klicks in der \seegls{GUI} darzustellen kommen nun zum Textfeld
+noch ein \codeQuote{Slider} und ein \codeQuote{Spinner} hinzu:
+\index{Manager!ColorManager}
+\begin{java}[caption=Oberfläche mit Plugindaten synchronisieren,label=lst:smplplug:datasync:gui:sync]
+	private void init() {
+		GridLayout gl = SWTUtil.setGridLayout(this, 2, true);
+		SWTUtil.resetMargins(gl);
+		SWTUtil.resetSpacings(gl);
+
+		this.setBackground(ColorManager.getColor(SWT.COLOR_RED));
+
+		text = new XText(this, SWT.READ_ONLY | SWT.WRAP, false);
+		SWTUtil.setGridData(text,
+				true,
+				true,
+				GridData.FILL,
+				GridData.FILL,
+				2,
+				1);
+
+		XStyledSpinner spinner = new XStyledSpinner(this, SWT.NONE);
+		sync(spinner, "clickCount");
+		SWTUtil.setGridData(spinner,
+				false,
+				false,
+				GridData.CENTER,
+				GridData.CENTER,
+				1,
+				1);
+
+		Slider slider = new Slider(this, SWT.NONE);
+		sync(slider, "clickCount");
+		SWTUtil.setGridData(slider,
+				true,
+				false,
+				GridData.FILL,
+				GridData.CENTER,
+				1,
+				1);
+	}
+\end{java}
+
+Diese beiden \index{Widget}Widgets können einfach durch den Aufruf von \index{Plugin!Benutzeroberfläche!sync()}\codeQuote{sync()} mit
+dem entsprechenden Propertynamen mit den Daten synchronisiert werden.
+\par
+Beim Klicken auf das \index{Bild!Icon}\seegls{Icon} ändern sich nun die Werte von \codeQuote{Slider} und
+\codeQuote{Spinner}. Bewegt man den \codeQuote{Slider} ändert sich auch der Wert
+des \codeQuote{Spinner} und umgekehrt (\refFig{dataSync}).
+
+\kfig{plugin_dataSync}{.7}{Synchronisation von Slider und Spinner}{dataSync}

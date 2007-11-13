@@ -1,0 +1,194 @@
+\chapter{Internationalisierung}
+\label{cha:i18n}
+\mainindex{Internationalisierung}
+
+Unter Internationalisierung versteht man in \xirp~dass alle Texte welche in der
+Oberfläche oder im \index{Logging!SystemProtokoll} Log erscheinen nicht hart im Code hinterlegt
+sind, sondern in externen Dateien. Für jede Sprache existiert dabei ein
+\index{Internationalisierung!Jar}Jar im Ordner \fileQuote{languages}. In diesen
+Jars befindet sich jeweils eine
+\index{Internationalisierung!Properties}\fileQuote{.properties}-Datei.
+
+Diese haben den Folgenden Aufbau:
+\begin{properties}[caption=Übersetzungsdatei,label=code:i18n:props]
+PluginManager.log.norobot.stop=Plugin ''{0}'' kann nicht gestoppt werden, da der Roboter ''{1}'' nicht existiert.
+PluginManager.log.norobot.get=Holen von Plugin ''{0} für Roboter ''{1}'' fehlgeschlagen, da der Roboter nicht existiert.
+PluginManager.log.norobot.stop.all=Plugins für Roboter ''{0}'' können nicht gestoppt werden, da der Roboter nicht existiert.
+\end{properties}
+
+Vor dem Gleichheitszeichen steht der
+\index{Internationalisierung!Schlüssel}Übersetzungsschlüssel wie er im Code
+referenziert wird. Nach dem Gleichheitszeichen steht die Übersetzung selbst.
+
+Die Zahlen in den geschweiften Klammern sind Platzhalter oder
+\index{Internationalisierung!Variable}Variablen die bei der Übersetzung mit
+Parametern gefüllt werden. Der Vorteil der Nutzung von Variablen liegt darin,
+dass sich so andere Satzstellung bei einer anderen Sprache ohne Probleme
+berücksichtigen lässt.
+
+Im Code würde nun Beispielsweise stehen:
+\begin{java}[caption=Übersetzungsbeispiel,label=code:i18n:i18n]
+String translation = I18n.getString("PluginManager.log.norobot.stop","Laserscanner","TesterBot");
+\end{java}
+
+Die Klasse \index{Internationalisierung!I18n} \codeQuote{I18n} bietet Zugriff
+auf die Übersetzungen von \xirp~und
+die gerade gesetzte Sprache. Diese kann mit \codeQuote{I18n.getLocale()}
+abgefragt werden.
+
+Weitere Informationen zu dem Format der properties-Dateien 
+finden sich im \seegls{JDK} Javadoc zur Klasse \codeQuote{PropertyResourceBundle}. 
+
+ 
+\section{Zusätzliche Sprachen}
+\index{Internationalisierung!zusätzliche Sprachen}
+Zur Zeit sind für \xirp~Übersetzungen in deutsch und englisch vorhanden. Weitere
+Sprachen können sehr einfach hinzugefügt werden.
+
+Dazu muss zunächst das Kürzel für die gewünschte Sprache gefunden werden.
+Informationen über die Sprachkürzel finden sich im \seegls{JDK} Javadoc zur Klasse
+\codeQuote{Locale}. 
+
+Mit folgendem Code-Stück können die im System vorhandenen Sprachen ausgegeben
+werden. Dies erleichtert die Findung des richtigen Sprachkürzels.
+\begin{java}
+public static void main(String[] args) {
+	final List<Locale> availableLocales = Arrays.asList(Locale.getAvailableLocales( ));
+
+	Collections.sort(availableLocales, new Comparator<Locale>( ) {
+
+		@Override
+		public int compare(Locale locale1, Locale locale2) {
+			return locale1.toString( )
+					.compareToIgnoreCase(locale2.toString( ));
+		}
+
+	});
+
+	for (Locale locale : availableLocales) {
+		System.out.println(locale + " " +
+				locale.getDisplayName(Locale.GERMAN));
+	}
+}
+\end{java}
+
+Danach kann wie folgt verfahren werden:
+\begin{itemize}
+  \item Aus dem Ordner \fileQuote{languages} eines der Jars kopieren und in
+  language\_<sprachkürzel>.jar umbenennen
+  \item Das Jar mit einem Zip-Programm öffnen und die enthaltene Properties
+  Datei extrahieren.
+  \item Datei in messages\_<sprachkürzel>.properties umbenennen
+  \item Übersetzen
+  \item Das Jar erneut mit dem Zip-Programm öffnen, die alte properties Datei
+  löschen und die neue hinzufügen
+\end{itemize}
+
+Die neue Sprache wird automatisch von \xirp~erkannt und steht von nun an zur
+Auswahl.
+
+\subsection{Dialekt}
+\index{Internationalisierung!Dialekt}
+Ist bereits eine Übersetzung zu einer Sprache vorhanden und soll dafür nur ein
+ Dialekt hinzugefügt werden, so müssen nur
+die Schlüssel übersetzt werden, welche im Dialekt anders sind. Die restlichen
+Schlüssel können aus der Properties Datei entfernt werden und werden dann von
+der Original-Sprache geladen.
+
+Sollen für die deutschen Übersetzungen (Kürzel: \texttt{de}) von \xirp~Teile in
+Schweizerisches Deutsch (Kürzel: \texttt{de\_CH}) Übersetzt werden so kopiert man
+das \fileQuote{language\_de.jar} und benennt diese Kopie in
+\fileQuote{language\_de\_CH.jar} um. Nun öffnet man das Jar mit einem Zip-Programm
+und extrahiert die \fileQuote{messages\_de.properties} und benennt diese in
+\newline\fileQuote{messages\_de\_CH.properties} um.
+
+Die Übersetzung von \enquote{AboutDialog.button.tellMore=Erzähl mir mehr} soll
+angepasst werden. Alle restlichen Einträge der Properties-Datei können gelöscht
+werden. Diese enthält dann nur noch den Eintrag:
+\begin{properties}[caption=Übersetzung: Dialekt,label=code:i18n:dialekt]
+AboutDialog.button.tellMore=Verzell mer mee
+\end{properties}
+
+Das \fileQuote{language\_de\_CH.jar} muss nun wieder geöffnet werden. Die alte
+\fileQuote{messages\_de.properties} wird gelöscht und die neue
+\fileQuote{messages\_de\_CH.properties} hinzugefügt.
+
+Startet man nun \xirp~so erhält man in der Sprachauswahl auch \enquote{Deutsch
+(Schweiz)} zur Auswahl (siehe \autoref{img:i18n:schweiz}).
+
+\kfig{i18n_schweiz}{1}{Schweizer Deutsch}{img:i18n:schweiz}
+
+Wählt man dies als neue Sprache aus so sieht man, dass alle Übersetzungen die
+deutschen sind, bis auf die im Menü unter \index{Menü!?!Über \xirp 2} 
+\menuQuote{?/Über \xirp 2} aufzurufenden Dialog auf dem rechten unteren Button
+zu findende geänderte Übersetzung (\autoref{img:i18n:schweiz:dialog}).
+
+\kfig{i18n_schwytzerdütsch.png}{.5}{Schweizer Deutsch in Über \xirp 2}{img:i18n:schweiz:dialog}
+
+\section{Plugins}
+\index{Internationalisierung!Plugin}
+Auch die \seegls{Plugins} bringen eigene Übersetzungen mit.
+
+Diese befinden sich dort direkt im Jar des \seegls{Plugin} im Paket der Hauptklasse des
+\seegls{Plugins} wieder. Auch dort lassen sich weitere Sprachen nach dem Bereits
+vorgestellten Verfahren hinzufügen.
+
+Im \autoref{sec:firstplugin} ab \autopageref{sec:firstplugin} ist erklärt wie
+sich Übersetzungen zu einem \seegls{Plugin} hinzufügen lassen und wie man mit dem zur
+Verfügung stehenden \index{Internationalisierung!PluginI18nHandler}
+\codeQuote{PluginI18nHandler} arbeitet.
+
+\section{Tips}
+\index{Internationalisierung!Tips}
+Es ist kein Problem die Übersetzungen erst hartcodiert in den Code zu schreiben
+und erst später in die Properties-Datei zu übertragen.
+
+eclipse unterstützt einen dabei mit der Funktion im Menü \menuQuote{Source} und
+\menuQuote{Externalize Strings}.
+
+Der Vorteil dieser Methode ist, dass man kein Problem mit der korrekten
+Darstellung von \index{Internationalisierung!Sonderzeichen} in der
+properties-Datei bekommt.
+
+Der Nachteil ist, dass die Nutzung von Variablen/Platzhaltern schwieriger wird.
+
+\textbf{Beispiel}
+\begin{java}
+LOGGER.debug(robotName,"Hier beim Roboter " + robotName + " geht was nicht richtig."+CONSTANTS.LINE_SEPARATOR);
+\end{java}
+
+sollte bereits so geschrieben werden:
+\begin{java}
+LOGGER.debug(robotName,handler.getString("Hier beim Roboter {0} geht was nicht richtig.",robotName)+CONSTANTS.LINE_SEPARATOR);
+\end{java}
+
+Die Ausgabe in der Konsole erfolgt dann in Ausrufezeichen geklammert die
+auf einen nicht gefundenen Übersetzungsschlüssel hinzuweisen:
+\begin{lstlisting}
+!Hier beim Roboter TesterBot geht was nicht richtig.!
+\end{lstlisting}
+
+\subsection{Do's und Dont's}
+\begin{itemize}
+  \item \textbf{Variablen benutzen}: Nicht den String in zwei Teile rund um einen
+  Parameter aufteilen. Dies führt zu Probleme wenn eine andere Sprache eine
+  andere Satzstellung verwendet.
+  \item \textbf{Keine Zeilenumbrüche}: In der Übersetzung sollten keine Zeilenumbrüche
+  wie z.B. \enquote{\textbackslash n} hartcodiert werden. Auf anderen
+  Betriebssystem könnte ein Zeilenumbruch anders aussehen. Stattdessen
+  \codeQuote{Constants.LINE_SEPARATOR} benutzen und wenn nötig dafür Variablen
+  einbauen. 
+  \item \textbf{Aufpassen bei Sonderzeichen}: Schon ein \enquote{'{0}'} in der
+  Übersetzung ist nicht korrekt. Die Hochkomma werden in der Übersetzung nicht
+  mit auftauchen. Stattdessen hier zwei Hochkomma verwenden und im Zweifelsfall
+  von eclipse externalisieren lassen.
+  \item \textbf{Custom-Widgets verwenden}: Die \index{SWT!Custom}Custom-Widgets
+  übersetzen sich zur Laufzeit wenn sich die Sprache änder. Siehe
+  \autoref{sec:swt:custom}
+  (\autopageref{sec:swt:custom}) und  \autoref{sec:plugin:toolbar}
+  (\autopageref{sec:plugin:toolbar}) 
+  \item \textbf{Sprachspezifische Trenner benutzen}: Während im deutschen der
+  Trenner einer Dezimalzahl das Komma ist, ist dies im englischen ein Punkt. Die
+  Klasse \codeQuote{I18n} stellt hierfür Methoden bereit die die korrekten Werte
+  für die aktuelle Sprache zurückgeben (hier \codeQuote{getDecimalSeparator()}).
+\end{itemize}

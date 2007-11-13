@@ -1,0 +1,249 @@
+\chapter{\xirp~2 Überblick}
+
+\xirp~steht für \xirpname.
+Übersetzt heißt dies \enquote{Erweiterbare Benutzerschnittstelle für Robotik
+Anwendungen}. Die Software wurde entworfen, um die Entwicklung von
+Benutzeroberflächen für Roboter zu erleichtern und gleichzeitig
+Werkzeuge zum Experimentieren und zur Arbeitserleichterung bereitzustellen.
+\par
+Dieses Kapitel gibt einen kurzen Überblick über die vorhandenen Features und
+Möglichkeiten die \xirp~bietet. In den folgenden Kapiteln wird genauer auf die
+im Folgenden vorgestellten Features eingegangen.
+
+\newpage
+
+\section{Features der aktuellen Version}
+\index{Features|(}
+Die aktuelle Version von \xirp~ist \version. Diese Version enthält folgende
+Features.
+
+\begin{itemize}
+	\item Profile Editor %%FERTIG%%
+	%\item Robot Editor
+	%\item Kommunikationsspezifikations Editor
+	\item Konfigurierbarer Arbeitsbereich %%FERTIG%%
+	\item Mailsystem %%FERTIG%%
+	\item Diagrammgenerator %%FERTIG%%
+	\item Live-Diagramme %%FERTIG%%
+	\item Werte-Rekorder %%FERTIG%%
+	\item Reportsuche %%FERTIG%%
+	\item Testerbot %%FERTIG%%
+	\item Externe Werkzeuge %%FERTIG%%
+	\item Hilfe %%FERTIG%%
+	\item Plugin-Schnittstelle %%FERTIG%%
+	\item Diverse Standard-Plugins %%FERTIG%%
+	\item Stoppuhr %%FERTIG%%
+	\item Sprachausgabe %Kapitel Sprachausgabe%
+	\item Kommandos %%FERTIG%%
+	\item Internationalisierung %%FERTIG%%
+	\item Roboterübersicht %%FERTIG%%
+	\item Systemprotokoll %%FERTIG%%
+	\item Kontrollübersicht %%FERTIG%%
+	\item Plugin-Vorschau %%FERTIG%%
+	\item Einstellungen für Anwendung und Plugins %%FERTIG%%
+	\item Datenbankanbindung %%FERTIG%%
+\end{itemize}
+{}
+\subsection{Profile Editor}
+\index{Features!Profile}
+\index{Profile}
+Die \seegls{Profile} spezifizieren welche(r) Roboter eingesetzt werden sollen. Des
+Weiteren können weitere optionale Einstellungen hier eingetragen werden.
+Die Applikation bietet die Möglichkeit die \seegls{Profile} mittels eines Dialoges zu
+erstellen und zu bearbeiten.
+
+\subsection{Arbeitsbereich}
+\index{Features!Arbeitsbereich}
+\index{Arbeitsbereich}
+Die Arbeitsoberfläche enthält die graphischen Elemente der geladenen Plugins und
+einige feste Bestandteile der Applikation. Jedes Element kann frei angeordnet
+werden. Die in der Oberfläche benutzen Farben können frei konfiguriert werden.
+Die eingesetzten \seegls{Shortcut}s, können ebenfalls frei konfiguriert werden.
+
+\subsection{Mailsystem}
+\index{Features!Mail}
+\index{Features!Kontakte}
+\index{Mail}
+\index{Kontakte}
+\xirp~bietet die Möglichkeit E-Mails mit Anhängen zu versenden. Diese E-Mails
+werden archiviert und können exportiert, weitergeleitet und/oder gedruckt
+werden. Um das E-Mail-System komfortabel zu gestalten steht eine
+Kontaktverwaltung zur Verfügung.
+
+\subsection{Diagrammgenerator}
+\index{Features!Diagramme}
+\index{Diagramme}
+Es ist möglich diverse Diagrammtypen zu generieren. Als Datenbasis dienen die
+aufgezeichneten Werte des Rekorders.
+
+\subsection{Live-Diagramme}
+\index{Features!Live-Diagramme}
+\index{Live-Diagramme}
+Diagramme können nicht nur auf einer bestehenden Datenbasis erstellt werden,
+sondern auch direkt während des Empfangens von Sensordaten vom Roboter. Die zu
+plottenden Werte können aus der Liste der Sensorwerte ausgewählt werden.
+
+\subsection{Werte-Rekorder}
+\index{Features!Rekorder}
+\index{Rekorder}
+Mit Hilfe des Werte-Rekorders können ausgewählte Sensordaten aufgezeichnet
+werden. Diese Aufzeichnungen werden in der Datenbank gespeichert. Später können
+diese als \seegls{CSV}-Dateien exportiert werden, oder mittels des Diagrammgenerators in
+verschiedenste Diagramme umgewandelt werden.
+
+\subsection{Reportsuche}
+\index{Features!Reportsuche}
+\index{Reporte}
+Alle von Plugins erzeugten \seegls{PDF}-Reporte werden nicht nur im Dateisystem
+gespeichert, sondern ebenfalls in der Datenbank abgelegt. Damit diese Reporte
+später wiedergefunden werden können, ist es möglich eine Suche in der Datenbank
+auszuführen. Die so gefundenen Einträge können als \seegls{PDF} exportiert, gedruckt oder
+im Standard \seegls{PDF}-Betrachter geöffnet werden.
+
+\subsection{Testerbot}
+\index{Features!Testerbot}
+\index{Testerbot}
+Der \seegls{Testerbot} ist ein einfacher \seegls{Server}, welcher an die zu ihm verbundenen
+\seegls{Client}s Werte für diverse \seegls{Sensor}en liefert. Ebenfalls werden mit jedem Paket
+ein Laserscan und ein Scan eines \seegls{Thermopile}s mitgeschickt. Dieser \seegls{Server} kann
+zum Testen von eigenen neuen Plugins verwendet werden.
+
+\subsection{Externe Werkzeuge}
+\index{Features!Externe Werkzeuge}
+\index{Externe Werkzeuge}
+\index{Profile}
+In jedem Profil können sogenannte externen Werkzeuge definiert werden. Ein
+Werkzeug besteht aus mindestens einem Aufruf einer ausführbaren Datei. Es
+können die zu übergebenden Argumente und eine Wartezeit nach dem Start des
+Programmes zum Start des nächsten Programmes angegeben werden. Jedes Tool kann
+einfach über das Menü gestartet werden. 
+
+\subsection{Hilfe}
+\index{Features!Hilfe}
+\index{Hilfe}
+Jedes Plugin kann eine Hilfe in \seegls{HTML}-Form zur Verfügung stellen. Diese Hilfen
+und die Hilfe der Applikation selbst kann über den Hilfe-Dialog eingesehen werden.
+
+\subsection{Plugin-Schnittstelle}
+\index{Features!Plugin-Schnittstelle}
+\index{Plugins}
+\index{Profile}
+Die Applikation ist zu einem großen Teil zusammengesetzt aus Plugins. Welche
+Plugins für einen Roboter verwendet werden wird in der Roboter Profil Datei
+angegeben. Mehr über die \seegls{API} zur Entwicklung von Plugins für \xirp~kann im
+\href{\devguideurl}{Developer Guide} nachgelesen werden. Dieser kann von
+\href{\devguideurl}{\devguideurlname} heruntergeladen werden.
+
+\subsection{Standard-Plugins}
+\index{Features!Standard-Plugins}
+\index{Plugins}
+\index{Testerbot}
+\index{Profile}
+Die Installation von \xirp~liefert einige Plugins. Die installierten Plugins
+reichen aus, um die Applikation mittels des \seegls{Testerbot} zu erkunden. Es stehen für
+alle Bereiche der Applikation Plugins für den \seegls{Testerbot} zur Verfügung:
+
+\begin{itemize}
+  \item Sensorik
+  \item Reporte
+  \item Toolbars
+  \item Eingebettete Plugins mit graphischer Benutzeroberfläche
+  \item Plugins mit graphischer Benutzeroberfläche welche in einem eigenen
+  Fenster angezeigt werden
+  \item Plugins ohne graphische Benutzeroberfläche
+\end{itemize}
+
+Nach einer Standardinstallation von \xirp~kann sofort begonnen werden sich
+mit Hilfe des \seegls{Testerbot} Profils in die Applikation einzuarbeiten. Im Folgenden
+wird anhand des \seegls{Testerbot}s und des dazugehörigen Profil Dateien in die Anwendung
+eingeführt.
+
+\subsection{Stoppuhr}
+\index{Features!Stoppuhr}
+\index{Stoppuhr}
+Ein kleines Feature in \xirp~sind die vorhandenen Stopp-Uhren. Jede
+Registerkarte eines Roboters bietet die Möglichkeit eine Uhr mitlaufen zu
+lassen. Es ist ebenso möglich alle vorhandenen Stopp-Uhren gleichzeitig zu
+starten, stoppen oder zu pausieren.
+
+\subsection{Sprachausgabe}
+\index{Features!Sprachausgabe}
+\index{Sprachausgabe}
+\xirp~bietet die Möglichkeit Text von einem Sprach-Syntesizer
+\enquote{vorlesen} zu lassen. Wie dieses Feature in einem Plugin eingesetzt
+werden kann, kann im \href{\devguideurl}{Developer Guide} nachgelesen werden.
+Dieser kann von \href{\devguideurl}{\devguideurlname} heruntergeladen werden.
+\par
+Die Sprachausgabe unterstützt nicht nur die zum Paket gehörenden Standard
+Stimmen sondern auch Stimmen des \enquote{MBROLA} Projektes.
+
+\subsection{Kommandos}
+\index{Features!Kommandos}
+\index{Kommandos}
+In der Anwendung ist es möglich von Plugins definierte Aktionen auf frei
+wählbare Tasten der Tastatur oder z.B. eines \seegls{Gamepad}s zu legen. So könnte als
+Beispiel eine \enquote{Notabschaltung} eines Roboters mittels eines Buzzers
+realisiert werden.
+
+\subsection{Internationalisierung}
+\index{Features!Internationalisierung}
+\index{Internationalisierung}
+\index{Plugins}
+Die Anwendung ist für die Verwendung von verschiedensten Sprachen ausgelegt.
+Momentan stehen Sprachdateien für Deutsch und Englisch bereit. Plugins können
+ebenfalls Sprachpakete liefern.
+
+\subsection{Roboterübersicht}
+\index{Features!Roboterübersicht}
+\index{Roboterübersicht}
+Jeder Roboter-Reiter enthält einen Bereich, der schematisch den Roboter
+darstellt. Es werden alle aus dem \seegls{Profile} verfügbaren Informationen über den
+Roboter angezeigt.
+
+\subsection{Systemprotokoll}
+\index{Features!Systemprotokoll}
+\index{Systemprotokoll}
+Im Systemprotokoll werden Informationen, Warnungen und Fehler die von \xirp~oder
+einem geladenen Plugin des Roboters angezeigt. Jeder Roboter hat eine solche
+Protokollansicht.
+
+\subsection{Kontrollübersicht}
+\index{Features!Kontrollübersicht}
+\index{Kontrollübersicht}
+Sind in einem Profil mehr als ein Roboter eingetragen kann das sogenannte
+\enquote{Control Overview Panel} auf deutsch die
+\enquote{Kontrollübersicht} kurz \enquote{C.O.P.} angezeigt werden. Hier ist es
+möglich verschiedene der verfügbaren Roboter auszuwählen und gleichzeitig die
+wichtigsten Elemente anzuzeigen. So ist es möglich mehrere Roboter gleichzeitig
+zu kontrollieren.
+
+\subsection{Plugin-Vorschau}
+\index{Features!Plugin-Vorschau}
+\index{Plugin-Vorschau}
+Über den Plugin Informationsdialog ist es möglich eine Vorschau eines Plugins
+anzeigen zu lassen.
+
+\subsection{Einstellungen für Anwendung und Plugins}
+\index{Features!Einstellungen}
+\index{Einstellungen}
+Um die Einstellungsmöglichkeiten in Anwendung und Plugins übersichtlich zu
+halten existiert nur ein einziger Dialog. Dieser Dialog enthält
+Einstellungsseiten für die Optionen von \xirp~sowie die von den Plugins
+definierten Einstellungen.
+
+\subsection{Datenbankanbindung}
+\index{Features!Datenbank}
+\index{Datenbank}
+\index{Datenbank!HSQLDB}
+\index{Datenbank!MySQL}
+Die Aufnahmen die mit dem Rekorder gemacht werden und die von Plugins
+generierten \seegls{PDF}-Reporte werden in einer Datenbank abgelegt. Momentan werden die
+folgenden Datenbanken unterstützt.
+
+\begin{itemize}
+  \item HSQLDB
+  \item MySQL
+\end{itemize}
+
+
+\index{Features|)}

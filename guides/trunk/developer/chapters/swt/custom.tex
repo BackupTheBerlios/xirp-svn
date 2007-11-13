@@ -1,0 +1,584 @@
+\section{Custom}
+\label{sec:swt:custom}
+\index{Widget!Custom}
+
+\xirp~stellt für die Nutzung Custom Widgets bereit, die anstatt der \seegls{SWT} Widgets
+benutzt werden sollten. Diese Custom Widgets im Paket
+\codeQuote{de.unibremen.rr.xirp.ui.widgets.custom} übernehmen die aktuellen
+\codeQuote{Farbe!\xirp}Farb- und \index{Internationalisierung}Spracheinstellungen von \xirp~automatisch.
+
+Sie bieten je nach Anwendbarkeit die Methoden
+\codeQuote{setTextForLocaleKey(String key, Object... objects)} und
+\codeQuote{setToolTipTextForLocaleKey(String key, Object... objects)} sowie
+Konstruktoren die zusätzlich zu den Standardkonstruktoren einen
+\index{Internationalisierung!II18nHandler}Übersetzungshandler (\autoref{cha:i18n}, \autopageref{cha:i18n}) als Parameter 
+haben.
+
+\subsection{Neue Widgets}
+
+Im Laufe der Entwicklung von \xirp~reichten die von \seegls{SWT} bereitgestellten
+\index{Widget}Widgets nicht immer aus, so dass drei neue hinzugekommen sind:
+\begin{itemize}
+  \item \index{Widget!Custom!XNegativeSlider}\codeQuote{XNegativeSlider} (siehe
+  \autopageref{sec:XNegativeSlider})
+  \item \index{Widget!Custom!XStyledSpinner}\codeQuote{XStyledSpinner} (siehe
+  \autopageref{sec:XStyledSpinner})
+  \item
+  \index{Widget!Custom!XTimeIntervalChooser}\codeQuote{XTimeIntervalChooser} (siehe
+  \autopageref{sec:XTimeIntervalChooser})
+  \item \codeQuote{XImageLabel} (siehe
+  \autopageref{sec:XImageLabel})
+  \item \codeQuote{XPList} und \codeQuote{XPListItem} (siehe
+  \autopageref{sec:XPList})
+  \item \codeQuote{XPCombo} (siehe
+  \autopageref{sec:XPCombo})
+\end{itemize}
+
+
+\subsubsection{XNegativeSlider}
+\label{sec:XNegativeSlider}
+\index{Widget!Custom!XNegativeSlider}
+\kfig{swt_custom_xnegativeslider}{.4}{XNegativeSlider}{img:swt:custom:negativeslider}
+Die \seegls{SWT} \codeQuote{Slider} unterstützen nur positive Werte. Bei der
+Robotersteuerung ist es jedoch oft nötig auch negative Werte einstellen zu
+können. Aus diesem Grund ist der \codeQuote{XNegativeSlider} entstanden.
+
+Im Hintergrund wird der Original \codeQuote{Slider} von \seegls{SWT} benutzt der
+Minimalwert des \codeQuote{XNegativeSlider} darf jedoch im Gegensatz zu dem des
+\codeQuote{Slider} auch negativ sein.
+
+Da die Werte intern umgerechnet werden müssen, ist es erforderlich dass ein
+Aufruf von \codeQuote{setMinimum} vor einem \codeQuote{setMaximum} Aufruf
+durchgeführt wird und diese beiden Methoden auch nicht ein zweites mal aufgerufen
+werden dürfen.
+
+Der \index{Tooltip}Tooltip des \codeQuote{XNegativeSlider} weist einige
+Besonderheiten auf: 
+Ist noch kein Tooltip Text gesetzt worden, so wird der aktuelle Wert des \codeQuote{Slider}s
+als Tooltip angezeigt. Ist ein Tooltip Text mittels
+\codeQuote{setToolTipTextForLocaleKey()} gesetzt worden und enthält die
+\index{Internationalisierung!Schlüssel} Übersetzung zu dem Schlüssel eine Variable
+\index{Internationalisierung!Variable} und wurde kein Parameter für die
+Übersetzung mitgegeben, so wird der gegebene \index{Internationalisierung!Schlüssel} Schlüssel
+übersetzt und die Variable in der Übersetzung mit dem aktuellen Wert ersetzt.
+
+\textbf{Beispiel:}\par
+Ist der aktuelle Wert des \codeQuote{XNegativeSlider} \texttt{-11} und die
+deutsche Übersetzung für den als Tooltip gesetzten Schlüssel
+\enquote{XNegativeSlider.tooltip.text} ist \enquote{Der aktuelle Wert ist
+\{0\}} so erscheint als Tooltip am \codeQuote{XNegativeSlider} (siehe
+\autoref{img:swt:custom:negativeslider} auf 
+ \autopageref{img:swt:custom:negativeslider})
+\begin{lstlisting}
+Der aktuelle Wert ist -11
+\end{lstlisting}
+
+
+\begin{java}[caption=Beispiel XNegativeSlider,label=code:swt:custom:xnegativeslider]
+import java.util.Locale;
+
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
+
+import de.unibremen.rr.xirp.ui.widgets.custom.XNegativeSlider;
+import de.unibremen.rr.xirp.util.I18n;
+
+public class XNegativeSliderExample {
+
+	public static void main(String[] args) {
+		final Display display = new Display( );
+		final Shell shell = new Shell(display);
+		shell.setLayout(new FillLayout( ));
+		shell.setText("XNegativeSlider");
+
+		I18n.setLocale(Locale.GERMAN);
+
+		XNegativeSlider s = new XNegativeSlider(shell, SWT.NONE);
+		s.setMinimum(-50);
+		s.setMaximum(50);
+		s.setSelection(0);
+		s.setToolTipTextForLocaleKey("XNegativeSlider.tooltip.text");
+
+		shell.pack( );
+		shell.open( );
+		while (!shell.isDisposed( )) {
+			if (!display.readAndDispatch( )) {
+				display.sleep( );
+			}
+		}
+		display.dispose( );
+	}
+}
+\end{java}
+
+\subsubsection{XStyledSpinner}
+\label{sec:XStyledSpinner}
+\index{Widget!Custom!XStyledSpinner}
+\kfig{swt_custom_xstyledspinner}{.4}{XStyledSpinner}{img:swt:custom:xstyledspinner}
+Der \codeQuote{XStyledSpinner} hatte zu Beginn den selben Entstehungshintergrund
+wie der \codeQuote{XNegativeSlider}, jedoch kam hier zu der Anforderung auch
+negative Werte darstellen zu können auch noch die auch Fließkomma-Werte
+(\codeQuote{double}) Einstellen zu können.
+
+Im Gegensatz zum \codeQuote{XNegativeSlider} basiert der
+\codeQuote{XStyledSpinner} auf keinem \seegls{SWT}-Widget sondern setzt sich aus
+einzelnen Textfeldern und Buttons auf einem Composite zusammen.
+
+Um den verschiedenen Anforderungen gerecht zu werden unterstützt der
+\codeQuote{XStyledSpinner} verschiedene Stile welche dem Konstruktor übergeben
+werden können:
+\begin{itemize}
+  \item \codeQuote{SpinnerStyle.NORMAL}: Ein normaler Spinner
+  \item \codeQuote{SpinnerStyle.NEGATIVE}: Ein Spinner welcher auch negative
+  Werte erlaubt
+  \item \codeQuote{SpinnerStyle.DOUBLE}: Ein Spinner welcher die Eingabe von
+  Double Werte erlaubt
+  \item \codeQuote{SpinnerStyle.CHOOSABLE_INCREMENT}: Ein Spinner bei dem sich
+  Auswählen lässt welche Stelle erhöht werden soll. Sinnvoll für den Stil \codeQuote{SpinnerStyle.DOUBLE}
+  \item \codeQuote{SpinnerStyle.ALL}: Zusammenfassung aus
+  \codeQuote{SpinnerStyle.NEGATIVE}, \codeQuote{SpinnerStyle.DOUBLE} und
+  \codeQuote{SpinnerStyle.CHOOSABLE_INCREMENT}
+\end{itemize}
+
+Der \codeQuote{XStyledSpinner} bietet neben einem \codeQuote{SelectionListener}
+auch die Möglichkeit einen\newline \codeQuote{ValueChangedListener} zu registrieren
+welcher im Gegensatz zum \codeQuote{SelectionListener} direkt einen
+\codeQuote{double} als selektierten Wert enthält.
+
+Werte die in die Textfelder eingegebene werden, beachten die gesetzten Minimum
+und Maximum-Grenzen des Spinner, werden aber nur bei einem \codeQuote{focusLost}
+übernommen.
+
+Mit \codeQuote{setNumberOfDecimals()} kann die Anzahl der angezeigten
+Dezimalstellen für Spinner des Stils \codeQuote{SpinnerStyle.DOUBLE} eingestellt
+werden.
+
+Minimum und Maximum-Werte können nur negativ sein wenn der Stil
+\codeQuote{SpinnerStyle.NEGATIVE} ist. Der Minimum-Wert muss immer vor dem
+Maximum-Wert gesetzt werden, und die Werte können nicht wieder überschrieben
+werden. Ist der Maximum-Wert kleiner als der Minimum-Wert so werden die Werte
+getauscht. 
+
+Der mit \codeQuote{setIncrement()} gesetzte Wert wird beim Stil
+\codeQuote{SpinnerStyle.DOUBLE} plus
+\codeQuote{SpinnerStyle.CHOOSABLE_INCREMENT} Anteilig auf die gerade zu
+verändernde Stelle angerechnet.
+
+Steht der Increment auf \texttt{1} und bei der Zahl \texttt{15,65} soll die erste
+Dezimalstelle editiert werden, so ergibt eine Erhöhung den Wert \texttt{15,75}
+(siehe \autoref{img:swt:custom:xstyledspinner} auf \autopageref{img:swt:custom:xstyledspinner}).
+
+\begin{java}[caption=Beispiel XStyledSpinner,label=code:swt:custom:xstyledspiner]
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
+
+import de.unibremen.rr.xirp.ui.widgets.custom.XStyledSpinner;
+import de.unibremen.rr.xirp.ui.widgets.custom.XStyledSpinner.SpinnerStyle;
+
+public class XStyledSpinnerExample {
+
+	public static void main(String[] args) {
+		final Display display = new Display( );
+		final Shell shell = new Shell(display);
+		shell.setLayout(new FillLayout( ));
+		shell.setText("XStyledSpinner");
+
+		XStyledSpinner s = new XStyledSpinner(shell,
+				SWT.NONE,
+				SpinnerStyle.CHOOSABLE_INCREMENT | SpinnerStyle.DOUBLE |
+						SpinnerStyle.NEGATIVE);
+		s.setMinimum(-50);
+		s.setMaximum(100);
+		s.setSelection(60.65);
+		s.setIncrement(10);
+
+		shell.pack( );
+		shell.open( );
+		while (!shell.isDisposed( )) {
+			if (!display.readAndDispatch( )) {
+				display.sleep( );
+			}
+		}
+		display.dispose( );
+	}
+}
+\end{java}
+
+\subsubsection{XTimeIntervalChooser}
+\label{sec:XTimeIntervalChooser}
+\index{Widget!Custom!XTimeIntervalChooser}
+\kfig{swt_custom_xtimeintervalchooser}{.75}{XTimeIntervalChooser}{img:swt:custom:xtimeintervalchooser}
+
+Der \codeQuote{XTimeIntervalChooser} ermöglicht ist Zeitspannen auf einem
+Zeitstrahl auszuwählen.
+
+Mittels \codeQuote{setStart(java.util.Date)} und
+\codeQuote{setStop(java.util.Date)} werden die Grenzen des Zeitstrahls auf die
+angegebenen Zeiten festgelegt. Innerhalb dieser Grenzen kann dann eine beliebige
+Zeitspanne ausgewählt werden.
+
+Durch \codeQuote{setRange(java.util.Date)} kann zusätzlich eine feste Zeitspanne
+von z.B. 10 min festgelegt werden, bei der sich nur noch Start oder Endpunkt
+festlegen lässt.
+
+Über dem Zeitstrahl werden die Start- und Endzeit des Gesamten Zeitstrahls
+angezeigt, darunter die Zeiten der Gewählten Zeitspanne.
+
+Die Farben des \codeQuote{XTimeIntervalChooser} sind einstellbar:
+\begin{itemize}
+  \item \codeQuote{setBackground()}: Die Hintergrundfarbe
+  \item \codeQuote{setChosenTimeTextColor()}: Die Farbe für die Zeiten der
+  gewählten Zeitspanne
+  \item \codeQuote{setLineColor()}: Die Farbe des Zeitstrahls
+  \item \codeQuote{setMarkerColor()}: Die Farbe der Zeitspannenmarkierung
+\end{itemize}
+
+Weiterhin lässt sich das Format der angezeigten Zeiten mit
+\codeQuote{setFormat()} festlegen. Dieses Format entspricht denen in
+\codeQuote{java.text.SimpleDateFormat} beschriebenen Formaten und ist Initial
+\enquote{dd.MM.yyyy HH:mm:ss,SSS} zeigt also Tage, Monate, Jahr, Stunden, Minuten,
+Sekunden und Millisekunden an.
+
+Das folgende Beispiel zeigt die Erstellung eines
+\codeQuote{XTimeIntervalChooser} mit einem Zeitstrahl von 30 Minuten ab jetzt
+und einer Zeitspannen-Auswahl von 10 Minuten mit einem Zeitformat welches
+Stunden, Minuten und Sekunden darstellt (siehe
+\autoref{img:swt:custom:xtimeintervalchooser} auf \autopageref{img:swt:custom:xtimeintervalchooser}).
+
+\begin{java}[caption=Beispiel XTimeIntervalChooser,label=code:swt:custom:xtimeintervalchooser]
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
+
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
+
+import de.unibremen.rr.xirp.ui.widgets.custom.XTimeIntervalChooser;
+
+public class XTimeIntervalChooserExample {
+
+	public static void main(String[] args) {
+		final Display display = new Display( );
+		final Shell shell = new Shell(display);
+		shell.setLayout(new FillLayout( ));
+		shell.setText("XTimeIntervalChooser");
+
+		XTimeIntervalChooser s = new XTimeIntervalChooser(shell, SWT.NONE);
+		// Startzeit = Jetzt
+		s.setStart(new Date( ));
+		// Stopzeit in einer halben Stunde
+		Date stop = new Date(System.currentTimeMillis( ) +
+				TimeUnit.MINUTES.toMillis(30));
+		s.setStop(stop);
+
+		// Farbe der ausgewählten zeiten soll rot sein
+		s.setChosenTimeTextColor(display.getSystemColor(SWT.COLOR_RED));
+		// Farbe des Zeitstrahls soll blau sein
+		s.setLineColor(display.getSystemColor(SWT.COLOR_BLUE));
+		// Farbe der Zeitspannen Markierungen soll Magenta sein
+		s.setMarkerColor(display.getSystemColor(SWT.COLOR_DARK_MAGENTA));
+
+		// Feste Zeitspanne von 10 Minuten
+		s.setRange(new Date(TimeUnit.MINUTES.toMillis(10)));
+		// Stunde, Minuten und Sekunden anzeigen
+		s.setFormat("HH:mm:ss");
+
+		shell.pack( );
+		shell.setSize(500, shell.getSize( ).y);
+		shell.open( );
+		while (!shell.isDisposed( )) {
+			if (!display.readAndDispatch( )) {
+				display.sleep( );
+			}
+		}
+		display.dispose( );
+	}
+}
+\end{java}
+
+\subsubsection{XImageLabel}
+\label{sec:XImageLabel}
+\index{Widget!Custom!XImageLabel}
+
+Das \codeQuote{XImageLabel} bietet die Möglichkeit einen roten oder grünen Punkt
+zum Beispiel für die Komplettierung einer Aufgabe anzuzeigen. Als
+\index{Tooltip}Tooltip erscheint entsprechend des Punktes \enquote{Dieser Teil
+ist fertig} (grün) oder
+\enquote{Dieser Teil ist nicht fertig} (rot). Die Angabe eines eigenen
+\index{Tooltip}Tooltip oder Textes ist nicht möglich.
+
+Der Status kann mittels der Methode \codeQuote{setDone(boolean)} gesetzt und mit
+\codeQuote{isDone()} abgerufen werden.
+
+\subsubsection{XPList und XPListItem}
+\label{sec:XPList}
+\index{Widget!Custom!XPList}
+\index{Widget!Custom!XPListItem}
+\kfig{swt_custom_xplist}{.75}{XPList mit ListType.TITLE$\_$AND$\_$DESC in der 
+Kontaktverwaltung}{img:swt:custom:xplist}
+Die \codeQuote{XPList} hat als Grundlage nicht ein \seegls{SWT}-Widget sondern
+\codeQuote{PList} aus \index{SWTPlus!PList}\seegls{SWTPlus}.
+
+Diese Liste unterstützt drei verschiedene Typen:
+\begin{itemize}
+  \item \codeQuote{ListType.SIMPLE}: Einfache Liste von Items mit Bild und Text
+  \item \codeQuote{ListType.LIST_BAR}: Liste von Items mit größeren Bildern
+  \item \codeQuote{ListType.TITLE_AND_DESC}: Liste von Items mit Bild, Titel und
+  Beschreibung (siehe \autoref{img:swt:custom:xplist})
+\end{itemize}
+
+Ist der Type der Liste auf der ein \seegls{Item} liegt
+\codeQuote{ListType.TITLE_AND_DESC} so unterstützen die \codeQuote{XPListItem}s
+zusätzlich die Methoden \codeQuote{setDescription(String)},
+\codeQuote{setDescriptionForLocaleKey(String, Object...)} und
+\codeQuote{getDescription()}.
+
+Die \codeQuote{setText()}-Methoden setzen in diesem Fall den Titel des \seegls{Item}.
+
+\subsubsection{XPCombo}
+\label{sec:XPCombo}
+\index{Widget!Custom!XPCombo}
+\kfig{swt_custom_xpcombo}{.3}{XPCombo mit ComboType.COLOR}{img:swt:custom:xpcombo}
+Die \codeQuote{XPCombo} hat als Grundlage nicht ein \seegls{SWT}-Widget sondern
+\codeQuote{PCombo} aus \index{SWTPlus!PCombo}\seegls{SWTPlus}.
+
+Diese Liste unterstützt drei verschiedene Typen:
+\begin{itemize}
+  \item \codeQuote{ComboType.COLOR}: Eine \index{Widget!Combobox}Combobox zur
+  Farbauswahl (siehe \autoref{img:swt:custom:xpcombo})
+  \item \codeQuote{ComboType.LIST}: Eine \index{Widget!Combobox}Combobox mit einer
+  Liste zur Auswahl
+  \item \codeQuote{ComboType.TREE}: Eine \index{Widget!Combobox}Combobox mit einem
+  Baum zur Auswahl
+  \item \codeQuote{ComboType.TABLE}: Eine \index{Widget!Combobox}Combobox mit einer
+  Tabelle zur Auswahl
+\end{itemize}
+
+Die Methode \codeQuote{setI18nPrefix(String)} wird Intern für die
+\index{Internationalisierung}Internationalisierung der Farbnamen für den Stil
+\codeQuote{ComboType.COLOR} und sollte nicht extern verwendet werden.
+
+\subsection{Besondere Funktionen}
+
+Einige \index{Widget!Custom!Besondere Funktionen} Custom-Widgets haben neben
+Internationalisierung und Farbübernahme neben den Original-Funktionen des
+SWT-Widget noch zusätzliche Funktionen die die Benutzung vereinfachen sollen.
+Zur Zeit sind dies:
+\begin{itemize}
+  \item \codeQuote{XCombo}
+  \item \codeQuote{XList}
+  \item \codeQuote{XPCombo}
+  \item \codeQuote{XTabFolder}
+  \item \codeQuote{XTable}
+  \item \codeQuote{XTableColumn}
+  \item \codeQuote{XTreeItem}
+  \item \codeQuote{XButton}
+\end{itemize} 
+
+\subsubsection{XCombo}
+
+Die Methode \codeQuote{select(String)} der \codeQuote{XCombo} selektiert den
+gegebenen \codeQuote{String} der Teil der \seegls{Items} der \index{Widget!Combobox}Combobox sein muss, jedoch
+kein \index{Internationalisierung!Schlüssel}Schlüssel sein darf.
+
+\subsubsection{XList}
+Die Methode \codeQuote{setSelectionWithEvent} der \codeQuote{XList} selektiert
+den gegebenen Index und wirft ein entsprechendes \codeQuote{SelectionEvent}.
+
+\subsubsection{XTabFolder}
+Der \codeQuote{XTabFolder} hat keine besonderen Methoden, sorgt aber dafür dass
+\seegls{Items} die auf diesem Folder liegen mit eine Klick des Mittleren Mausbuttons auf
+das \seegls{Item} geschlossen werden können.
+
+\subsubsection{XTable und XTableColumn}
+\codeQuote{XTable} und \codeQuote{XTableColumn} unterstützen die Sortierung von
+Spalten wenn sie zusammen verwendet werden.
+
+\codeQuote{XTable} bietet folgende Methode:
+\begin{itemize}
+  \item \codeQuote{sortColumn(int, int)}: Sortiert die angegebene Spalte wenn
+  diese vorhanden und vom Typ \codeQuote{XTableColumn} ist in der angegebenen
+  Sortierreihenfolge \codeQuote{SWT.UP} und \codeQuote{SWT.DOWN}.
+  \item \codeQuote{resortColumn(int)}: Sortiert die angegebene Spalte wenn
+  diese vorhanden und vom Typ \codeQuote{XTableColumn} ist in der aktuell
+  gesetzten Sortierreihenfolge.
+  \item \codeQuote{setSelectionAndForceFocus(int)}: Selektiert die angegebene
+  Zeile, wirft ein passendes \codeQuote{SelectionEvent} und gibt der Tabelle den
+  Focus.
+  \item \codeQuote{selectLastAndForceFocus()}: Wie
+  \codeQuote{setSelectionAndForceFocus(int)} selektiert aber die letzte Zeile
+  der Tabelle.
+\end{itemize}
+
+\codeQuote{XTableColumn} bietet folgende Methode:
+\begin{itemize}
+  \item \codeQuote{setSortable(Comparator<String>)}: Sortiert die Spalte mit dem
+  gegebenen \codeQuote{Comparator} für \codeQuote{String}s
+  \item \codeQuote{setSortable(SortType)}: Stellt die Sortierung auf den
+  gegebenen Typ:
+  \begin{itemize}
+    \item \codeQuote{SortType.ALPHA}: Alphanumerische Sortierung
+    \item \codeQuote{SortType.NUMERIC_INT}: Sortierung für Ganzzahlen
+    \item \codeQuote{SortType.NUMERIC_DOUBLE}: Sortierung für Fließkommazahlen
+  \end{itemize}
+  \item \codeQuote{sort(int)}: Sortiert diese Spalte anhand des gegebenen
+  Sortierungstyps \codeQuote{SWT.UP} (aufsteigend) oder \codeQuote{SWT.DOWN} (absteigend).
+  \item \codeQuote{disableSortable()}: Deaktiviert die Sortierung für diese Spalte.
+\end{itemize}
+
+Die Sortierung von \codeQuote{XTableColumn} ist Standardmäßig an und steht auf
+alphanumerischer Sortierung.
+
+\subsubsection{XTreeItem}
+Da Standardmäßig nur die Methode \codeQuote{getChecked()} existiert kommt beim
+\codeQuote{XTreeItem} zur besseren Auffindbarkeit noch die Methode
+\codeQuote{isChecked()} hinzu, welche \codeQuote{getChecked()} zurück gibt.
+
+\subsubsection{XButton}
+Der \codeQuote{XButton} ist ein Normaler Button mit dem Stil \codeQuote{SWT.PUSH}
+dem Konstruktor kann stattdessen aber noch ein Typ mitgegeben werden welcher
+einen \index{Internationalisierung}internationalisierten Standardtext für den
+Button setzt (hier die deutschen Übersetzungen):
+\begin{itemize}
+  \item \codeQuote{XButtonType.NULL}: Text und Tooltip kann manuell gesetzt
+  werden. Dies entspricht der Übergabe keines Typ.
+  \item \codeQuote{XButtonType.APPLY}: Text \enquote{Übernehmen}, Tooltip \enquote{Änderungen übernehmen}
+  \item \codeQuote{XButtonType.SAVE}: Text \enquote{Speichern}, Tooltip \enquote{Daten übernehmen und speichern}
+  \item \codeQuote{XButtonType.RESET}: Text \enquote{Zurücksetzen}, Tooltip \enquote{Feldinhalte zurücksetzen}
+  \item \codeQuote{XButtonType.DEFAULT}: Text \enquote{Standard}, Tooltip \enquote{Standard wiederherstellen}
+  \item \codeQuote{XButtonType.CLOSE}: Text \enquote{Schließen}, Tooltip \enquote{Dialog schließen}
+  \item \codeQuote{XButtonType.OK}: Text \enquote{OK}, Tooltip \enquote{Daten bestätigen}
+  \item \codeQuote{XButtonType.CANCEL}: Text \enquote{Abbrechen}, Tooltip \enquote{Operation abbrechen}
+  \item \codeQuote{XButtonType.YES}: Text \enquote{Ja}, Tooltip \enquote{Ja ich will}
+  \item \codeQuote{XButtonType.NO}: Text \enquote{Nein}, Tooltip \enquote{Nein ich will nicht}
+  \item \codeQuote{XButtonType.LOOKUP}: Text \enquote{\ldots}, Tooltip \enquote{Daten auswählen}
+\end{itemize}
+
+\subsection{Eigene Widgets}
+\index{Widget!eigene}
+Werden zusätzlich zu den von \xirp~bereitgestellten noch weitere Widgets
+benötigt, welche ebenfalls \index{Internationalisierung}Internationalisierung
+und \index{Farbe!\xirp} Farbgebung von \xirp~
+entsprechen, so können diese selber erstellt werden.
+
+Dies soll am Beispiel von \codeQuote{XText} gezeigt werden.
+
+Als erste wird dafür die Klasse selbst benötigt. Diese erweitert
+\codeQuote{Text}: 
+\begin{java}[caption=Eigenes Widget: XText (1),label=code:swt:custom:xtext1]
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Text;
+
+import de.unibremen.rr.xirp.util.I18n;
+import de.unibremen.rr.xirp.util.II18nHandler;
+
+public class XText extends Text {
+
+	private II18nHandler handler;
+
+	public XText(Composite parent, int style) {
+		super(parent, style);
+		handler = I18n.getGenericI18n( );
+	}
+
+	public XText(Composite parent, int style, II18nHandler handler) {
+		super(parent, style);
+		this.handler = handler;
+	}
+
+}
+\end{java}
+
+Für die Übersetzungen wird ein \index{Internationalisierung!II18nHandler}
+\codeQuote{II18nHandler} benötigt. Der Standardkonstruktor nutzt die
+Standardübersetzungen von \xirp~während der zweite Konstruktor einen \seegls{Handler}
+übergeben bekommt. Diese Variante wird von \seegls{Plugins} genutzt.
+
+Um die Übersetzungen zu vereinfachen kann der Handler direkt an eine Instanz von
+\newline\index{Internationalisierung!XWidgetLocaleHandler} 
+\codeQuote{XWidgetLocaleHandler} übergeben werden.
+\begin{java}[caption=Eigenes Widget: XText (2),label=code:swt:custom:xtext2]
+public class XText extends Text {
+
+	private final XWidgetLocaleHandler localeHandler;
+
+	public XText(Composite parent, int style) {
+		super(parent, style);
+		localeHandler = new XWidgetLocaleHandler(this, I18n.getGenericI18n( ));
+		initListeners( );
+	}
+
+	public XText(Composite parent, int style, II18nHandler handler) {
+		super(parent, style);
+		localeHandler = new XWidgetLocaleHandler(this, handler);
+		initListeners( );
+	}
+
+}
+\end{java}
+
+Zu sehen ist hier schon die Methode \codeQuote{initListener()} welche für die
+Farbänderungen benötigt wird.
+
+\subsubsection{Farbe}
+
+Diese sollen nun zuerst implementiert werden.
+\index{Manager!ColorManager}
+\begin{java}[caption=Eigenes Widget: XText (3),label=code:swt:custom:xtext3]
+private AppearanceChangedListener appearanceListener;
+
+private void initListeners() {
+	// Hintegrundfarbe initial setzen
+	setBackground(ColorManager.getColor(Variables.BACKGROUND_COLOR));
+
+	appearanceListener = new AppearanceChangedListener( ) {
+
+		// Bei Farbänderung neue Farbe setzen
+		public void appearanceChanged(AppearanceChangedEvent event) {
+			setBackground(ColorManager.getColor(Variables.BACKGROUND_COLOR));
+		}
+	};
+
+	// Listener registrieren
+	ApplicationManager.addAppearanceChangedListener(appearanceListener);
+
+	addDisposeListener(new DisposeListener( ) {
+
+		public void widgetDisposed(DisposeEvent e) {
+			// Listener abmelden
+			ApplicationManager.removeAppearanceChangedListener(appearanceListener);
+		}
+	});
+}
+\end{java}
+
+Um über \codeQuote{Farbe!\xirp!addAppearanceChangedListener()}Farbänderungen informiert zu werden, meldet sich diese Klasse bei
+\xirp~auf die Farbänderungen an (und beim \codeQuote{dispose} wieder ab).
+
+Ändert sich die Farbe, so wird diese neu gesetzt.
+
+\subsubsection{Internationalisierung}
+
+Damit das neue Widget nun auch immer die aktuelle Sprache von
+\xirp~widerspiegelt muss nun der schon angelegte \codeQuote{localeHandler} noch
+benutzt werden.
+
+Dazu werden zwei neue Methoden angelegt:
+\begin{java}[caption=Eigenes Widget: XText (4),label=code:swt:custom:xtext4]
+public void setTextForLocaleKey(String key, Object... objects) {
+	localeHandler.setText(key, objects);
+}
+
+public void setToolTipTextForLocaleKey(String key, Object... objects) {
+	localeHandler.setToolTipText(key, objects);
+}
+\end{java}
+
+Diese Methoden delegieren ihre Aufrufe an den \codeQuote{localeHandler} welcher
+dann dafür sorgt dass Text und Tooltip immer in der gerade gesetzten Sprache
+erscheinen.

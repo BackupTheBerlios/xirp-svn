@@ -1,0 +1,334 @@
+%
+% header.tex
+%
+\documentclass[%
+	pdftex,%              PDFTex verwenden
+	a4paper,%             A4 Papier
+	twoside,%             Einseitig
+	bibtotoc,%    Literaturverzeichnis nummeriert einfügen
+	idxtotoc,%            Index ins Verzeichnis einfügen
+	halfparskip,%         Europäischer Satz mit abstand zwischen Absätzen
+	chapterprefix,%       Kapitel anschreiben als Kapitel
+	headsepline,%         Linie nach Kopfzeile
+	%footsepline,%         Linie vor Fusszeile
+	12pt,%                 Grössere Schrift, besser lesbar am bildschrim
+	pointlessnumbers,
+	openright
+]{scrbook}
+
+\newcommand{\xirp}{$\chi$irp\index{xirp@$\chi$irp}}
+\newcommand{\xirpname}{\enquote{eXtendable interface for robotic purposes}}
+\newcommand{\version}{2.4.0}
+\newcommand{\devguideurl}{http://developer.berlios.de/docman/display_doc.php?docid=1711&group_id=8442}
+\newcommand{\devguideurlname}{xirp.berlios.de}
+\newcommand{\userguideurl}{http://developer.berlios.de/docman/display_doc.php?docid=1710&group_id=8442}
+\newcommand{\swttutorialurl}{http://www.cs.umanitoba.ca/~eclipse/}
+\newcommand{\swtsnippeturl}{http://www.eclipse.org/swt/snippets/}
+\newcommand{\jakartacommonsurl}{http://jakarta.apache.org/commons}
+
+\usepackage[ngerman]{varioref}
+
+
+\usepackage{scrpage2}
+\usepackage{multicol}
+% \renewcommand{\partformat}{\partname~\thepart}
+% \renewcommand{\chapterformat}{\chapapp~\thechapter}
+% \renewcommand{\othersectionlevelsformat}[1]{\csname the#1\endcsname\enskip}
+% 
+% \renewcommand{\partmarkformat}{\thepart\enskip}
+% \renewcommand{\chaptermarkformat}{\chapapp~\thechapter\enskip}
+% \renewcommand{\sectionmarkformat}{\thesection\enskip}
+% \renewcommand{\subsectionmarkformat}{\thesubsection\enskip}
+% \renewcommand{\subsubsectionmarkformat}{\thesubsubsection\enskip}
+% \renewcommand{\paragraphmarkformat}{\theparagraph\enskip}
+% \renewcommand{\subparagraphmarkformat}{\thesubparagraphmarkformat\enskip}
+
+\renewcommand{\chaptermark}[1]{\markboth{\chaptermarkformat{#1}}{\chaptermarkformat{#1}}}
+
+\renewcommand{\chapterpagestyle}{scrheadings}
+\renewcommand{\indexpagestyle}{scrheadings}
+
+% kopf und fusszeilen
+\pagestyle{scrheadings}
+
+\clearscrheadfoot
+\rohead[\headmark~\pagemark]{\headmark~\pagemark}
+\lehead[\pagemark~\headmark]{\pagemark~\headmark}
+\setheadtopline{.4pt}
+\setheadsepline{.4pt}
+
+\setcounter{secnumdepth}{5}
+\setcounter{tocdepth}{5}
+
+\usepackage{textcomp}%für textuparrow
+
+% ---------------------------------------
+% Makro fuer einheitliche figures!
+% Bilder immer ins pics verzeichnis!!
+% Dateiname, Groesse, caption, label
+% ---------------------------------------
+\newcommand{\kfig}[4]
+		{\figgiNeu{#1}{#2}{#3}{#4}}
+%<-------------------------------------->
+\newcommand{\figgiNeu}[4]
+{
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=#2\textwidth]{images/{#1}}
+	\caption{#3}
+	\label{#4}
+\end{figure}
+}
+
+\newcommand{\refFig}[1]
+{\autoref{#1} auf \autopageref{#1}}
+
+%\newcommand{\codeQuote}[1]
+%{\texttt{{#1}}}
+\newcommand*{\codeQuote}[1]{\lstinline!#1!}
+
+\newcommand{\fileQuote}[1]
+{\texttt{{#1}}}
+
+\newcommand{\menuQuote}[1]
+{\texttt{{#1}}}
+
+\newcommand{\seegls}[1]{\textuparrow#1}
+
+\newcommand{\robotQuote}[1]
+{\index{#1}\texttt{\seegls{#1}}}
+
+\newcommand{\refSec}[1]
+{\autoref{#1} (\autopageref{#1})}
+
+\newcommand{\longRefSec}[1]
+{siehe \autoref{#1} auf \autopageref{#1}}
+
+
+
+%
+% Paket für die Indexerstellung.
+%
+\usepackage{makeidx}
+\newcommand{\boldindex}[1]{{\bf #1}}
+\newcommand{\mainindex}[1]{\index{#1|boldindex}}
+
+%Formattierungen für Indexfile
+%Erste Ebene
+\newcommand*{\indexdelim}{\ \hspace{0pt plus 1fil}\penalty0\null\nobreak
+  \dotfill~}
+%Zweite Ebene
+\newcommand*{\indexdelimi}{~\dotfill\penalty0\ }
+%Dritte Ebene
+\newcommand*{\indexdelimii}{~\dotfill\penalty0\ }
+
+%Abschnittsüberschrift
+\newcommand*{\indexsection}[1]{%
+  \ifx\empty#1\empty\else
+  \hspace{0pt plus 2fil}{{\usekomafont{sectioning} #1}}\hspace{0pt plus
+    1fil}\nopagebreak
+  \fi
+}
+
+%
+% Paket für Übersetzungen ins Deutsche
+%
+\usepackage[ngerman]{babel}
+\addto\extrasngerman{%
+\def\partautorefname{Teil}
+\def\pageautorefname{\pagename}%
+\def\figureautorefname{\figurename}%
+\def\tableautorefname{\tablename}%
+\def\appendixautorefname{\appendixname}%
+\def\chapterautorefname{\chaptername}%
+\def\sectionautorefname{Abschnitt}%
+\def\subsectionautorefname{Abschnitt}%
+\def\subsubsectionautorefname{Abschnitt}%
+\def\paragraphautorefname{Abschnitt}%
+\def\subparagraphautorefname{Abschnitt}%
+\def\equationautorefname{Formel}%
+\def\appendixautorefname{\appendixname}
+\def\Itemautorefname{\itemname}
+\def\Hfootnoteautorefname{\footnotename}
+\def\AMSautorefname{\AMSname}
+\def\theoremautorefname{\theoremname}
+}
+%
+% Pakete um Latin1 Zeichnensätze verwenden zu können und die dazu
+%  passenden Schriften.
+%
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+
+%
+% Paket für Quotes
+%
+\usepackage[babel,french=guillemets,german=swiss]{csquotes}
+
+%
+% Paket um die Symbole des TS1 Zeichensatzes verwenden zu können.
+%
+%\usepackage{textcomp}
+
+%
+% Paket zum Erweitern der Tabelleneigenschaften
+%
+\usepackage{array}
+
+%
+% Paket um Grafiken einbetten zu können
+%
+\usepackage{graphicx}
+
+%
+% Spezielle Schrift verwenden.
+%
+%\usepackage{goudysans}
+
+%
+% Spezielle Schrift im Koma-Script setzen.
+%
+%\setkomafont{sectioning}{\normalfont\bfseries}
+%\setkomafont{captionlabel}{\normalfont\bfseries}
+%\setkomafont{pagehead}{\normalfont\itshape}
+%\setkomafont{descriptionlabel}{\normalfont\bfseries}
+
+%
+% Zeilenumbruch bei Bildbeschreibungen.
+%
+\setcapindent{1em}
+
+%
+% mathematische symbole aus dem AMS Paket.
+%
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+%
+% Type 1 Fonts für bessere darstellung in PDF verwenden.
+%
+%\usepackage{mathptmx}           % Times + passende Mathefonts
+%\usepackage[scaled=.92]{helvet} % skalierte Helvetica als \sfdefault
+%\usepackage{courier}            % Courier als \ttdefault
+
+%
+% Paket um Textteile drehen zu können
+%
+\usepackage{rotating}
+
+% Package für Farben im PDF
+\usepackage{color}
+\input{rgb}
+% Links innerhalb des PDF Dokuments
+\definecolor{LinkColor}{rgb}{0,0,0.5}
+\usepackage[unicode,
+	pdftitle={Xirp - Developer Guide},
+	pdfauthor={Rabea Gransberger, Matthias Gernand},
+	pdfcreator={MiKTeX, LaTeX with hyperref and KOMA-Script},
+	pdfsubject={Das Xirp Entwicklerhandbuch},
+	pdfkeywords={Xirp, Robotik, Universität, Bremen}]{hyperref}
+\hypersetup{colorlinks=true,
+	linkcolor=LinkColor,
+	citecolor=LinkColor,
+	filecolor=LinkColor,
+	menucolor=LinkColor,
+	%pagecolor=LinkColor,
+	urlcolor=LinkColor}
+
+%
+% Paket um Listings sauber zu formatieren.
+%
+\usepackage{listings}
+\lstloadlanguages{Java,XML}
+
+%
+% ---------------------------------------------------------------------------
+% Listing Definationen für Java und XML
+%
+\definecolor{eclipsekeyword}{rgb}{0.5,0,0.0}
+\definecolor{eclipsestring}{rgb}{0.16,0,1}
+\definecolor{eclipsecomment}{rgb}{0.25,0.5,0.37}
+
+\lstdefinelanguage{Properties}%
+  {sensitive=false,%
+   moredelim=*[s][\color{eclipsekeyword}]{\{}{\}},
+   morecomment=**[l][\ttfamily\color{eclipsestring}]{=},
+   morecomment=*[l]{\#},
+  }[comments,strings]%
+
+\lstset{
+basicstyle=\ttfamily\footnotesize,
+breaklines=true, %break long lines
+showlines=true,
+breakautoindent=true,
+postbreak=\space,
+numbers=none, %n numbers
+numberstyle=\tiny, %numbers in tiny size
+numbersep=0pt, %the distance between number and listing.
+xleftmargin=0pt, %needed for numbers to be shown
+extendedchars=true, %allow german chars
+showstringspaces=false, %don't mark spaces
+tabsize=2,
+frame=tb,
+captionpos=b,
+showspaces=false,
+showstringspaces=false,
+backgroundcolor=\color{LightGrey}
+}
+	
+\lstnewenvironment{java}[1][]{\lstset{language=Java,
+	tagstyle=\color{darkred},
+ 	keywordstyle=\color{eclipsekeyword}\bfseries, %red keywords
+ 	commentstyle=\color{eclipsecomment}, %green comments
+ 	stringstyle=\color{eclipsestring},
+ 	usekeywordsintag=false,
+ 	markfirstintag=false,#1
+ }}{}
+\lstnewenvironment{xml}[1][]{\lstset{language=XML,
+	tagstyle=\color{SeaGreen},
+	keywordstyle=\color{DarkBlue},
+	commentstyle=\color{DarkRed},
+	stringstyle=\color{BlueViolet},
+	usekeywordsintag=true,
+	markfirstintag=true,#1
+	}}{}
+\lstnewenvironment{properties}[1][]{\lstset{language=Properties,
+	commentstyle=\color{eclipsecomment},
+	stringstyle=\color{black},
+	usekeywordsintag=true,
+	markfirstintag=true,#1
+	}}{}
+% \newcommand{\Java}[2]{\setJava \begin{lstlisting}[caption=#1,label=#2]}
+% \newcommand{\XML}[2]{\setXML \begin{lstlisting}[caption=#1,label=#2]}
+% \newcommand{\Properties}[2]{\setProps \begin{lstlisting}[caption=#1,label=#2]}
+% ---------------------------------------------------------------------------
+%
+
+%
+% Neue Umgebungen
+% ---------------------------------------------------------------------------
+\usepackage[number=none,style=altlist,toc=true]{glossary}
+\makeglossary
+
+%
+% Index erzeucgen
+%
+\makeindex
+
+\renewcommand{\lstlistingname}{Auflistung}
+\renewcommand{\lstlistlistingname}{Auflistungsverzeichnis}
+\renewcommand{\glossaryname}{Glossar}
+
+%\setindexpreamble{Erkärung zum Index.\par\bigskip} 
+
+\setkomafont{caption}{\sffamily}
+\setkomafont{captionlabel}{\sffamily\bfseries}
+\setkomafont{footnote}{\sffamily}
+\setkomafont{pagehead}{\sffamily}
+\setkomafont{pagenumber}{\sffamily\bfseries}
+
+\renewcommand{\glossarypreamble}{\begin{multicols}{2}}
+\renewcommand{\glossarypostamble}{\end{multicols}}
+%
+% EOF
+%

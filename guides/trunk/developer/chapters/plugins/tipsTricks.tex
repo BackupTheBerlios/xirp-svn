@@ -1,0 +1,60 @@
+\section{Tips und Tricks}
+\label{sec:tipstricks}
+\index{Plugin!Tips und Tricks}
+
+
+\subsection{Datenpool}
+\index{Datenpool}
+Beim anmelden auf den Datenpool ist bei \seegls{Sensor}en darauf zu achten, dass der
+\index{Datenpool!Schlüssel}Datenpoolschlüssel durch die Klasse 
+\index{Datenpool!DatapoolUtil}\codeQuote{de.unibremen.rr.xirp.io.comm.data.DatapoolUtil}
+ermittelt wird.
+
+\seegls{Plugins} die Werte vom \index{Datenpool}Datenpool empfangen sollten 
+diese Werte nicht direkten an die \seegls{GUI} sondern an eine 
+\index{Plugin!Plugindaten!AbstractData}\codeQuote{AbstractData} Implementierung 
+weitergeben. Von dort aus kann die Weitergabe mittels 
+\codeQuote{plugin.notifyUI} erfolgen.
+
+Werte die vom \index{Datenpool}Datenpool Empfangen werden kommen nicht aus dem 
+\index{SWT!Thread}\seegls{SWT}-\seegls{Thread}. Da in \seegls{SWT} nur der 
+\seegls{SWT}-Thread Zugriff auf die \seegls{GUI}-Komponenten hat, müssen Zugriffe aus 
+der \index{Datenpool!Listener}Listener Implementierung heraus auf die \seegls{GUI} in 
+einem \index{SWT!Thread!asyncExec()}\codeQuote{de.unibremen.rr.xirp. 
+ui.util.SWTUtil.asyncExec()} ausgeführt werden. Dies gilt auch für Listener auf 
+den Daten eines \seegls{Plugins}.
+
+Weitere Informationen finden sich in \autoref{sec:datapool} ab 
+\autopageref{sec:datapool}.
+
+\subsection{Berechnungen bei Plugins mit Oberfläche}
+\label{sub:swtcalc}
+Da es nur einen \index{SWT!Thread}\seegls{SWT}-\seegls{Thread} gibt sollten Berechnungen nicht in Zeichenmethoden
+eines \seegls{Plugins} untergebracht werden. Berechnungen müssen nur dann durchgeführt
+werden wenn sich die zugrunde liegenden Daten des \seegls{Plugins} oder die Größe der
+Oberfläche geändert hat. Die Berechnungen können dann in geeigneten Feldern der
+\seegls{GUI} abgelegt werden und müssen beim Zeichnen nur noch ausgelesen werden.
+
+Wird die \seegls{GUI} ausgeblendet und tritt in der Zwischenzeit sonst keine Veränderung
+auf, so muss dann nur gezeichnet aber nichts berechnet werden. Dies spart Zeit.
+
+\subsection{Roboter zeichnen}
+Zum Zeichnen des Roboters und seiner \seegls{Sensor}en gibt es die Klasse
+\index{Roboter!zeichnen!RobotDrawHelper}\codeQuote{de.unibremen.rr.xirp.
+ui.util.RobotDrawHelper}. Dieser übergibt man
+den zur Verfügung stehenden Platz (die Größe des \seegls{GUI}-Composites) und den
+gewünschten Rand und es werden die Maße eines Roboterrechtecks und auf Anfrage
+die Position eines \seegls{Sensor}s am Roboter berechnet (siehe
+\autoref{code:robotdrawhelper} auf \autopageref{code:robotdrawhelper}).
+
+\subsection{Einstellungen in Profil}
+\index{Plugin!Profil!Optionen}
+\index{Einstellungen!Profil}
+Es ist möglich, dass das \seegls{Plugin} Optionen anbieten möchte, die nicht in den
+Einstellungen vorkommen sollen, sondern nur einmal konfiguriert werden sollen.
+
+Diese können im \seegls{Profil} im Bereich des \codeQuote{plugin}-Elements als Optionen
+angegeben werden.
+
+Informationen dazu finden sich in \autoref{sec:profile:plugins} ab
+\autopageref{sec:profile:plugins}.

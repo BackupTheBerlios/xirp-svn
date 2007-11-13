@@ -1,0 +1,126 @@
+\chapter{Testerbot}
+\index{Testerbot|(}
+
+Dieses Kapitel befasst sich mit dem in \xirp~vorhandenen \seegls{Testerbot} \seegls{Server}.
+Dieser \seegls{Server} erzeugt für verschiedenste \seegls{Sensor}en Zufallswerte und sendet sie an
+den verbundenen \seegls{Client}. Dadurch ist es möglich neue Plugins zu Testen. Der
+\seegls{Testerbot} kann auch dazu verwendet werden, die Anwendung zu demonstieren, ohne
+dass eine aufwändige Roboter-Simulation oder ein echter Roboter benutzt werden müssen.
+
+\newpage
+
+\section{Kontrolloberfläche}
+\index{Testerbot!Kontrolloberfläche}
+Der \seegls{Testerbot} \seegls{Server} kann bequem aus der Anwendung heraus gestartet werden. Über
+den Menüeintrag \texttt{Extras --> Testerbot ausführen} wird die
+Kontrolloberfläche aufgerufen. Diese Oberfläche ist in Abbildung
+\ref{img:testerbot:control:off} auf Seite \pageref{img:testerbot:control:off} zu
+sehen.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=.75\textwidth]{images/tbserverctrl}
+    \caption{Die Testerbot Kontrolloberfläche - Server abgeschaltet.}
+    \label{img:testerbot:control:off}
+\end{figure}
+
+Die Kontrolloberfläche ist in drei Bereiche aufgeteilt.
+
+\begin{itemize}
+  \item Serverinformationen
+  \item Servereinstellungen
+  \item Serverkontrolle
+\end{itemize}
+
+Die einzelnen Bereiche werden in den folgenden Abschnitten genauer beschrieben.
+In Abbildung \ref{img:testerbot:control:on} auf Seite
+\pageref{img:testerbot:control:on} ist die Oberfläche mit aktiviertem \seegls{Server} zu
+sehen.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=.75\textwidth]{images/tbserverctrl_an}
+    \caption{Die Testerbot Kontrolloberfläche - Server angeschaltet.}
+    \label{img:testerbot:control:on}
+\end{figure}
+
+\newpage
+
+\subsection{Serverinformationen}
+\index{Testerbot!Kontrolloberfläche!Serverinformationen}
+In diesem Bereich werden die folgenden Informationen über den \seegls{Server} angezeigt.
+
+\begin{itemize}
+  \item Serverstatus (An oder Aus)
+  \item Anzahl verbundener Clients
+  \item Gesendete Pakete
+  \item Gesendete Datenmenge
+\end{itemize}
+
+\subsection{Servereinstellungen}
+\index{Testerbot!Kontrolloberfläche!Servereinstellungen}
+Die einzige Einstellung die in der Oberfläche gemacht werden kann ist die
+Einstellung des Serverports. Der Standardwert ist \texttt{2005}. Ein neuer Wert
+wird bei einem Neustart des \seegls{Server} benutzt.
+
+\subsection{Serverkontrolle}
+\index{Testerbot!Kontrolloberfläche!Serverkontrolle}
+In diesen Bereich gibt es zwei Knöpfe. Nur jeweils einer ist aktiv. Die
+Bezeichnung der Knöpfe spricht für sich selbst und seine Funktion.
+
+\begin{itemize}
+  \item Starte Server
+  \item Stoppe Server
+\end{itemize}
+
+Wird die Kontrolloberfläche geschlossen, wird auch automatisch der \seegls{Server}
+beendet. Daher muss die Oberfläche immer angezeigt werden, wenn der \seegls{Server}
+laufen soll. Die Oberfläche kann allerdings minimiert werden.
+
+\section{Gesendete Werte}
+Der \seegls{Server} sendet Werte für diverse \seegls{Sensor}en. Die unterstützten \seegls{Sensor}en werden
+im folgenden beschrieben.
+
+\subsection{Energiequelle}
+Es werden Werte für zwei Energiequellen gesendet.
+
+\subsection{Infrarot}
+Es werden Werte für vier Infrarotabstandssensoren gesendet.
+
+\subsection{Ultraschall}
+Es werden Werte für vier Untraschallabstandssensoren geliefert.
+
+\subsection{Temperatur}
+Es wird ein Temperaturwert gesendet.
+
+\subsection{Thermopile}
+\index{Live-Diagramm}
+\index{Aufzeichungen}
+Es wird ein Termopile-Array Scan geliefert. Dieser Scan besteht aus 32 mal 8
+Werten. Daher ist dieser \seegls{Sensor} nicht für Aufzeichungen und Live-Diagramm
+verwendbar.
+
+\subsection{CO$_2$}
+Es wird ein Kohlendioxidwert geliefert.
+
+\subsection{Kompass}
+Es wird ein Himmelsrichtungswert gesendet.
+
+\subsection{Geschwindigkeit}
+Es wird ein Geschwindigkeitswert gesendet.
+
+\subsection{Neigung}
+Es werden zwei Werte für die horizontale und vertikale Neigung geliefert.
+
+\subsection{Laserscanner}
+\index{Live-Diagramm}
+\index{Aufzeichungen}
+Es wird ein \seegls{Laserscanner} Scan geliefert. Dieser Scan besteht aus mehr als 600
+einzelnen Werten, so dass dieser \seegls{Sensor} nicht für Aufzeichungen und Live-Diagramm
+verwendbar ist.
+
+\subsection{Nachrichten}
+Es werden diverse Zufallstextnachrichten vom \seegls{Server} gesendet. Diese können z.B.
+zum Testen der Sprachausgabe benutzt werden.
+
+\index{Testerbot|)}

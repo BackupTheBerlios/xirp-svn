@@ -1,0 +1,262 @@
+\section{Erstellung}
+\index{Einstellungen}
+Mit der Klasse \codeQuote{Settings} beginnt die Erstellung von Einstellungen, 
+da man zunächst eine Instanz dieser Klasse benötigt. Sie ist die Basisklasse 
+für alle Einstellungen. Gleichzeitig wird hier durch die Wahl des Konstruktors 
+auch festgelegt ob die Einstellungen automatisch von \xirp~in eine Datei 
+persistiert werden sollen, oder die 
+\index{Einstellungen!Persistierung}Persistierung selber übernommen wird.
+
+Sollen die Einstellungen von \xirp~automatisch persistiert werden, so muss 
+einer der Konstruktoren \codeQuote{Settings(PropertiesConfiguration, 
+II18nHandler, String, String)} gewählt werden.
+
+Das Übergebene \codeQuote{PropertiesConfiguration}-Objekt\footnote{Die
+Erstellung von \codeQuote{PropertiesConfiguration}-Objekten ist in der
+Dokumentation zu Commons Configuration unter
+\href{\jakartacommonsurl}{\jakartacommonsurl} zu finden.} enthält dabei
+die Informationen in welche Datei die Einstellungen gespeichert werden sollen.
+Als Standard hierfür kann \index{Manager!PluginManager}\codeQuote{PluginManager.getProperties( )}
+übergeben werden.
+
+Danach folgen der \index{Internationalisierung!II18nHandler} 
+Internationalisierungshandler (im \seegls{Plugin} als Feld \codeQuote{handler} 
+verfügbar) und zwei Schlüssel. Der Erste ist die Basis für die 
+\index{Einstellungen!Internationalisierung}Übersetzungen, der zweite wird für 
+die eindeutige Zuordnung zu einem \seegls{Plugin} bei der 
+\index{Einstellungen!Persistierung}Persistierung benötigt.
+
+Der Erste Schlüssel (Hauptschlüssel) kann frei gewählt werden, für den Zweiten
+muss \newline\codeQuote{getRealKey()} benutzt werden.
+
+\begin{java}[caption=Erstellung eines Settings-Objekt]
+Settings settings = new Settings(PluginManager.getProperties( ),
+		handler,
+		"MyPlugin.settings.main",
+		getRealKey( ));
+\end{java}
+
+\subsection{Seiten}
+
+Diesem Objekt können nun mit \codeQuote{addPage(String, String, String)} \index{Einstellungen!Seite}Seiten
+hinzugefügt werden.
+
+Die drei Strings sind dabei alle Schlüssel für die \index{Einstellungen!Internationalisierung}Übersetzungen: Ein
+Seitenschlüssel für die Überschrift dieser Seite, einer für eine Kurzbeschreibung der
+Seite und einer für eine Langbeschreibung der Seite.
+
+Kurz- und Langbeschreibung müssen nicht gesetzt werden, können also
+\codeQuote{null} sein.
+
+\begin{java}[caption=Erstellung einer Einstellungsseite]
+Settings settings = new Settings(PluginManager.getProperties( ),
+		handler,
+		"Example.settings.main",
+		getRealKey( ));
+SettingsPage settingsPage = settings.addPage("page",
+		"shortdescription",
+		"description");
+\end{java}
+
+Die Schlüssel für die \index{Einstellungen!Internationalisierung}Übersetzungen sehen dann so aus:
+\begin{itemize}
+  \item Einstellungsbeschreibung: <hauptschlüssel>
+  \item Seitenüberschrift: <hauptschlüssel><seitenschlüssel>
+  \item Kurzbeschreibung Seite: <hauptschlüssel><seitenschlüssel><kurzschlüssel>
+  \item Langbeschreibung Seite: <hauptschlüssel><seitenschlüssel><langschlüssel>
+\end{itemize}
+
+In diesem Fall also:
+\begin{properties}
+Example.settings.main=Beispiel
+Example.settings.main.page=Erste Seite
+Example.settings.main.page.description=Lange Beschreibung
+Example.settings.main.page.shortdescription=Kurze Beschreibung
+\end{properties}
+
+\subsection{Optionen}
+
+Der Seite können dann einzelne \index{Einstellungen!Optionen}Optionen mit \codeQuote{addOption(String,
+OptionType)} hinzugefügt werden. Das erste Argument ist dabei der eindeutige
+Optionsschlüssel, das zweite Argument der \index{Einstellungen!Optionen!Optionstyp}Optionstyp. Zur Verfügung stehende
+Optionstypen sind:
+\begin{itemize}
+  \item \codeQuote{CHECKBOX}: Werte werden als \index{Widget!Checkbox}Checkboxen in einer Gruppe angezeigt.
+  \item \codeQuote{RADIOBUTTON}: Werte werden als \index{Widget!Radiobox}Radiobox in einer Gruppe angezeigt.
+  \item \codeQuote{COMBOBOX}: Werte werden in einer \index{Widget!Combobox}Combobox dargestellt.
+  \item \codeQuote{TEXTFIELD}: Der letzte Wert wird in einem \index{Widget!Textfield}Textfeld für
+  manuellen Input dargestellt. Dies kann auch ein Passwortfeld sein.
+  \item \codeQuote{COLOR}: Letzter Wert wird in Farbauswahl dargestellt.
+  \item \codeQuote{SPINNER}: Letzter Wert wird als \index{Widget!Spinner}Spinner dargestellt.
+  \item \codeQuote{UNKNOWN}: Unbekannt. Es muss ein \index{Einstellungen!Renderer}\seegls{Renderer} für die Darstellung
+  gesetzt werden.
+\end{itemize}
+
+Als Beispiel also:
+\begin{java}[caption=Erstellung einer Option]
+Settings settings = new Settings(PluginManager.getProperties( ),
+		handler,
+		"Example.settings.main",
+		getRealKey( ));
+SettingsPage settingsPage = settings.addPage("page",
+		"shortdescription",
+		"description");
+Option optionString = settingsPage.addOption("option",
+		Option.OptionType.TEXTFIELD);
+\end{java}
+
+\subsection{Werte}
+
+Einer \index{Einstellungen!Optionen}Option können dann mehrere \index{Einstellungen!Werte} Werte zugewiesen
+werden:
+
+\begin{itemize}
+\item \codeQuote{addTranslatableNamedBooleanValue(String, SettingsState,
+Object...)}:  Fügt einen \\übersetzbaren String der Option hinzu. Das erste
+Argument ist der Schlüssel für die Übersetzung. Der zweite Parameter gibt den Standardzustand des
+Wertes an: Selektiert oder nicht selektiert. Der dritte Parameter ist optional
+und kann Argumente für die Ersetzung von Variablen in der Übersetzung enthalten.
+\item \codeQuote{addNonTranslatableNamedBooleanValue(String, SettingsState)}:
+Fügt den gegebenen \\String der Option hinzu. Dieser String wird nicht übersetzt
+sondern direkt angezeigt. Der zweite Parameter gibt den Standardzustand des
+Wertes an: Selektiert oder nicht selektiert.
+\item \codeQuote{addNumberValue(Number, SettingsState)}: Fügt die gegebene Zahl
+der Option hinzu. Der zweite Parameter gibt den Standardzustand des
+Wertes an: Selektiert oder nicht selektiert.
+\item \codeQuote{addRGBValue(String, int, int, int)}: Fügt einen Farbwert einer
+Option vom Typ \codeQuote{COLOR} oder \codeQuote{UNKNOWN} hinzu. Der erste
+Parameter gibt dabei den Schlüssel an unter welchem der Wert gespeichert wird.
+Dieser Schlüssel muss für diese Option eindeutig sein. Die nächsten drei
+Parameter definieren den Standardfarbwert in RGB und stehen in dieser
+Reihenfolge für Rot, Grün, Blau im Bereich von [0;255]. Da für den Optionstyp
+\codeQuote{COLOR} nur der ein Wert dargestellt wird, wird hier die Beschreibung
+von der Option als Beschreibung des Wertes genutzt.
+\item \codeQuote{addRGBValue(String, RGB)}: Wie \codeQuote{addRGBValue(String,
+int, int, int)} nur mit einem \codeQuote{RGB}-Objekt für den Standardfarbwert.
+\item \codeQuote{addSpinnerValue(double, double, double, int)}: Wenn der
+Optionstyp \codeQuote{SPINNER} oder \codeQuote{UNKNOWN} ist wird der erste
+Parameter als Standardwert, der zweite als Minimum, der dritte als Maximum und
+der vierte als Schrittweite interpretiert. Der Wert wird mit einem
+\codeQuote{StyledSpinner} mit dem Stil \codeQuote{DOUBLE} und wenn das Minimum
+kleiner 0 ist mit dem Stil \codeQuote{NEGATIVE} (siehe
+\autoref{sec:XStyledSpinner} auf \autopageref{sec:XStyledSpinner}) dargestellt.
+\item \codeQuote{addSpinnerValue(int, int, int, int)}: Genau wie
+\codeQuote{addSpinnerValue(double, double, double, int)} jedoch nicht mit
+\codeQuote{DOUBLE} Stil.
+\item \codeQuote{addStringValue(String, String)}: Wenn der
+Optionstyp \codeQuote{TEXTFIELD} oder \codeQuote{UNKNOWN} ist wird der im
+zweiten Argument gegebene Text als Standardwert für ein Textfeld hinzugefügt.
+Die Werte von Textfeldern können nicht übersetzt werden, da ein freier Text
+eingegeben werden darf. Der erste Parameter ist der Schlüssel für die
+Speicherung welcher innerhalb der Option eindeutig sein muss.
+\item \codeQuote{addStringValue(String, String, int)}: Genau wie
+\codeQuote{addStringValue(String, String)} nur ist der dritte Parameter die
+maximale Anzahl an eingebbaren Zeichen für das Textfeld.
+\item \codeQuote{addPasswordValue(String, String)}: Genau wie
+\codeQuote{addStringValue(String, String)} nur wird in der Darstellung der
+eingegebenen Text nur mit Sternen gekennzeichnet.
+\item \codeQuote{addValue(IValue)}: Fügt einen beliebigen selbst definierten
+Wert hinzu. Siehe \autoref{sec:settings:ownvalues} auf \autopageref{sec:settings:ownvalues}.
+\end{itemize}
+
+\subsection{Beispiele}
+
+Mit der Methode \codeQuote{getExampleSettings()} lässt sich ein Beispiel für
+Einstellungen erstellen, welches für jeden vorhandenen \index{Einstellungen!Optionen!Optionstyp}Optionstyp eine neue
+Seite hat, auf welcher jeder mögliche Wert einmal hinzugefügt wird.
+\begin{java}
+Settings settings = Settings.getExampleSettings( );
+\end{java}
+
+In den Abbildungen \ref{img:settings:checkpage} bis
+\ref{img:settings:spinnerpage} sind die entstehenden Seiten zu sehen.
+
+\kfig{settings_checkpage}{1}{Einstellungen: Optionstyp=CHECKBOX}{img:settings:checkpage}
+\kfig{settings_radiopage}{1}{Einstellungen: Optionstyp=RADIOBUTTON}{img:settings:radiopage}
+\kfig{settings_combopage}{1}{Einstellungen: 
+Optionstyp=COMBOBOX}{img:settings:combopage} 
+\kfig{settings_colorpage}{1}{Einstellungen:
+Optionstyp=COLOR}{img:settings:colorpage} 
+\kfig{settings_textfieldpage}{1}{Einstellungen:
+Optionstyp=TEXTFIELD}{img:settings:textfieldpage}
+\kfig{settings_spinnerpage}{1}{Einstellungen:
+Optionstyp=SPINNER}{img:settings:spinnerpage}
+
+\clearpage
+
+Nun noch ein Codebeispiele zur Erzeugung einer Seite mit verschiedenen
+\index{Einstellungen!Optionen!Optionstyp}Optionstypen und \index{Einstellungen!Werte}Werten:
+\begin{java}[caption=Beispieleinstellungen,label=code:settings:example]
+@Override
+public Settings getSettings() {
+	if (settings == null) {
+		settings = new Settings(PluginManager.getProperties( ),
+				handler,
+				"Example.settings.main",
+				getRealKey( ));
+
+		SettingsPage settingsPage = settings.addPage("page",
+				"shortdescription",
+				"description");
+
+		Option checkbox = settingsPage.addOption("checkbox",
+				OptionType.CHECKBOX);
+		checkbox.addTranslatableNamedBooleanValue("value1",
+				SettingsState.SELECTED,
+				"Ein Argument");
+		checkbox.addNumberValue(20.5, SettingsState.NOT_SELECTED);
+
+		Option radiobutton = settingsPage.addOption("radiobutton",
+				OptionType.RADIOBUTTON);
+		radiobutton.addNonTranslatableNamedBooleanValue("Nicht übersetzbarer Wert",
+				SettingsState.SELECTED);
+		radiobutton.addNumberValue(20.5, SettingsState.NOT_SELECTED);
+
+		Option combo = settingsPage.addOption("combobox",
+				OptionType.COMBOBOX);
+		combo.addNonTranslatableNamedBooleanValue("Nicht übersetzbarer Wert",
+				SettingsState.SELECTED);
+		combo.addNumberValue(20.5, SettingsState.NOT_SELECTED);
+
+		Option color = settingsPage.addOption("color", OptionType.COLOR);
+		color.addRGBValue("colorvalue", 255, 0, 0);
+
+		Option spinner = settingsPage.addOption("spinner",
+				OptionType.SPINNER);
+		spinner.addSpinnerValue(20.5, -10, 20, 1);
+
+		Option spinnerInt = settingsPage.addOption("spinnerint",
+				OptionType.SPINNER);
+		spinnerInt.addSpinnerValue(15, -10, 20, 1);
+
+		Option text = settingsPage.addOption("text", OptionType.TEXTFIELD);
+		text.addStringValue("textkey", "Eingabefeld");
+
+		Option pass = settingsPage.addOption("pass", OptionType.TEXTFIELD);
+		pass.addPasswordValue("textkey", "Passwort");
+
+	}
+	return settings;
+}
+\end{java}
+
+Die zugehörigen \index{Einstellungen!Optionen}Übersetzungen:
+\begin{properties}
+Example.settings.main=Testeinstellungen
+Example.settings.main.page=Testeinstellungen
+Example.settings.main.page.shortdescription=Kurze Beschreibung
+Example.settings.main.page.description=Lange Beschreibung
+Example.settings.main.page.checkbox=Checkboxoption
+Example.settings.main.page.checkbox.value1=Übersetzter String: {0}
+Example.settings.main.page.radiobutton=Radiobuttonoption
+Example.settings.main.page.combobox=Combooption
+Example.settings.main.page.color=Farboption
+Example.settings.main.page.spinner=Spinneroption
+Example.settings.main.page.spinnerint=Spinneroption (int)
+Example.settings.main.page.text=Textoption
+Example.settings.main.page.pass=Passwordoption
+\end{properties}
+
+\kfig{settings_examplepage}{1}{Einstellungsseite mit Beispielen}{img:settings:examplepage}
+
+Diese Beispieleinstellungen sind in \autoref{img:settings:examplepage} zu sehen.

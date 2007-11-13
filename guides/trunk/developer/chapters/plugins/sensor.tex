@@ -1,0 +1,209 @@
+\section{Sensordaten}
+\label{sec:sensor}
+\index{Sensordaten}
+
+Das \index{Kommunikation}Kommunikationsplugin des Roboters sorgt dafür, dass \seegls{Sensor}daten die vom
+Roboter empfangen werden im \index{Datenpool}Datenpool (siehe auch 
+\autoref{sec:datapool} auf \autopageref{sec:datapool}) unter einem
+bestimmten \index{Datenpool!Schlüssel}Schlüssel (Key) abgelegt werden.
+
+\begin{xml}[caption=Roboter Profil Sensorgruppe,label=lst:smplplug:sensordata:sensorgroup]
+<sensorgroup datapoolKey="compass" longName="Compass" visible="true">
+    <sensor subKey="unique" unit="DEGREE" id="0">
+        <sensorspecs>
+            <position y="250" x="250" side="INSIDE" attached="TORSO"/>
+            <minimum>0.0</minimum>
+            <maximum>360.0</maximum>
+        </sensorspecs>
+    </sensor>
+</sensorgroup>
+\end{xml}
+
+Dies ist ein Beispiel aus dem \index{Profil!Roboter}Roboterprofil des \robotQuote{TesterBot} und zeigt
+die Definition eines Kompasssensors. Der \index{Datenpool!Schlüssel}Datenpool-Schlüssel unter welchem die
+Daten im \index{Datenpool}Datenpool abgelegt werden setzt sich dabei aus dem Attribut
+\codeQuote{compass} des Elements \codeQuote{sensorgroup} und \codeQuote{subKey}
+des Elements \codeQuote{sensor} zusammen. Um den vollständigen Schlüssel zu
+erhalten kann die Klasse \index{Datenpool!DatapoolUtil}\codeQuote{DatapoolUtil} 
+genutzt werden.
+
+Dem \index{Plugin!Sensor}\index{Profil!Roboter!Plugin}\seegls{Plugin} kann ein so definierter \index{Profil!Roboter!Sensor}\seegls{Sensor} wie folgt
+im Roboter \seegls{Profil} zugeordnet werden:
+\begin{xml}[caption=Roboter Profil Sensor-Plugin-Zuordnung,label=lst:smplplug:sensordata:plugin]
+<plugin name="Compass">
+    <class>de.unibremen.rr.plugins.sensors.compass.CompassDisplay</class>
+    <sensorname>Compass</sensorname>
+    <usemultimedia>false</usemultimedia>
+</plugin>
+\end{xml}
+
+Für die Zuordnung wir das Attribut \codeQuote{longName} des Elements
+\codeQuote{sensorgroup} genutzt.
+
+Das Auslesen der Daten eines \seegls{Sensor}s aus dem \index{Profil!Roboter}Roboter \seegls{Profil} wird \seegls{Sensor}plugins
+vereinfacht indem sie statt
+\index{Plugin!IPlugable!AbstractPlugin}\codeQuote{AbstractPlugin}
+\index{Plugin!IPlugable!AbstractSensorPlugin}\codeQuote{AbstractSensorPlugin}
+erweitern. Dies stellt die Methoden
+\begin{itemize}
+  \item \codeQuote{getSensorgroups()}
+  \item \codeQuote{getSensorgroup()}
+  \item \codeQuote{getSensor()}
+  \item \codeQuote{readSensorDefaults()} (für \index{Plugin!Plugindaten!DefaultSensorData}\codeQuote{DefaultSensorData})
+\end{itemize} 
+bereit.
+
+Das Auslesen aus dem Roboter \seegls{Profil} sollte in 
+\index{Plugin!IPlugable!runInternal()}\codeQuote{runInternal()}
+erfolgen, damit dies für jedes \seegls{Plugin} nur genau einmal ausgeführt wird.
+
+Für das Kompass-\seegls{Plugin} sieht die Methode so aus:
+\begin{java}[caption=Auslesen von Sensorspezifikation aus Roboter Profil (kurz),label=lst:smplplug:sensordata:compassplugin:short]
+@Override
+protected void runInternal() {
+	getSensor( );
+	initListener( );
+}
+
+private void initListener() {
+	addDatapoolReceiveListener(new DatapoolAdapter( ) {
+
+		public void valueChanged(DatapoolEvent e) {
+			Object data = e.getValue( );
+			if (data instanceof Number) {
+				final Number angle = (Number) data;
+				SWTUtil.asyncExec(new Runnable( ) {
+
+					@Override
+					public void run() {
+						pluginData.setAngle(angle);
+					}
+
+				});
+
+			}
+		}
+
+	});
+}
+\end{java}
+
+Die Methode \codeQuote{addDatapoolReceiveListener()} wird ebenfalls vom
+\index{Plugin!IPlugable!AbstractSensorPlugin}\codeQuote{AbstractSensorPlugin}
+bereitgestellt. In diesem Fall liest \codeQuote{getSensor()} direkt den
+\index{Datenpool!Schlüssel}Datenpool-Schlüssel des Kompass-\seegls{Sensor}s aus dem Roboter \seegls{Profil} mit aus. Dieser
+Schlüssel wird als Feld in der Klasse abgelegt und beim Aufruf von
+\codeQuote{addDatapoolReceiveListener()} zum anmelden des gegebenen
+\index{Datenpool!Listener}
+\codeQuote{DatapoolListener} oder \codeQuote{DatapoolAdapter} genutzt.
+
+Der Vorteil bei der Nutzung von \codeQuote{addDatapoolReceiveListener()} ist,
+dass ein Abmelden vom Datenpool beim Beenden des \seegls{Plugins} automatisch ausgeführt
+wird. 
+
+Ansonsten würde der Code deutlich länger sein:
+\index{Manager!ProfileManager}
+\index{Manager!DatapoolManager}
+\begin{java}[caption=Auslesen von Sensorspezifikation aus Roboter Profil (lang),label=lst:smplplug:sensordata:compassplugin:long]
+private String datapoolKey;
+
+@Override
+public void runInternal() {
+	try {
+		// Roboterdaten vom Profil holen
+		Robot robot = ProfileManager.getRobot(robotName);
+		// Sensorgruppen die diesem Plugin zugeordnet sind
+		// abrufen
+		List<Sensorgroup> sensorgroups = robot.getSensorgroups(this.getClass( )
+				.getName( ),
+				this.uniqueIdentifier);
+		if (!sensorgroups.isEmpty( )) {
+			if (sensorgroups.size( ) > 1) {
+
+				logClass.info(robotName,
+						"Mehr als eine Sensogruppe vorhanden, es wird aber nur die erste genutzt." +
+								Constants.LINE_SEPARATOR);
+			}
+			// Erste Sensorgruppe benutzen
+			Sensorgroup group = sensorgroups.get(0);
+			if (group != null) {
+				// Sensoren der Gruppe auslesen und ersten
+				// benutzen
+				List<Sensor> sensors = group.getSensors( );
+				if (!sensors.isEmpty( )) {
+					if (sensors.size( ) > 1) {
+						logClass.info(robotName,
+								"Mehr als ein Sensor vorhanden, es wird aber nur die erste genutzt." +
+										Constants.LINE_SEPARATOR);
+					}
+					Sensor sensor = sensors.get(0);
+					if (sensor != null) {
+						// Datenpoolschlüssel holen
+						this.datapoolKey = DatapoolUtil.createDatapoolKey(group,
+								sensor);
+					}
+				}
+			}
+		}
+	}
+	catch (RobotNotFoundException e) {
+		logClass.error(this.robotName, "Error " + e.getMessage( ) //$NON-NLS-1$
+				+ Constants.LINE_SEPARATOR, e);
+	}
+}
+
+private DatapoolListener listener;
+
+private void initListener() {
+	//Listener erstellen
+	listener = new DatapoolListener( ) {
+
+		@Override
+		public boolean notifyOnlyWhenChanged() {
+			return true;
+		}
+
+		@Override
+		public void valueChanged(DatapoolEvent e) {
+			Object data = e.getValue( );
+			if (data instanceof Number) {
+				final Number angle = (Number) data;
+				SWTUtil.asyncExec(new Runnable( ) {
+
+					@Override
+					public void run() {
+						pluginData.setAngle(angle);
+					}
+
+				});
+
+			}
+		}
+
+	};
+
+	//Datenpool des Roboters holen und Listener anmelden
+	Datapool datapool = DatapoolManager.getDatapool(robotName);
+	datapool.addDatapoolReceiveListener(datapoolKey, listener);
+}
+
+@Override
+protected boolean stopInternal() {
+	//Datenpool des Roboters holen und Listener abmelden
+	Datapool datapool = DatapoolManager.getDatapool(robotName);
+	datapool.addDatapoolReceiveListener(datapoolKey, listener);
+	return true;
+}
+\end{java}
+
+Wichtig ist in jedem Fall das saubere Prüfen der über den
+\index{Datenpool!Listener}Datenpool-Listener empfangenen Daten mit
+\codeQuote{instanceof} vor dem \codeQuote{casten}.
+
+Warum hier \index{SWTUtil!asyncExec()} genutzt wird kann im Abschnitt
+\refSec{sec:tipstricks} und Kapitel
+\refSec{sec:swt} nachgelesen werden.
+
+Beispiele für \seegls{Sensor}plugins finden sich beim \robotQuote{TesterBot} die in
+dessen Roboter \seegls{Profil} \fileQuote{conf/profiles/robots/testerbot.bot}
+aufgelistet sind.

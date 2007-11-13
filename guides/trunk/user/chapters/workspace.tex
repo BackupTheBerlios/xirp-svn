@@ -1,0 +1,422 @@
+\chapter{Arbeitsbereich}
+\index{Arbeitsbereich|(}
+Der Arbeitsbereich lässt sich in fünf Bereiche aufteilen. Im folgenden werden
+diese fünf Bereich getrennt voneinander erläutert.
+
+\begin{itemize}
+  \item Menü
+  \item Anwendungswerkzeugleiste
+  \item Roboterwerkzeugleiste
+  \item Statusleiste
+  \item Drag-and-Drop Hauptarbeitsbereich
+\end{itemize}
+
+Im folgenden Kapitel werden diese Punkte einzeln beschrieben und näher erläutert.
+
+\newpage
+
+\section{Menü}
+\index{Arbeitsbereich!Menü}
+
+Das Menü der Anwendung ist in Abbildung \ref{img:workspace:menu} auf Seite
+\pageref{img:workspace:menu} zu sehen.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\textwidth]{images/menu}
+    \caption{Das Menü}
+    \label{img:workspace:menu}
+\end{figure}
+
+Wie zu sehen ist, gibt es acht verschiedene Einträge, welche nun im Einzelnen
+erläutert werden.
+
+\subsection{Datei}
+\index{Arbeitsbereich!Menü!Datei}
+\index{Kommunikationsspezifikationsdatei}
+\index{Roboterdatei}
+
+Das Menü \enquote{Datei} enthält acht Einträge. Allerdings sind von diesen in
+der Version 2.4.0 nur vier verfügbar, da momentan noch keine Editoren für
+Roboter- und Kommunikationsspezifikationsdateien existieren
+\footnote{Es ist geplant, dass diese Editoren ab der Version 3.0.0 verfügbar
+seien werden.}. Daher fallen die Einträge \texttt{Neuer Roboter},
+\texttt{Roboter bearbeiten}, \texttt{Neue Kommunikationsspezifikation} und
+\texttt{Kommunikationsspezifikation bearbeiten} weg. Die restlichen vier
+Einträge werden im folgenden beschrieben.
+
+\subsubsection{Neues Profil}
+\index{Profile!Profileditor}
+Wird dieser Eintrag ausgewählt, öffnet sich der Profileditor im Modus zum
+Erstellen eines neuen Profils.
+
+\subsubsection{Profil bearbeiten}
+\index{Profile!Profileditor}
+Wird dieser Eintrag ausgewählt, öffnet sich der Profileditor im Modus zum
+Bearbeiten eines bereits kompletten, oder eines nicht kompletten Profils.
+
+\subsubsection{Einstellungen}
+\index{Einstellungen}
+Die Auswahl dieses Eintrages öffnet den Einstellungsdialog. Mehr über die
+vorhandenen Einstellungsmöglichkeiten kann im Kapitel \enquote{Einstellungen}
+ab Seite \pageref{ref:settings} nachgelesen werden.
+
+\subsubsection{Beenden}
+Wird dieser Eintrag gewählt schließt sich die Anwendung.
+
+\subsection{Ansicht}
+\index{Arbeitsbereich!Menü!Ansicht}
+
+Das Menü \enquote{Ansicht} enthält sieben Optionen die aktiviert oder
+deaktiviert werden können. Jeder dieser Optionen bewirkt ein sichtbare Änderung
+im Arbeitsbereich.
+
+\subsubsection{C.O.P. sichtbar}
+\index{Kontrollübersicht}
+Diese Option ist nur verfügbar, wenn mindestens ein Profil mit mehr als einem
+Roboter geladen wurde. Wird die Option aktiviert ist die Kontrollübersicht als
+weiterer Reiter auf der Profil-Reiter Ebene verfügbar. Wird die Option
+deaktiviert wird auch die Kontrollübersicht geschlossen.
+
+\subsubsection{Werkzeuge sichtbar}
+Wird diese Option aktiviert ist die Anwendungswerkzeugleiste sichtbar, wird sie
+deaktiviert wird diese unsichtbar und stellt dem Arbeitsbereich etwas mehr
+Platz zur Verfügung.
+
+\subsubsection{Werkzeuge arretiert}
+Wird diese Option aktiviert wird die Anwendungswerkzeugleiste arretiert, wird
+sie deaktiviert ist es möglich die Werkzeuge in der Werkzeugleiste zu
+verschieben.
+
+\subsubsection{Statusleiste sichtbar}
+Wird diese Option aktiviert ist die Statusleiste sichtbar,wird sie
+deaktiviert wird diese unsichtbar und stellt dem Arbeitsbereich etwas  mehr
+Platz zur Verfügung.
+
+\subsubsection{Systemprotokolle sichtbar}
+\index{Systemprotokoll}
+Wird diese Option aktiviert sind in allen vorhandenen Roboter-Reitern die
+Systemprotokolle\footnote{Ab Version 3.0.0 wird diese Option profilabhängig. So
+werden nicht alle Systemprotokolle aus allen Reitern entfernt, sondern nur für
+ein bestimmtes Profil.} sichtbar, wird sie deaktiviert werden die Protokolle
+nicht angezeigt.
+
+\subsubsection{Live-Diagramme sichtbar}
+\index{Live-Diagramme}
+Wird diese Option aktiviert sind in allen vorhandenen Roboter-Reitern die
+Live-Diagramme\footnote{Ab Version 3.0.0 wird diese Option profilabhängig. So
+werden nicht alle Live-Diagramme aus allen Reitern entfernt, sondern nur für
+ein bestimmtes Profil.} sichtbar, wird sie deaktiviert werden die
+Live-Diagramme nicht angezeigt.
+
+\subsubsection{Rekorder sichtbar}
+\index{Rekorder}
+Wird diese Option aktiviert sind in allen vorhandenen Roboter-Reitern die
+Rekorder\footnote{Ab Version 3.0.0 wird diese Option profilabhängig. So
+werden nicht alle Rekorder aus allen Reitern entfernt, sondern nur für
+ein bestimmtes Profil.} sichtbar, wird sie deaktiviert werden die Rekorder nicht
+angezeigt.
+
+\subsubsection{Roboterübersicht sichtbar}
+\index{Roboterübersicht}
+Wird diese Option aktiviert sind in allen vorhandenen Roboter-Reitern die
+Roboterübersicht\footnote{Ab Version 3.0.0 wird diese Option profilabhängig. So
+werden nicht alle Roboterübersichten aus allen Reitern entfernt, sondern nur für
+ein bestimmtes Profil.} sichtbar, wird sie deaktiviert werden die
+Roboterübersichten nicht angezeigt.
+
+\subsection{Roboter}
+\index{Arbeitsbereich!Menü!Roboter}
+Das Menü \enquote{Roboter} ist ein dynamisch beim Start der Anwendung erstelltes
+Menü. Es enthält für jedes erfolgreich geladene Profil einen eigenen Eintrag.
+Öffnet man eines dieser Menüs wird für jeden Roboter des Profils eine Option
+angezeigt\footnote{Ab Version 3.0.0 wird es die Möglichkeit geben den Zustand
+des Profils bei Beenden der Anwendung im Profil zu speichern.}. Ist diese Option
+aktiviert wird der entsprechende Roboter-Reiter angezeigt, wird sie deaktiviert wird
+der Roboter-Reiter geschlossen.
+
+\subsection{Plugins}
+\index{Arbeitsbereich!Menü!Plugins}
+\index{Plugins}
+\index{Einstellungen}
+Das Menü \enquote{Plugins} ist ein dynamisches, kontextsensitives Menü. Es ist
+abhängig von dem aktuell aktivem Roboter. Es enthält Einträge für die Plugins
+des Roboters, welche entweder keine graphische Benutzeroberfläche haben und nur
+eine Funktionalität ausführen, oder solche die zwar eine graphische
+Benutzeroberfläche besitzen, aber nicht eingebettet in den Arbeitsbereich
+dargestellt werden sollen, sondern in Dialogform in einem eigenen Fenster.
+Des Weiteren enthält dieses einen Eintrag der die Einstellungen öffnet.
+
+\subsection{Reporte}
+\index{Arbeitsbereich!Menü!Reporte}
+\index{Reporte}
+\index{Reporte!PDF}
+\index{Plugins}
+Das Menü \enquote{Reporte} ist ein dynamisches, kontextsensitives Menü. Es ist
+abhängig von dem aktuell aktivem Roboter. Es enthält Einträge für die
+Report-Plugins des Roboters, sowie einen Eintrag zum Öffnen des Suchdialogs für
+Reporte. Wird ein Report erzeugt, wird dieser nach der Erstellung sofort im
+\seegls{PDF}-Betrachter des Betriebssystems geöffnet.
+
+\subsection{Extras}
+\index{Arbeitsbereich!Menü!Extras}
+Das Menü \enquote{Extras} enthält Einträge für diverse zusätzliche Funktionen
+die in \xirp~verfügbar sind.
+
+\subsubsection{Mail}
+\index{Mail}
+Wird dieser Eintrag gewählt öffnet sich die Mailverwaltung der Anwendung.
+
+\subsubsection{Kontakte}
+\index{Kontakte}
+Wird dieser Eintrag gewählt öffnet sich die Kontaktverwaltung der Anwendung.
+
+\subsubsection{Diagramme}
+\index{Diagramme}
+Wird dieser Eintrag gewählt öffnet sich der Dialog zum Konfigurieren des
+Diagrammgenerators.
+
+\subsubsection{Testerbot ausführen}
+\index{Testerbot}
+Wird dieser Eintrag gewählt öffnet sich der Kontrolldialog des \seegls{Testerbot}
+\seegls{Server}s.
+
+\subsection{Externe Werkzeuge}
+\index{Arbeitsbereich!Menü!Externe Werkzeuge}
+\index{Externe Werkzeuge}
+Das Menü \enquote{Externe Werkzeuge} ist ein dynamisches, kontextsensitives
+Menü. Es ist abhängig vom aktuell aktivem Profil. Es enthält für jedes im Profil
+spezifiziertes externes Werkzeug einen Eintrag mit dem angegebenen Namen des
+Werkzeugs. Wird ein Eintrag ausgewählt werden die in dem externen Werkzeug
+angegebenen Programme in der gewollten Reihenfolge und in dem angegebenen
+zeitlichen Abstand gestartet.
+
+\subsection{?}
+\index{Arbeitsbereich!Menü!?}
+Das Menü \enquote{?} enthält Einträge zum Anzeigen von Programminformationen und
+der Hilfe zur Anwendung und den Plugins.
+
+\subsubsection{Über \xirp~2}
+Wird dieser Eintrag gewählt öffnet sich ein Informationsdialog, der die aktuelle
+Versionnummer anzeigt.
+
+\subsubsection{Über Plugins}
+\index{Plugins}
+Wird dieser Eintrag gewählt öffnet sich ein Dialog, der Informationen über die
+geladenen Plugins anzeigt.
+
+\subsubsection{Hilfe}
+\index{Hilfe}
+Wird dieser Eintrag gewählt öffnet sich die Hilfe zu \xirp~und den geladenen Plugins.
+
+\section{Anwendungswerkzeugleiste}
+\index{Arbeitsbereich!Anwendungswerkzeugleiste}
+Die Werkzeugleiste der Anwendung ist in Abbildung \ref{img:workspace:apptools} auf Seite
+\pageref{img:workspace:apptools} zu sehen.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=.75\textwidth]{images/apptools}
+    \caption{Die Anwendungswerkzeugleiste}
+    \label{img:workspace:apptools}
+\end{figure}
+
+Wie zu sehen ist, gibt es acht verschiedene Werkzeugelemente. In Tabelle
+\ref{tab:apptools} auf Seite \pageref{tab:apptools} werden diese Elemente
+genauer erklärt.
+
+\begin{table}[htpb]
+    \centering
+    \begin{tabular}{c|l}
+    Werkzeugelement & Beschreibung\\
+    \hline
+    \includegraphics{images/quit} & Auswahl des Elements schließt die
+    Anwendung.\\
+    \includegraphics{images/preferences} & Auswahl des Elements
+    öffnet den Einstellungsdialog.\\
+    \includegraphics{images/start} & Auswahl des Elements startet alle Stoppuhren.\\
+    \includegraphics{images/pause} & Auswahl des Elements pausiert alle Stoppuhren.\\
+    \includegraphics{images/stop} & Auswahl des Elements stoppt alle Stoppuhren.\\
+    \includegraphics{images/send_mail} & Auswahl öffnet die Mailverwaltung.\\
+    \includegraphics{images/contacts} & Auswahl öffnet die Kontaktverwaltung.\\
+    \includegraphics{images/chart} & Auswahl öffnet den Dialog zum Konfigurieren des\\
+    & Diagrammgenerators.\\
+    \end{tabular}
+    \caption{Die Elemente der Anwendungswerkzeugleiste}
+    \label{tab:apptools}
+    \index{Einstellungen}
+    \index{Mail}
+    \index{Kontakte}
+    \index{Stoppuhr}
+\end{table}
+
+\section{Roboterwerkzeugleiste}
+\index{Arbeitsbereich!Roboterwerkzeugleiste}
+Die Werkzeugleiste der Roboter ist in Abbildung \ref{img:workspace:robtools} auf Seite
+\pageref{img:workspace:robtools} zu sehen.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\textwidth]{images/robottools}
+    \caption{Die Roboterwerkzeugleiste}
+    \label{img:workspace:robtools}
+\end{figure}
+
+\index{Plugins}
+Wie zu sehen ist, gibt es sieben verschiedene Werkzeugelemente. In Tabelle
+\ref{tab:robottools} auf Seite \pageref{tab:robottools} werden diese Elemente
+genauer erklärt. Diese Elemente sind für jeden Roboter verfügbar. Plugins können
+allerdings Werkzeugleisten definieren die dann zusätzlich dort angezeigt werden.
+
+\begin{table}[htpb]
+    \centering
+    \begin{tabular}{c|l}
+    Werkzeugelement & Beschreibung\\
+    \hline
+    \includegraphics{images/not_connected} & Auswahl des Elements stellt eine
+    Verbindung\\
+    & zu dem Roboter mit den eingestellten Optionen her.\\
+    & Ist eine Verbindung hergestellt kann durch eine weitere\\
+    & Auswahl des Elements die Verbindung getrennt werden.\\
+    \includegraphics{images/medium} & Auswahl des Kommunikationsmediums.\\
+    \includegraphics{images/protocol} & Auswahl des Kommunikationsprotokolls.\\
+    \includegraphics{images/watch} & Die Stoppuhranzeige.\\
+    \includegraphics{images/start} & Auswahl des Elements startet die Stoppuhr\\
+    & des Roboters.\\
+    \includegraphics{images/pause} & Auswahl des Elements pausiert die Stoppuhr\\
+    & des Roboters.\\
+    \includegraphics{images/stop} & Auswahl des Elements stoppt die Stoppuhr\\
+    & des Roboters.\\
+    \end{tabular}
+    \caption{Die Elemente der Roboterwerkzeugleiste}
+    \label{tab:robottools}
+    \index{Stoppuhr}
+\end{table}
+
+\newpage
+
+\section{Statusleiste}
+\index{Arbeitsbereich!Statusleiste}
+\index{Kontrollübersicht}
+Die Statusleiste der Anwendung ist kontextsensitiv. Sie ist abhängig vom aktuell
+aktivem Roboter und dem Verbindungsstatus des Roboters, oder dem Kontrollübersicht.
+In den Abbildungen \ref{img:workspace:statusnc} (Seite \pageref{img:workspace:statusnc}),
+\ref{img:workspace:statusc} (Seite \pageref{img:workspace:statusc})
+und \ref{img:workspace:statuscop} (Seite \pageref{img:workspace:statuscop}) sind
+die drei verschiedenen Zustände der Statusleiste zu sehen.
+\par
+Die Statusleiste zeigt die folgenden Informationen über den aktuellen Roboter
+von links nach rechts an:
+
+\begin{itemize}
+  \item Robotername
+  \item Verbindungsstatus
+  \item Information über den Kontrollstatus
+  \item Anzeige über die gesendete und empfangene Datenmenge
+  \item Anzeige des Status der Energiequelle
+\end{itemize}
+
+Wenn der Kontrollübersicht geöffnet ist zeigt die Statusleiste die folgenden
+Informationen von links nach rechts an:
+
+\begin{itemize}
+  \item Information, dass mehrere Roboter gesteuert werden
+  \item Weiterer Informationstext
+  \item Anzeige über die gesendete und empfangene Datenmenge
+\end{itemize}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\textwidth]{images/statusnc}
+    \caption{Die Statusleiste im \enquote{nicht verbundenen} Zustand}
+    \label{img:workspace:statusnc}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\textwidth]{images/statusc}
+    \caption{Die Statusleiste im \enquote{verbundenen} Zustand}
+    \label{img:workspace:statusc}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\textwidth]{images/statuscop}
+    \caption{Die Statusleiste im \enquote{Kontrollübersicht} Zustand}
+    \label{img:workspace:statuscop}
+\end{figure}
+
+\section{Hauptarbeitsbereich}
+\index{Arbeitsbereich!Hauptarbeitsbereich}
+Der Hauptarbeitsbereich besteht aus mehreren Reitern. Jeder Reiter entspricht
+einem geladenen Profil. Diese Reiter tragen den Namen des geladenen Profils.
+In Abbildung \ref{img:tab:profile} auf Seite \pageref{img:tab:profile} ist dies
+rot markiert.
+\par
+Jeder dieser Reiter enthält weitere Reiter. Für jeden im Profil enthaltenen
+Roboter einen weiteren Reiter. In Abbildung \ref{img:tab:robot} auf Seite
+\pageref{img:tab:robot} ist dies rot markiert.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=.75\textwidth]{images/profiletab}
+    \caption{Die Profil-Reiter}
+    \label{img:tab:profile}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=.75\textwidth]{images/robottab}
+    \caption{Die Roboter-Reiter}
+    \label{img:tab:robot}
+\end{figure}
+
+\index{Kontrollübersicht}
+Der Kontrollübersicht wird auf der Ebene der Profil-Reiter in einem eigenen
+Reiter dargestellt.
+
+
+\subsection{Drag-and-Drop der enthaltenen Elemente}
+\index{Plugins}
+Der Arbeitsbereich eines Roboters setzt sich aus den Standard Elementen und den
+Plugin Elementen zusammen. Die Elemente können frei in diesem Bereich angeordnet
+werden. Mittels \seegls{Drag-and-Drop} kann die Anordnung der Elemente verändert werden.
+Um z.B. Element \enquote{A} links neben Element \enquote{B} zu verschieben muss
+die Maus über der Titelzeile des Element gehalten und dann auf die
+Trennlinie links neben Element \enquote{B} verschoben und dann
+\enquote{losgelassen} werden. Pfeile zeigen an, ob ein Element an der
+gewünschten Stelle eingefügt werden kann. Es ist ebenfalls möglich Elemente
+übereinander zu \enquote{stapeln} in dem das Element einfach über einem andern
+\enquote{losgelassen} wird.
+
+\subsection{Anzeigemöglichkeiten der Elemente}
+Einige der Standard Elemente und Plugins können bei Bedarf in einem eigenen
+Fenster angezeigt werden. Um dieses zu erreichen muss auf das \enquote{in
+eigenem Fester anzeigen} \seegls{Icon} geklickt werden. Das \seegls{Icon} ist in Abbildung
+\ref{img:windowed} auf Seite \pageref{img:windowed} rot markiert. Die Abbildung
+zeigt ebenfalls, wie ein Plugin in einem eigenen Fenster angezeigt wird. Das
+Plugin wird, wenn das Fenster geschlossen wird, wieder an seine ursprüngliche
+Stelle im Arbeitsbereich eingefügt.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=.75\textwidth]{images/windowed}
+    \caption{Ein Plugin in eigenen Fenster}
+    \label{img:windowed}
+\end{figure}
+
+Es ist ebenfalls möglich ein Element zu \enquote{maximieren}. Wenn das in Abbildung
+\ref{img:windowed} auf Seite \pageref{img:windowed} blau markierte \seegls{Icon}
+angeklickt wird, nimmt das Element den kompletten Platz des
+Roboterarbeitsbereich ein. Dies ist in Abbildung \ref{img:maximized} auf Seite
+\pageref{img:maximized} zu sehen. In dieser Abbildung ist rechts oben das \seegls{Icon}
+zum Wiederherstellen der Originalgröße rot markiert.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\textwidth]{images/fullscreen}
+    \caption{Ein maximiertes Plugin}
+    \label{img:maximized}
+\end{figure}
+
+\index{Arbeitsbereich|)}

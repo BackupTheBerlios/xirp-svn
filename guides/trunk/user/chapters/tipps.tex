@@ -1,0 +1,178 @@
+\chapter{Tipps und Tricks}
+\index{Tipps|(}
+\index{Tricks|(}
+In folgenden Kapitel werden einige Funktionen vorgestellt, die weniger wichtig
+aber sehr hilfreich in bestimmten Situationen sind. Die vorgestellten
+Funktionalitäten sind:
+
+\begin{itemize}
+  \item Energiequelle in Statusleiste umschalten
+  \item Die Funktionen des Trayicons
+  \item Informationsdialoge
+  \item Stoppuhr
+  \item Externe Werkzeuge
+\end{itemize}
+
+\newpage
+
+\section{Energiequelle in Statusleiste umschalten}
+\index{Energiequellenanzeige|(}
+\index{Roboterprofil}
+\index{Testerbot}
+Im Roboterprofil können beliebig viele Energiequellen eingetragen werden. In der
+Statuszeile kann aber immer nur eine zur Zeit angezeigt werden. Um die Werte der
+anderen Energiequellen zu erfahren kann mit der rechten Maustaste ein
+Kontextmenü über dem Batterieicon in der rechten unteren Ecke der Anwendung
+geöffnet werden. Dieses enthält alle Energiequellen die der Roboter besitzt. Die
+aktuell angezeigte ist mit einem Punkt markiert. Um die Energiequellenanzeige
+umzuschalten muss einfach nur die gewünschte Energiequelle angeklickt werden.
+In Abbildung \ref{img:status:powersource:choose} auf Seite
+\pageref{img:status:powersource:choose} ist das Auswahlmenü für den \seegls{Testerbot}
+zu sehen.
+
+\begin{figure}[htp]
+	\centering
+	\includegraphics[width=.35\textwidth]{images/powersourcechooser}
+	\caption{Die Auswahl der Energiequelle für die Energiequellenanzeige}
+	\label{img:status:powersource:choose}
+\end{figure}
+
+\index{Energiequellenanzeige|)}
+
+\section{Die Funktionen des Trayicons}
+\index{Tray|(}
+Das \seegls{Tray}icon (blauer Stern) besitzt ein Kontextmenü, welches mit der rechten
+Maustaste aufgerufen werden kann. Dieses Menü enthält die folgenden acht
+Funktionen. 
+
+\index{Reportsuche}
+\index{Mail}
+\index{Kontakte}
+\index{Diagramme}
+\index{Diagrammgenerator}
+\index{Testerbot}
+\index{Einstellungen}
+\index{Hilfe}
+\begin{itemize}
+  \item Reportsuche - Öffnet die Reportsuche
+  \item Mail - Öffnet die Mailverwaltung
+  \item Kontakte - Öffnet die Kontaktverwaltung
+  \item Diagramme - Öffnet den Konfiguationsdialog des Diagrammgenerators
+  \item Testerbot ausführen - Öffnet den Kontrolldialog des \seegls{Testerbot}
+  \item Einstellungen - Öffnet die Programmeinstellungen
+  \item Hilfe - Öffnet den Hilfedialog
+  \item Beenden - Beendet das Programm
+\end{itemize}
+
+Wird anstatt mit der rechten, mit der linken Maustaste auf das \seegls{Tray}icon
+geklickt, blendet sich die Anwendung automatisch aus oder ein, je nachdem ob
+die Anwendung gerade sichtbar ist oder nicht.In Abbildung \ref{img:tray:menu}
+auf Seite \pageref{img:tray:menu} ist das Kontextmenü zu sehen.
+
+\begin{figure}[htp]
+	\centering
+	\includegraphics[width=.3\textwidth]{images/traymenu}
+	\caption{Das Kontextmenü des Trayicons}
+	\label{img:tray:menu}
+\end{figure}
+
+\index{Tray|)}
+
+\section{Informationsdialoge}
+\index{Informationsdialoge|(}
+\index{Sprachausgabe}
+Unter dem Menüpunkt \enquote{?} gibt es die Einträge \enquote{Über \xirp~2} und
+\enquote{Über Plugins}. Der \enquote{Über \xirp~2}-Dialog zeigt Informationen
+über die aktuelle Version der Anwendung an. In Abbildung \ref{img:about:xirp}
+auf Seite \pageref{img:about:xirp} ist dieser Dialog zu sehen. Mit Hilfe dieses
+Dialogs ist es auch noch möglich seine Sprachausgabeeinstellungen zu testen. Ist
+die Sprachausgabe in den Einstellungen aktiviert, ist auch der Knopf
+\enquote{Erzähl mir mehr} verfügbar. Wird dieser angeklickt, wird ein
+Informationstext über die Anwendung über die Sprachausgabe ausgegeben.
+
+\begin{figure}[htp]
+	\centering
+	\includegraphics[width=.4\textwidth]{images/aboutxirp}
+	\caption{Über \xirp~2 - Informationsdialog}
+	\label{img:about:xirp}
+\end{figure}
+
+\newpage
+
+Der \enquote{Über Plugins}-Dialog zeigt alle verfügbaren Plugins an und stellt
+zusätzlich diverse Informationen über die Plugins zur Verfügung. In der Tabelle
+werden die folgenden Informationen angezeigt.
+
+\begin{itemize}
+  \item Name des Plugins
+  \item Version
+  \item Autor(en)
+\end{itemize}
+
+Klickt man auf eine Zeile in der Tabelle, öffnet sich ein Informationsfenster.
+Dieses enthält eine Kurzbeschreibung des Plugins. In Abbildung
+\ref{img:about:plugins} auf Seite \pageref{img:about:plugins} ist dies gut zu
+erkennen. Hat man ein Plugin mit einem grünen Punkt an Anfang der Zeile in der
+Tabelle markiert und klickt auf den Knopf \enquote{Vorschau}, öffnet sich ein
+Fenster mit der graphischen Oberfläche des Plugins. Die Plugins mit einem roten
+Punkt können nicht in der Vorschau angezeigt werden.
+
+\begin{figure}[htp]
+	\centering
+	\includegraphics[width=.7\textwidth]{images/aboutplugins}
+	\caption{Über Plugins - Informationsdialog}
+	\label{img:about:plugins}
+\end{figure}
+
+\index{Informationsdialoge|)}
+
+\section{Stoppuhr}
+\index{Stoppuhr|(}
+\index{Einstellungen}
+Die Anwendung wurde ursprünglich entwickelt, um einen Roboter beim RoboCup 
+Rescue Wettbewerb zu steuern. Da der Operator bei diesem Wettbewerb nur eine
+gewisse Zeit für einen Lauf hat, wurde eine Zeituhr in die Anwendung eingebaut.
+Dieses Feature bliebt erhalten. In den Einstellungen können Sekunden
+für einen Warn- und einen Endwert angegeben werden. Die Zeitdarstellung 
+verändert bei erreichen der Werte ihre Farbe. Orange bei erreichen des
+Warnwertes und rot bei erreichen des Endwertes.
+\par
+\index{Roboterreiter}
+\index{Anwendungswerkzeugleiste}
+Auf jedem Roboterreiter befindet sich die Anzeige der Stoppuhr. Ebenfalls
+befinden sich auf jedem Roboterreiter die Kontrollelemente zum Starten,
+Pausieren und Stoppen der jeweiligen Uhr. Jede Uhr eines Roboterreiters kann
+unabhängig von den andern genutzt werden. Sollte es jedoch einmal von Nöten
+sein, dass alle Uhren gleichzeitig gestartet, pausiert oder gestoppt werden
+sollen, so können die Kontrollelemente der Anwendungswerkzeugleiste benutzt
+werden. In Abbildung \ref{img:stop:watch} auf Seite \pageref{img:stop:watch}
+ist eine Stoppuhr im Betrieb zu sehen. Die Kontrollelemente des Roboterreiter
+sind rot und die der Anwendungswerkzeugleiste blau markiert.
+
+\begin{figure}[htp]
+	\centering
+	\includegraphics[width=.75\textwidth]{images/stopwatch}
+	\caption{Eine Stoppuhr mit markierten Kontrollelementen}
+	\label{img:stop:watch}
+\end{figure}
+
+\index{Stoppuhr|)}
+
+\section{Externe Werkzeuge}
+\index{Externe Werkzeuge|(}
+\index{Profile}
+In den \seegls{Profile}n können mittels der Einstellungen externe Programmaufrufe
+definiert werden. Diese externen Programmaufrufe können z.B. genutzt werden, um
+Simulatoren zu starten, die für Test benötigt werden. Hierbei ist die
+Möglichkeit der Eingabe einer Wartezeit bis zum Start des nächsten Programms in
+dem aktuellen Werkzeug von Hilfe, da evtl. ein nachfolgend zu startendes
+Programm das vorherige komplett gestartet benötigt.
+\par
+Natürlich kann ein externe Werkzeug nur ein externes Programm enthalten. Dies
+kann nützlich sein, da man so die Arbeitsoberfläche \xirp~nicht für
+Hilfsprogrammaufrufe verlassen muss.
+
+\index{Externe Werkzeuge|)}
+
+\index{Tipps|)}
+\index{Tricks|)}

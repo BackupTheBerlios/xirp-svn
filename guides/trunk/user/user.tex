@@ -1,0 +1,50 @@
+\input{chapters/header}
+
+\begin{document}
+\sffamily
+
+\input{chapters/glossary}
+\pagenumbering{Roman}
+\input{chapters/titlepage}
+
+\pagenumbering{roman}
+\tableofcontents
+\newpage
+\listoffigures
+\newpage
+\listoftables
+\newpage
+\lstlistoflistings
+\newpage
+\pagenumbering{arabic}
+
+% Hier die Kapitel einfuegen
+\input{chapters/overview}
+\input{chapters/profile}
+\input{chapters/workspace}
+\input{chapters/settings}
+\input{chapters/mail}
+\input{chapters/charts}
+\input{chapters/testerbot}
+\input{chapters/plugins}
+\input{chapters/speech}
+\input{chapters/cop}
+\input{chapters/extras}
+\input{chapters/tipps}
+\input{chapters/etc}
+\newpage
+
+\pagenumbering{alph}
+\appendix
+\input{chapters/license}
+\begin{thebibliography}{XXXXXXXXXX}
+	\bibitem[MBROLA]{MBROLA}{TCTS Lab of the Faculté Polytechnique de Mons,
+	The MBROLA Project - Towards a Freely Available Multilingual Speech
+	Synthesizer, \href{http://tcts.fpms.ac.be/synthesis/mbrola.html}
+	{http://tcts.fpms.ac.be/synthesis/mbrola.html}}, The MBROLA Project Webseite.
+	Stand 29.06.2007.
+\end{thebibliography}	
+\printglossary
+\printindex
+
+\end{document}

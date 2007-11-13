@@ -1,0 +1,1286 @@
+\chapter{Profile}
+\label{sec:sprofile}
+\index{Profil}
+
+\index{Roboter}
+\index{Profil}
+\index{Kommunikation!Spezifikation}
+Die \seegls{Profile} sind ein zentraler Bestandteil vom \xirp. \seegls{Profile}, Roboter und
+Kommunikationsspezifikationen werden in einzelnen Dateien in \seegls{XML} spezifiziert.
+Die \seegls{XML} Struktur wird mittels \enquote{\seegls{JAXB}} und annotierten Java-Klassen in
+eine Java-Bean-Struktur überführt.
+
+Im folgenden Kapitel werden zunächst die \seegls{XML}-Spezifikationen und im Anschluss
+daran die Repäsentation der \seegls{Profile}, Roboter und Kommunikationsspezifikationen
+in den entsprechenden Java-Klassen erläutert.
+
+Die \seegls{XML}-Dateien wurden mit \seegls{DTDs} definiert. Um beim Einlesen der Dateien eine
+Validierung dieser vorzunehmen, wurden die \seegls{DTDs} mittels des Programms
+\enquote{Trang}\footnote{Zu finden unter \href{http://www.thaiopensource.com/}
+{www.thaiopensource.com}} in \seegls{XSDs} übersetzt. \enquote{\seegls{JAXB}} benötigt diese
+Dateien um Validieren zu können, ob eine Datei gültig oder ungültig nach den
+gegebenen Definitionen ist. Die Beschreibung der Profildateien wird trotzdessen
+anhand der \seegls{DTDs} durchgeführt, da diese in ihrer Struktur einfacher und
+übersichtlicher sind.
+
+\newpage
+
+\section{Profil}
+In den Profildateien, Dateiendung \texttt{pro}, werden die Roboter zugeordnet
+die zu diesem \seegls{Profil} gehören, sowie die externen Werkzeuge gespeichert.
+Dateien dieser Art müssen sich im Ordner \texttt{<xirp>/conf/profiles} befinden,
+um beim Starten geladen zu werden.
+
+Im folgenden wird die Struktur einer validen Profildatei anhand der DTD
+erläutert.
+
+\begin{xml}[caption=Die DTD von Profildateien (\texttt{pro}), label=lst:prodtd]
+<!-- A profile -->
+<!ELEMENT profile (robot+, externaltools?)>
+<!ATTLIST profile name CDATA #REQUIRED>
+<!ATTLIST profile complete (true|false) #REQUIRED>
+
+<!-- A robot -->
+<!ELEMENT robot (#PCDATA)>
+
+<!-- The external tools -->
+<!ELEMENT externaltools (tool*)>
+
+<!-- A tool -->
+<!ELEMENT tool (executable+)>
+<!ATTLIST tool name CDATA #REQUIRED>
+
+<!-- A executable -->
+<!ELEMENT executable (args?)>
+<!ATTLIST executable name CDATA #REQUIRED>
+<!ATTLIST executable path CDATA #REQUIRED>
+<!ATTLIST executable wait CDATA #REQUIRED>
+
+<!-- The arguments for the executable -->
+<!ELEMENT args (#PCDATA)>
+\end{xml}
+
+\subsection{<profile>}
+
+Wie zu sehen ist muss mindestens ein Roboter zu geordnet werden:
+\texttt{(robot+,}. Die externen Programme sind komplett optional 
+\texttt{externaltools?)}. Das Element \texttt{<profile>} hat zwei benötigte
+Attribute: 
+
+\begin{itemize}
+  \item \texttt{name} - Der Name des \seegls{Profils}
+  \item \texttt{complete} - \texttt{true} oder \texttt{false}, zeigt
+  an, ob das \seegls{Profil} komplett ist (wird intern benutzt).
+\end{itemize}
+
+Die im \texttt{<profile>}-Element vorhanden Elemente werden in den folgenden
+Abschnitten beschrieben.
+
+\subsubsection{<robot>}
+
+Das Element \texttt{<robot>} muss, um den Roboter
+zuweisen und laden zu können, den Dateinamen des gewünschten Roboters ohne
+Dateiendung enthalten. 
+
+\subsubsection{<externaltools>}
+
+In diesem Bereich werden die externen Programme die dem \seegls{Profil} zugeordnet sind
+definiert. Das \texttt{<externaltools>}-Element kann mehrere
+\texttt{<tool>}-Elemente enthalten. Jedes \texttt{<tool>}-Element hat ein
+Attribut \texttt{name} (der Name des Tools) und eine Folge von mindestens
+einem \texttt{<executable>}. Jeder \texttt{<executable>} hat drei
+Attribute:
+
+\begin{itemize}
+  \item \texttt{name} - Name des ausführbaren Programms (nicht der Dateiname).
+  \item \texttt{path} - Kompletter Pfad zum ausführbaren Programm.
+  \item \texttt{wait} - Ein Zahlenwert. Die Wartezeit in Millisekunden bis zum Start des
+  nachfolgenden Programms.
+\end{itemize} 
+
+Zusätzlich dazu enthält jedes \texttt{<executable>} ein oder kein
+\texttt{<args>}-Element. In diesem Element werden die Start-Argumente des Programms
+als ein String eingetragen. Dieser kann auch leer sein, wenn keine Argumente
+vorhanden sind.
+
+\subsection{Valide Profildatei}
+Ist die Profildatei als komplett markiert unf valid, wird das \seegls{Profil} in der
+Anwendung geladen. Eine valide Profildatei ist in Auflistung
+\autoref{lst:profildatei} auf \autopageref{lst:profildatei} zu sehen.
+
+\begin{xml}[caption=Eine valide\, komplette Profildatei, label=lst:profildatei]
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<profile complete="true" name="Testing">
+    <externaltools>
+        <tool name="TestTool">
+            <executable wait="1000" path="C:\WINDOWS\NOTEPAD.EXE" name="Notepad">
+                <args></args>
+            </executable>
+            <executable wait="1000" path="C:\WINDOWS\system32\calc.exe" name="Calculator">
+                <args></args>
+            </executable>
+        </tool>
+    </externaltools>
+    <robot>testerbot</robot>             
+</profile>
+\end{xml}
+
+\section{Roboter}
+In den Roboterdateien, Dateiendung \texttt{bot}, wird ein Roboter komplett
+spezifiziert. Von Maßen, \seegls{Sensor}en und \seegls{Aktuator}en über Kommunikationsangaben und
+Multimediageräte hin zu den \seegls{Plugins} die für den Roboter geladen werden sollen.
+Dateien dieser Art müssen sich im Ordner \texttt{<xirp>/conf/profiles/robots}
+befinden, um beim Starten geladen zu werden. 
+
+Im folgenden wird die Struktur einer validen Profildatei anhand der \seegls{DTD}
+erläutert.
+
+\begin{xml}[caption=Die DTD von Roboterdateien (\texttt{bot}), label=img:botdtd]
+<!-- Structure of <robot> -->
+<!ELEMENT robot (robotspecs,actuators,powersource+,sensorgroup*,communicationspecification,multimedia?,plugins?)>
+<!ATTLIST robot name CDATA #REQUIRED>
+<!ATTLIST robot type (WHEEL|WALK|FLY|OTHER) #REQUIRED>
+<!ATTLIST robot completed (true|false) #REQUIRED>
+
+<!-- Measurements of the torso -->
+<!ELEMENT robotspecs (height,width,length,weight)>
+
+<!-- The height of the robot -->
+<!ELEMENT height (#PCDATA)> 
+<!ATTLIST height unit (MILLIMETER|CENTIMETER|DECIMETER|METER) #REQUIRED>
+
+<!-- The width of the robot -->
+<!ELEMENT width (#PCDATA)>
+<!ATTLIST width unit (MILLIMETER|CENTIMETER|DECIMETER|METER) #REQUIRED>
+
+<!-- The length of the robot -->
+<!ELEMENT length (#PCDATA)>
+<!ATTLIST length unit (MILLIMETER|CENTIMETER|DECIMETER|METER) #REQUIRED>
+
+<!-- The weight of the robot -->
+<!ELEMENT weight (#PCDATA)>
+<!ATTLIST weight unit (GRAM|KILOGRAM|TON) #REQUIRED>
+
+<!-- Actuators -->
+<!ELEMENT actuators (actuatorgroup+)>
+<!ATTLIST actuators count CDATA #REQUIRED>
+
+<!-- A group of actuators -->
+<!ELEMENT actuatorgroup (actuator+)>
+<!ATTLIST actuatorgroup name CDATA #REQUIRED>
+
+<!-- A actuator -->
+<!ELEMENT actuator (minimum,maximum)>
+<!ATTLIST actuator id CDATA #REQUIRED>
+<!ATTLIST actuator name CDATA #REQUIRED>
+<!ATTLIST actuator unit (DEGREE|PERCENT|RPM) #REQUIRED>
+
+<!-- Power sources -->
+<!ELEMENT powersource (#PCDATA)>
+<!ATTLIST powersource warningValue CDATA #REQUIRED>
+<!ATTLIST powersource max CDATA #REQUIRED>
+<!ATTLIST powersource unit (AMPERE|VOLT|FARAD|PERCENT|CCM) #REQUIRED>
+<!ATTLIST powersource datapoolKey CDATA #REQUIRED>
+
+<!-- Sensor groups -->
+<!ELEMENT sensorgroup (sensor+)>
+<!ATTLIST sensorgroup visible (true|false) #REQUIRED>
+<!ATTLIST sensorgroup longName CDATA #REQUIRED>
+<!ATTLIST sensorgroup datapoolKey CDATA #REQUIRED>
+
+<!-- Sensors -->
+<!ELEMENT sensor (sensorspecs)>
+<!ATTLIST sensor id CDATA #REQUIRED>
+<!ATTLIST sensor subKey CDATA #REQUIRED>
+<!ATTLIST sensor unit (DEGREE|PERCENT|RPM|PARTICLES_PER_MILLION|CENTIMETER|KELVIN|CELSIUS|FAHRENHEIT|MILES_PER_HOUR|KILOMETERS_PER_HOUR|METERS_PER_HOUR|METERS_PER_MINUTE|CENTIMETERS_PER_HOUR|CENTIMETERS_PER_MINUTE) #REQUIRED>
+
+<!-- Specs of a sensor -->
+<!ELEMENT sensorspecs (position,minimum,maximum,option*)>
+
+<!-- The position of the sensor -->
+<!ELEMENT position EMPTY>
+<!ATTLIST position attached (TORSO|EXTREMITY) #REQUIRED>
+<!ATTLIST position side (FRONT|REAR|LEFT|RIGHT|INSIDE|TOP|BOTTOM) #REQUIRED>
+<!ATTLIST position x CDATA #REQUIRED>
+<!ATTLIST position y CDATA #REQUIRED>
+
+<!-- A minimum -->
+<!ELEMENT minimum (#PCDATA)>
+
+<!-- A maximum -->
+<!ELEMENT maximum (#PCDATA)>
+
+<!-- A option -->
+<!ELEMENT option (#PCDATA)>
+<!ATTLIST option name CDATA #REQUIRED>
+
+<!-- A fully qualified class name -->
+<!ELEMENT class (#PCDATA)>
+
+<!-- Name of the comm-specs file -->
+<!ELEMENT communicationspecification (#PCDATA)>
+
+<!-- Multimedia -->
+<!ELEMENT multimedia (video?,audio?)>
+
+<!-- Video devices -->
+<!ELEMENT video (camera*,display*)>
+<!ATTLIST video simultaneous (true|false) #REQUIRED>
+
+<!-- A camera -->
+<!ELEMENT camera (#PCDATA)>
+
+<!-- A display -->
+<!ELEMENT display (#PCDATA)>
+
+<!-- Audio devices -->
+<!ELEMENT audio (microphone*,speaker*)>
+
+<!-- A microphone -->
+<!ELEMENT microphone (#PCDATA)>
+
+<!-- A speaker -->
+<!ELEMENT speaker (#PCDATA)>
+
+<!-- The plugins -->
+<!ELEMENT plugins (plugin+)>
+
+<!-- A plugin -->
+<!ELEMENT plugin (class,sensorname*,usemultimedia?,option*)>
+<!ATTLIST plugin name CDATA #REQUIRED>
+
+<!-- Name of a sensor which is displayed by a plugin -->
+<!ELEMENT sensorname (#PCDATA)>
+
+<!-- Flag, indicating if the plugin uses multiumedia devices -->
+<!ELEMENT usemultimedia (true|false)>
+\end{xml}
+
+\subsection{<robot>}
+In \autoref{lst:botdtd:robot} auf \autopageref{lst:botdtd:robot} ist die
+Definition des Elements \texttt{<robot>} zu sehen.
+
+\begin{xml}[caption=DTD: Definition von \texttt{<robot>}, label=lst:botdtd:robot]
+<!ELEMENT robot (robotspecs,actuators,powersource+,sensorgroup*,communicationspecification,multimedia?,plugins?)>
+<!ATTLIST robot name CDATA #REQUIRED>
+<!ATTLIST robot type (WHEEL|WALK|FLY|OTHER) #REQUIRED>
+<!ATTLIST robot completed (true|false) #REQUIRED>
+\end{xml}
+
+Das \texttt{<robot>}-Element enthält drei Attribute:
+
+\begin{itemize}
+  \item \texttt{name} - Name des Roboters.
+  \item \texttt{type} - Der Typ des Roboters. Hier kann zwischen vier Möglichkeiten
+  gewählt werden:
+  \begin{itemize}
+    \item \texttt{WHEEL} - Der Roboter hat Räder.
+    \item \texttt{WALK} - Der Roboter hat Beine.
+    \item \texttt{FLY} - Der Roboter fliegt.
+    \item \texttt{OTHER} - Der Roboter pass in keine der drei vorherigen
+    Kategorien.
+  \end{itemize}
+  \item \texttt{completed} - \texttt{true} oder \texttt{false}, zeigt
+  an, ob der Roboter komplett ist (wird intern benutzt).  
+\end{itemize}
+
+Innerhalb des \texttt{<robot>}-Elements können die folgenden Elemente in
+unterschiedlicher Anzahl vorkommen:
+
+\begin{itemize}
+  \item \texttt{<robotspecs>} - Die Roboterspezifikation, muss genau einmal
+  vorkommen.
+  \item \texttt{<actuators>} - Die \seegls{Aktuator}en des Roboters, muss genau einmal
+  vorkommen.
+  \item \texttt{<powersource>} -  Die Energiequellen des Roboters, muss
+  mindestens einmal vorkommen.
+  \item \texttt{<sensorgroup>} - Die gruppierten Sensoren, muss garnicht und
+  kann mehrfach vorkommen.
+  \item \texttt{<communicationspecification>} - Die Kommunikation des roboters,
+  muss genau einmal vorkommen.
+  \item \texttt{<multimedia>} - Die Multimediageräte des Roboters, kann garnicht
+  oder genau einmal vorkommen.
+  \item \texttt{<plugins>} - Die Plugins des Roboters, kann garnicht oder genau
+  einmal vorkommen.
+\end{itemize}
+
+Die Definitionen dieser Elemente wird in den folgenden Abschnitten erläutert.
+
+\subsubsection{<robotspecs>}
+\label{sec:robotspecs}
+In \autoref{lst:botdtd:robotspecs} auf \autopageref{lst:botdtd:robotspecs} ist die
+Definition des Elements \texttt{<robotspecs>} zu sehen.
+
+\begin{xml}[caption=DTD: Definition von \texttt{<robotspecs>},
+label=lst:botdtd:robotspecs] 
+<!ELEMENT robotspecs (height,width,length,weight)>
+
+<!ELEMENT height (#PCDATA)> 
+<!ATTLIST height unit (MILLIMETER|CENTIMETER|DECIMETER|METER) #REQUIRED>
+
+<!ELEMENT width (#PCDATA)>
+<!ATTLIST width unit (MILLIMETER|CENTIMETER|DECIMETER|METER) #REQUIRED>
+
+<!ELEMENT length (#PCDATA)>
+<!ATTLIST length unit (MILLIMETER|CENTIMETER|DECIMETER|METER) #REQUIRED>
+
+<!ELEMENT weight (#PCDATA)>
+<!ATTLIST weight unit (GRAM|KILOGRAM|TON) #REQUIRED>
+\end{xml}
+
+Innerhalb des \texttt{<robotspecs>}-Elementes befinden sich vier weitere
+Elemente:
+
+\begin{itemize}
+  \item \texttt{<height>} - Die Höhe des Torsos, muss genau einmal vorkommen.
+  \item \texttt{<width>} - Die Breite des Torsos, muss genau einmal vorkommen.
+  \item \texttt{<length>} - Die Länge des Torsos, muss genau einmal vorkommen.
+  \item \texttt{<weight>} - Das Gewicht des Roboters, muss genau einmal vorkommen.
+\end{itemize}
+
+Jedes dieser Elemente hat das benötigte Attribut \texttt{unit}. Hier kann bei
+den Längenangaben \texttt{<height>}, \texttt{<width>} und \texttt{<length>} 
+zwischen folgende Werten gewählt werden:
+
+\begin{itemize}
+  \item \texttt{MILLIMETER} - Maßeinheit ist dann Millimeter.
+  \item \texttt{CENTIMETER} - Maßeinheit ist dann Zentimeter.
+  \item \texttt{DECIMETER} - Maßeinheit ist dann Dezimeter.
+  \item \texttt{METER} - Maßeinheit ist dann Meter.
+\end{itemize}
+
+Bei der Gewichtsangabe -- \texttt{<weight>} -- kann zwischen folgenden Werten
+gewählt werden:
+
+\begin{itemize}
+  \item \texttt{GRAM} - Maßeinheit ist dann Gramm.
+  \item \texttt{KILOGRAM} - Maßeinheit ist dann Kilogramm.
+  \item \texttt{TON} - Maßeinheit ist dann Tonnen.
+\end{itemize}
+
+In \autoref{lst:botdtd:robotspecs:valid} auf
+\autopageref{lst:botdtd:robotspecs:valid} ist ein valider
+\texttt{<robotspecs>}-Bereich zu sehen.
+
+\begin{xml}[caption=Ein valides \texttt{<robotspecs>-Element},
+label=lst:botdtd:robotspecs:valid] 
+<robotspecs>
+    <height unit="MILLIMETER">200.0</height>
+    <width unit="MILLIMETER">500.0</width>
+    <length unit="MILLIMETER">700.0</length>
+    <weight unit="KILOGRAM">5.0</weight>
+</robotspecs>
+\end{xml}
+
+\subsubsection{<actuators>}
+In \autoref{lst:botdtd:actuators} auf \autopageref{lst:botdtd:actuators} ist die
+die Definition des Elements \texttt{<actuators>} zu sehen.
+
+\begin{xml}[caption=DTD: Definition von \texttt{<actuators>}, 
+label=lst:botdtd:actuators] 
+<!ELEMENT actuators (actuatorgroup+)>
+<!ATTLIST actuators count CDATA #REQUIRED>
+
+<!ELEMENT actuatorgroup (actuator+)>
+<!ATTLIST actuatorgroup name CDATA #REQUIRED>
+
+<!ELEMENT actuator (minimum,maximum)>
+<!ATTLIST actuator id CDATA #REQUIRED>
+<!ATTLIST actuator name CDATA #REQUIRED>
+<!ATTLIST actuator unit (DEGREE|PERCENT|RPM) #REQUIRED>
+
+<!ELEMENT minimum (#PCDATA)>
+
+<!ELEMENT maximum (#PCDATA)>
+\end{xml}
+
+Das \texttt{<actuators>}-Element besitzt das Attribut \texttt{count}. In diesem
+befindet sich die Anzahl der vorhandenen \seegls{Aktuator}en. Dieser Wert wird intern
+gesetzt. Des Weiteren kann das Element mindestens einen
+\texttt{<actuatorgroup>}-Tag enthalten.
+
+Das \texttt{<actuatorgroup>}-Element gruppiert \seegls{Aktuator}en, z.B. können sie alle
+Servos eines Beines als Gruppe \enquote{leg} zusammengefasst werden. Das
+Element besitzt das Attribut \texttt{name}, welches den Namen der Gruppe
+wiedergibt. Eine Gruppe muss mindestens ein \texttt{<actuator>}-Element
+beinhalten. 
+
+Das \texttt{<actuator>}-Element hat drei Attribute:
+
+\begin{itemize}
+  \item \texttt{id} - Erkennungsmarke des \seegls{Aktuator}s (ein Zahlenwert).
+  \item \texttt{name} - Der Name des \seegls{Aktuator}s.
+  \item \texttt{unit} - Die Maßeinheit in der die Werte des \seegls{Aktuator}s gemessen
+  werden. Es stehen folgende maßeinheiten zur Auswahl:
+  \begin{itemize}
+    \item \texttt{DEGREE} - Einheit wird in Grad angegeben.
+    \item \texttt{PERCENT} - Einheit wird in Prozent angegeben.
+    \item \texttt{RPM} - Einheit wird in Umdrehungen pro Minute.
+  \end{itemize}
+\end{itemize}
+
+Zusätzlich hat jedes \texttt{<actuator>}-Element zwei weitere Elemente, die beide
+ein einziges Mal vorhanden sein müssen:
+
+\begin{itemize}
+  \item \texttt{<minimum>} - Der minimale Wert den der \seegls{Aktuator} erreichen kann,
+  die Einheit entspricht der Angabe in \texttt{unit} des
+  \texttt{<actuator>}-Elements.
+  \item \texttt{<maximum>} - Der maximale Wert den der \seegls{Aktuator} erreichen kann,
+  die Einheit entspricht der Angabe in \texttt{unit} des
+  \texttt{<actuator>}-Elements.
+\end{itemize}
+
+In \autoref{lst:botdtd:actuators:valid} auf
+\autopageref{lst:botdtd:actuators:valid} ist ein valider
+\texttt{<actuators>}-Bereich zu sehen.
+
+\begin{xml}[caption=Ein valides \texttt{<actuators>-Element},
+label=lst:botdtd:actuators:valid] 
+<actuators count="2">
+    <actuatorgroup name="drive">
+        <actuator name="left" unit="PERCENT" id="0">
+            <minimum>0.0</minimum>
+            <maximum>100.0</maximum>
+        </actuator>
+        <actuator name="right" unit="PERCENT" id="1">
+            <minimum>0.0</minimum>
+            <maximum>100.0</maximum>
+        </actuator>
+    </actuatorgroup>
+</actuators>
+\end{xml}
+
+\subsubsection{<powersource>}
+In \autoref{lst:botdtd:powersource} auf \autopageref{lst:botdtd:powersource}
+ist die Definition des Elements \texttt{<actuators>} zu sehen.
+
+\begin{xml}[caption=DTD: Definition von \texttt{<powersource>}, 
+label=lst:botdtd:powersource] 
+<!ELEMENT powersource (#PCDATA)>
+<!ATTLIST powersource warningValue CDATA #REQUIRED>
+<!ATTLIST powersource max CDATA #REQUIRED>
+<!ATTLIST powersource unit (AMPERE|VOLT|FARAD|PERCENT|CCM) #REQUIRED>
+<!ATTLIST powersource datapoolKey CDATA #REQUIRED>
+\end{xml}
+
+Von dem \texttt{<powersource>}-Elemente muss mindestens eins vorhanden sein. Es
+hat vier Attribute:
+
+\begin{itemize}
+  \item \texttt{warningValue} - Ein Zahlenwert; zeigt den Wert an ab dem eine
+  Warnung ausgegenen soll, dass die Energiequelle bald keine Energie mehr
+  liefert.
+  \item \texttt{max} - Der maximale Wert der Energiequelle.
+  \item \texttt{unit} - Die Einheit in der \texttt{warningValue} und
+  \texttt{max} gemessen werden. Es stehen fünf Werte zur Auswahl:
+  \begin{itemize}
+    \item \texttt{AMPERE} - Die Maßeinheit ist Ampere.
+    \item \texttt{VOLT} - Die Maßeinheit ist Volt.
+    \item \texttt{FARAD} - Die Maßeinheit ist Farad.
+    \item \texttt{PERCENT} - Die Maßeinheit ist Prozent.
+    \item \texttt{CCM} - Die Maßeinheit ist Kubikzentimeter.
+  \end{itemize}
+  \item \texttt{datapoolKey} - Der Schlüsel unter dem die Werte der
+  Energiequelle in den Datenpool\index{Datenpool} eingespielt werden.
+\end{itemize}
+
+Der Name der Energiequelle wird im \enquote{value}-Bereich des Elements angegeben:
+\newline\texttt{<powersource>Name</powersource>}.
+
+In \autoref{lst:botdtd:powersource:valid} auf
+\autopageref{lst:botdtd:powersource:valid} ist ein valider
+\texttt{<powersource>}-Bereich mit zwei Energiequellen zu sehen.
+
+\begin{xml}[caption=Ein valides \texttt{<powersource>-Element},
+label=lst:botdtd:powersource:valid] 
+<powersource datapoolKey="battery1" unit="AMPERE" max="5.0" warningValue="0.5">Battery1</powersource>
+<powersource datapoolKey="battery2" unit="AMPERE" max="5.0" warningValue="0.5">Battery2</powersource>
+\end{xml}
+
+\subsubsection{<sensorgroup>}
+\label{sec:sensorgroup}
+In \autoref{lst:botdtd:sensorgroup} auf \autopageref{lst:botdtd:sensorgroup} ist die
+Definition des Elements \texttt{<sensorgroup>} zu sehen.
+
+\begin{xml}[caption=DTD: Definition von \texttt{<sensorgroup>}, 
+label=lst:botdtd:sensorgroup] 
+<!ELEMENT sensorgroup (sensor+)>
+<!ATTLIST sensorgroup visible (true|false) #REQUIRED>
+<!ATTLIST sensorgroup longName CDATA #REQUIRED>
+<!ATTLIST sensorgroup datapoolKey CDATA #REQUIRED>
+
+<!ELEMENT sensor (sensorspecs)>
+<!ATTLIST sensor id CDATA #REQUIRED>
+<!ATTLIST sensor subKey CDATA #REQUIRED>
+<!ATTLIST sensor unit (DEGREE|PERCENT|RPM|PARTICLES_PER_MILLION|CENTIMETER|KELVIN|CELSIUS|FAHRENHEIT|MILES_PER_HOUR|KILOMETERS_PER_HOUR|METERS_PER_HOUR|METERS_PER_MINUTE|CENTIMETERS_PER_HOUR|CENTIMETERS_PER_MINUTE) #REQUIRED>
+
+<!ELEMENT sensorspecs (position,minimum,maximum,option*)>
+
+<!ELEMENT position EMPTY>
+<!ATTLIST position attached (TORSO|EXTREMITY) #REQUIRED>
+<!ATTLIST position side (FRONT|REAR|LEFT|RIGHT|INSIDE|TOP|BOTTOM) #REQUIRED>
+<!ATTLIST position x CDATA #REQUIRED>
+<!ATTLIST position y CDATA #REQUIRED>
+
+<!ELEMENT minimum (#PCDATA)>
+
+<!ELEMENT maximum (#PCDATA)>
+
+<!ELEMENT option (#PCDATA)>
+<!ATTLIST option name CDATA #REQUIRED>
+\end{xml}
+
+Das \texttt{<sensorgroup>}-Element muss garnicht und kann mehrfach vorhanden
+sein. Es gruppiert \seegls{Sensoren} eines Typs, z.B. können alle
+Infrarotabstandssensoren so zusammengefasst werden. Jedes Gruppenelement enthält
+mindetsens ein \texttt{<sensor>}-Element. Des Weiteren hat das Gruppenelement
+drei Attribute:
+
+\begin{itemize}
+  \item \texttt{visible} - \texttt{true} oder \texttt{false}; zeigt an, ob die
+  Gruppe sichtbar sein soll, oder nicht.
+  \item \texttt{longName} - Der Name der Gruppe in Langform.
+  \item \texttt{datapoolKey} - Dies ist der Prefix für den kompletten
+  Schlüssel unter dem der Werte eines \seegls{Sensor}s in den Datenpool\index{Datenpool}
+  eingespielt werden soll. Der Schlüssel setzt sich aus diesem Key und dem
+  \texttt{subKey} des \seegls{Sensor}s folgendermaßen zusammen:\\
+  \texttt{<datapoolKey>\_<subKey>}.
+\end{itemize}
+
+Das \texttt{<sensor>}-Element enthält genau ein \texttt{<sensorspecs>}-Element
+und hat drei Attribute:
+
+\begin{itemize}
+  \item \texttt{id} - Erkennungsmarke des Sensors als Zahlenwert.
+  \item \texttt{subKey} - Der zweite Teil des Schlüssels unter dem der Wert des
+  Sensors in den Datenpool\index{Datenpool} eingespielt werden soll. Der
+  Schlüssel setzt sich aus diesem Key und dem \texttt{datapoolKey} der
+  Sensorgruppe folgendermaßen zusammen: \\
+     \texttt{<datapoolKey>\_<subKey>}.
+  \item \texttt{unit} - Die Maßeinheit des Wertes den der Sensor liefert. Hier
+  gibt es 14 Auswahlmöglichkeiten:
+  \begin{itemize}
+    \item \texttt{DEGREE} - Die Maßeinheit ist Grad.
+    \item \texttt{PERCENT} - Die Maßeinheit ist Prozent.
+    \item \texttt{RPM} - Die Maßeinheit ist Undrehungen pro Minute. 
+    \item \texttt{PARTICLES\_PER\_MILLION} - Die Maßeinheit ist Partikel pro
+    Million. 
+    \item \texttt{CENTIMETER} - Die Maßeinheit ist Zentimeter. 
+    \item \texttt{KELVIN} - Die Maßeinheit ist Grad Kelvin (°K).  
+    \item \texttt{CELSIUS} - Die Maßeinheit ist Grad Celsius (°C). 
+    \item \texttt{FAHRENHEIT} - Die Maßeinheit ist Grad Fahrenheit (°F). 
+    \item \texttt{MILES\_PER\_HOUR} - Die Maßeinheit ist Meilen pro Stunde. 
+    \item \texttt{KILOMETERS\_PER\_HOUR} - Die Maßeinheit ist Kilometer pro
+    Stunde. 
+    \item \texttt{METERS\_PER\_HOUR} - Die Maßeinheit ist Meter pro Stunde. 
+    \item \texttt{METERS\_PER\_MINUTE} - Die Maßeinheit ist Meter pro Minute. 
+    \item \texttt{CENTIMETERS\_PER\_HOUR} - Die Maßeinheit ist Centimeter pro
+    Stunde.
+    \item \texttt{CENTIMETERS\_PER\_MINUTE} - Die Maßeinheit ist Centimeter pro
+    Minute.
+  \end{itemize}
+\end{itemize}
+
+Das \texttt{<sensorspecs>}-Element enthält drei Elemente, jedes muss genau
+einmal vorhanden sein:
+
+\begin{itemize}
+  \item \texttt{<position>} - Die Position an dem der Sensor befestigt ist.
+  \item \texttt{<minimum>} - Der minimale Wert den der Sensor liefern kann,
+  die Einheit entspricht der Angabe in \texttt{unit} des
+  \texttt{<sensor>}-Elements.
+  \item \texttt{<maximum>} - Der maximale Wert den der Sensor liefern kann,
+  die Einheit entspricht der Angabe in \texttt{unit} des
+  \texttt{<sensor>}-Elements.
+\end{itemize}
+
+Das \texttt{<sensorspecs>}-Element kann zusätzlich mehrere
+\texttt{<option>}-Elemente enthalten. Eine Option wird folgendermaßen
+angegeben: \newline\texttt{<option name="Name der Option''>Wert der Option</option>}.
+
+Das in der Sensorspezifikation enthaltene \texttt{position}-Element ist ein
+leeres Element, d.h. es kann mit \texttt{<position/>}) angegeben werden). Es
+enthält lediglich vier Attribute:
+
+\begin{itemize}
+  \item \texttt{attached} - Hiermit wird angegeben, wo der Sensor befestigt
+  ist. Es stehen zwei Werte zur Auswahl:
+  \begin{itemize}
+    \item \texttt{TORSO} - Der Sensor ist am Torso befestigt.
+    \item \texttt{EXTREMITY} - Der Sensor befindet sich an einer Extremität,
+    z.B. ein Drucksensor am Fuß eines Laufroboters.
+  \end{itemize}
+  \item \texttt{side} - Hiermit wird die Seite angegeben, an der der Sensor
+  angebracht ist. Es stehen sieben Werte zur Auswahl:
+  \begin{itemize}
+    \item \texttt{FRONT} - Der Sensor ist an der Vorderseite angebracht.
+    \item \texttt{REAR} - Der Sensor ist an der Rückseite angebracht.
+    \item \texttt{LEFT} - Der Sensor ist auf der linken Seite angebracht.
+    \item \texttt{RIGHT} - Der Sensor ist auf der rechten Seite angebracht.
+    \item \texttt{INSIDE} - Der Sensor ist im Inneren angebracht.
+    \item \texttt{TOP} - Der Sensor ist auf der Oberseite angebracht.
+    \item \texttt{BOTTOM} - Der Sensor ist auf an der Unterseite angebracht.
+  \end{itemize}
+  \item \texttt{x} - Numerischer Wert; gibt die Verschiebung in X-Richtung des
+  Sensors vom Ursprung aus an. Dieser ist immer \enquote{unten links}. 
+  Abbildung \autoref{img:profile:ursprung} auf 
+  \autopageref{img:profile:ursprung} verdeutlicht wo genau der Ursprung ist
+  und was ein positiver Wert für die Verschiebung bedeutet. Negative Werte sind
+  nicht erlaubt.
+  \item \texttt{y} - Numerischer Wert; gibt die Verschiebung in Y-Richtung des
+  Sensors vom Ursprung aus an. Dieser ist immer \enquote{unten links}. 
+  Abbildung \autoref{img:profile:ursprung} auf 
+  \autopageref{img:profile:ursprung} verdeutlicht wo genau der Ursprung ist
+  und was ein positiver Wert für die Verschiebung bedeutet. Negative Werte sind
+  nicht erlaubt.
+\end{itemize}
+
+\kfig{ursprung}{.45}{Der Ursprung für die Verschiebung eines Sensors}
+{img:profile:ursprung}
+
+In \autoref{lst:botdtd:sensorgroup:valid} auf
+\autopageref{lst:botdtd:sensorgroup:valid} ist ein valider
+\texttt{<sensorgroup>}-Bereich zu sehen.
+
+\begin{xml}[caption=Ein valides \texttt{<sensorgroup>-Element},
+label=lst:botdtd:sensorgroup:valid] 
+<sensorgroup datapoolKey="gyro" longName="Gyroscope" visible="true">
+    <sensor subKey="roll_unique" unit="PERCENT" id="0">
+        <sensorspecs>
+            <position y="350" x="250" side="INSIDE" attached="TORSO"/>
+            <minimum>0.0</minimum>
+            <maximum>0.0</maximum>
+            <option name="direction">roll</option>
+        </sensorspecs>
+    </sensor>
+    <sensor subKey="nick_unique" unit="PERCENT" id="1">
+        <sensorspecs>
+            <position y="350" x="250" side="INSIDE" attached="TORSO"/>
+            <minimum>0.0</minimum>
+            <maximum>0.0</maximum>
+            <option name="direction">nick</option>
+        </sensorspecs>
+    </sensor>
+</sensorgroup>
+\end{xml}
+
+\subsubsection{<communicationspecification>}
+\label{sec:comspecs}
+In \autoref{lst:botdtd:communicationspecification} auf
+\autopageref{lst:botdtd:communicationspecification} ist die
+Definition des Elements \texttt{<communicationspecification>} zu sehen.
+
+\begin{xml}[caption=DTD: Definition von \texttt{<communicationspecification>},
+label=lst:botdtd:communicationspecification]
+<!ELEMENT communicationspecification (#PCDATA)>
+\end{xml}
+
+In \texttt{value}-Teil des \texttt{<communicationspecification>}-Elements wird
+der Dateiname der \index{Kommunikation!Spezifikation}Kommunikationsspezifikationsdatei ohne Dateiendung angegeben.
+
+In \autoref{lst:botdtd:communicationspecification:valid} auf
+\autopageref{lst:botdtd:communicationspecification:valid} ist ein valider
+\texttt{<communicationspecification>}-Bereich zu sehen.
+
+\begin{xml}[caption=Ein valides \texttt{<communicationspecification>-Element},
+label=lst:botdtd:communicationspecification:valid] 
+<communicationspecification>testerbot_spec</communicationspecification>
+\end{xml}
+
+\subsubsection{<multimedia>}
+In \autoref{lst:botdtd:multimedia} auf \autopageref{lst:botdtd:multimedia} ist
+die Definition des Elemets \texttt{<multimedia>} zu sehen.
+
+\begin{xml}[caption=DTD: Definition von \texttt{<multimedia>}, 
+label=lst:botdtd:multimedia] 
+<!ELEMENT multimedia (video?,audio?)>
+
+<!ELEMENT video (camera*,display*)>
+<!ATTLIST video simultaneous (true|false) #REQUIRED>
+
+<!ELEMENT camera (#PCDATA)>
+
+<!ELEMENT display (#PCDATA)>
+
+<!ELEMENT audio (microphone*,speaker*)>
+
+<!ELEMENT microphone (#PCDATA)>
+
+<!ELEMENT speaker (#PCDATA)>
+\end{xml}
+
+Das \texttt{<multimedia>}-Element muss nicht und kann einmal verwendet werden.
+Es kann zwei weitere Elemente enthalten die wiederum jeweils zwei weitere
+Elemente enthalten können.
+
+\begin{itemize}
+  \item \texttt{<video>} - Dieses Element enthält die Videogeräte des Roboters
+  und kann garnicht oder einmal vorkommen.
+  \begin{itemize}
+    \item \texttt{camera} - Hier wird im \texttt{value}-Teil des Elementes der
+    Name der Kamera angegeben.
+    \item \texttt{display} - Hier wird im \texttt{value}-Teil des Elements der
+    Name des Displays angegeben.
+  \end{itemize}
+  \item \texttt{<audio>} - Dieses Element enthält die Audiogeräte des Roboters
+  und kann garnicht oder einmal vorkommen.
+  \begin{itemize}
+    \item \texttt{microphone} - Hier wird im \texttt{value}-Teil des Elements
+    der Name des Mikrofons angegeben.
+    \item \texttt{speaker} - Hier wird im \texttt{value}-Teil des Elements der
+    Name des Lautspredcher angegeben.
+  \end{itemize} 
+\end{itemize}
+
+Das \texttt{<video>}-Element besitzt zusätzlich noch das Attribut
+\texttt{simultaneous}. Hier kann \texttt{true} oder \texttt{false} angegeben
+werden. Es zeigt an, ob die Kamerabilder (falls mehr als eine vorhanden)
+gleichzeitig angezeigt werden können.
+
+In \autoref{lst:botdtd:multimedia:valid} auf
+\autopageref{lst:botdtd:multimedia:valid} ist ein valider
+\texttt{<multimedia>}-Bereich zu sehen.
+
+\begin{xml}[caption=Ein valides \texttt{<multimedia>-Element},
+label=lst:botdtd:multimedia:valid] 
+<multimedia>
+    <video simultaneous="false">
+        <camera>Front Cam</camera>
+        <display>Front Display</display>
+    </video>
+    <audio>
+    	<microphone>Front Mic</microphone>
+    	<speaker>Front Speaker</speaker>
+    </audio>
+</multimedia>
+\end{xml}
+
+\subsubsection{<plugins>}
+\label{sec:profile:plugins}
+In \autoref{lst:botdtd:plugins} auf \autopageref{lst:botdtd:plugins} ist die
+Definition des Elements \texttt{<plugins>} zu sehen.
+
+\begin{xml}[caption=DTD: Definition von \texttt{<plugins>}, 
+label=lst:botdtd:plugins] 
+<!ELEMENT plugins (plugin+)>
+
+<!ELEMENT plugin (class,sensorname*,usemultimedia?,option*)>
+<!ATTLIST plugin name CDATA #REQUIRED>
+
+<!ELEMENT option (#PCDATA)>
+<!ATTLIST option name CDATA #REQUIRED>
+
+<!ELEMENT class (#PCDATA)>
+
+<!ELEMENT sensorname (#PCDATA)>
+
+<!ELEMENT usemultimedia (true|false)>
+\end{xml}
+
+Das \texttt{<plugins>}-Element kann garnicht oder einmal vorkommen. Es enthält
+mindestens ein oder mehere \texttt{<plugin>}-Elemente. Das \texttt{<plugin>}
+kann bis zu vier weitere Elemente enthalten:
+
+\begin{itemize}
+  \item \texttt{class} - Das Element muss einmal vorhanden sein. Es enthält in
+  seinem \texttt{value}-Teil den kompletten Klassennamen des zu ladenden
+  \seegls{Plugins}.
+  \item \texttt{sensorname} - Das Element kann garnicht oder mehrfach vorhanden
+  sein. Es enthält ins einem \texttt{value}-Teil den Namen (\texttt{longName})
+  einer Sensorgruppe um einem \seegls{Plugin}, welches Sensorenwerte nutzt die Zuordnung
+  zu erleichtern.
+  \item \texttt{usemultimedia} - Das Element kann garnicht oder einmal vorhanden
+  sein. Es enthält in seinem \texttt{value}-Teil entweder \texttt{true} oder
+  \texttt{false}. Dies zeigt an, ob das \seegls{Plugin} die Multimediageräte des Roboters
+  nutzt oder nicht.
+  \item \texttt{option} - Das Element kann garnicht oder mehrfach vorhanden
+  sein. Es gibt eine zusätzliche Option an die dem \seegls{Plugin} übergeben werden kann.
+  Eine Option wird folgendermaßen angegeben: \texttt{<option name="Name der
+  Option">Wert der Option</option>}.
+\end{itemize} 
+
+In \autoref{lst:botdtd:plugins:valid} auf
+\autopageref{lst:botdtd:plugins:valid} ist ein valider
+\texttt{<plugins>}-Bereich zu sehen.
+
+\begin{xml}[caption=Ein valides \texttt{<plugins>-Element},
+label=lst:botdtd:plugins:valid] 
+<plugins>
+     <plugin name="Gyro">
+        <class>de.unibremen.rr.plugins.sensors.pitch.PitchDisplay</class>
+        <sensorname>Gyroscope</sensorname>
+        <usemultimedia>false</usemultimedia>
+        <option name="color">red</option>
+    </plugin>
+</plugins>        
+\end{xml}
+
+\subsection{Valide Roboterdatei}
+Fügt man alle besprochenen Teile zu dem \texttt{<roboter>}-Element hinzu erhält
+man die in \autoref{lst:botdtd:valid} auf \autopageref{lst:botdtd:valid} zu
+sehende valide Roboterdatei.
+
+\begin{xml}[caption=Eine valide Roboterdatei, label=lst:botdtd:valid]
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<robot type="WHEEL" name="TesterBot" completed="true">
+	<robotspecs>
+	    <height unit="MILLIMETER">200.0</height>
+	    <width unit="MILLIMETER">500.0</width>
+	    <length unit="MILLIMETER">700.0</length>
+	    <weight unit="KILOGRAM">5.0</weight>
+	</robotspecs>
+	<actuators count="2">
+	    <actuatorgroup name="drive">
+	        <actuator name="left" unit="PERCENT" id="0">
+	            <minimum>0.0</minimum>
+	            <maximum>100.0</maximum>
+	        </actuator>
+	        <actuator name="right" unit="PERCENT" id="1">
+	            <minimum>0.0</minimum>
+	            <maximum>100.0</maximum>
+	        </actuator>
+	    </actuatorgroup>
+	</actuators>
+	<powersource datapoolKey="battery1" unit="AMPERE" max="5.0" warningValue="0.5">Battery1</powersource>
+	<powersource datapoolKey="battery2" unit="AMPERE" max="5.0" warningValue="0.5">Battery2</powersource>
+	<sensorgroup datapoolKey="gyro" longName="Gyroscope" visible="true">
+	    <sensor subKey="roll_unique" unit="PERCENT" id="0">
+	        <sensorspecs>
+	            <position y="350" x="250" side="INSIDE" attached="TORSO"/>
+	            <minimum>0.0</minimum>
+	            <maximum>0.0</maximum>
+	            <option name="direction">roll</option>
+	        </sensorspecs>
+	    </sensor>
+	    <sensor subKey="nick_unique" unit="PERCENT" id="1">
+	        <sensorspecs>
+	            <position y="350" x="250" side="INSIDE" attached="TORSO"/>
+	            <minimum>0.0</minimum>
+	            <maximum>0.0</maximum>
+	            <option name="direction">nick</option>
+	        </sensorspecs>
+	    </sensor>
+	</sensorgroup>
+	<communicationspecification>testerbot_spec</communicationspecification>
+	<multimedia>
+	    <video simultaneous="false">
+	        <camera>Front Cam</camera>
+	        <display>Front Display</display>
+	    </video>
+	    <audio>
+	    	<microphone>Front Mic</microphone>
+	    	<speaker>Front Speaker</speaker>
+	    </audio>
+	</multimedia>
+	<plugins>
+	     <plugin name="Gyro">
+	        <class>de.unibremen.rr.plugins.sensors.pitch.PitchDisplay</class>
+	        <sensorname>Gyroscope</sensorname>
+	        <usemultimedia>false</usemultimedia>
+	        <option name="color">red</option>
+	    </plugin>
+	</plugins> 
+</robot>
+\end{xml}
+
+\section{Kommunikationsspezifikationen}
+In den \index{Kommunikation!Spezifikation}Kommunikationsspezifikationsdateien, Dateiendung \texttt{cms}, wird
+die Kommunikation mit dem Roboter definiert. Dies betrifft die möglichen
+Übertragungsmedien und Roboter-Protokolle. Dateien dieser Art müssen sich im
+Ordner \texttt{<xirp>/conf/commspecs} befinden, um beim Starten geladen zu werden.
+
+Im folgenden wird die Struktur einer validen Kommunikationsspezifikationsdatei
+anhand der \seegls{DTD} erläutert.
+
+\begin{xml}[caption=Die DTD von Kommunikationsspezifikationsdateien
+(\texttt{cms}), label=lst:cmsdtd] 
+<!-- The protocol to use -->
+<!ELEMENT specification (communicationprotocol+,communicationinterface+)>
+<!ATTLIST specification completed (true|false) #REQUIRED>
+
+<!-- Class which should be used for
+	 communication with the robot,
+	 as fully qualified path        -->
+<!ELEMENT communicationprotocol (class,messagehandler,datum*)>
+
+<!-- A fully qualified class name -->
+<!ELEMENT class (#PCDATA)>
+
+<!-- The message handler of the robot -->
+<!ELEMENT messagehandler (#PCDATA)>
+
+<!-- Communication deals with sending and
+	 receiving of data, which is specified in here -->
+<!ELEMENT datum (option*,receiveformat,datapoolkey)>
+
+<!-- Options specific for this communication
+	 class. Might hold processID and exportID -->
+<!ELEMENT option (#PCDATA)>
+<!ATTLIST option name CDATA #REQUIRED>
+
+<!-- Format for this data when received.
+	 formats are specified in documentation -->
+<!ELEMENT receiveformat (#PCDATA)>
+
+<!-- Data is put to datapool after parsing
+	 with the specified key and format     -->
+<!ELEMENT datapoolkey (#PCDATA)>
+
+<!-- The interface to use for communication -->
+<!ELEMENT communicationinterface (class,option*)>
+\end{xml}
+
+\subsection{<specification>}
+In \autoref{lst:cmsdtd:specification} auf \autopageref{lst:cmsdtd:specification}
+ist die Definition des Elements \texttt{<specification>} zu sehen.
+
+\begin{xml}[caption=DTD: Definition von \texttt{<specification>}, 
+label=lst:cmsdtd:specification]
+<!ELEMENT specification (communicationprotocol+,communicationinterface+)>
+<!ATTLIST specification completed (true|false) #REQUIRED>
+\end{xml}
+
+Das \texttt{<specification>}-Element hat in Attribut: \texttt{completed}. Es
+kann die Werte \texttt{true} oder \texttt{false} haben und zeigt an, ob die
+Spezifikation komplett ist oder nicht (wird intern benutzt).
+
+Des Weiteren enthält das Element zwei weitere Elemente:
+
+\begin{itemize}
+  \item \texttt{communicationprotocol} - Muss mindestens einmal und kann
+  mehrfach vorhanden sein. Hier werden die Roboter-Protokolle definiert.
+  \item \texttt{communicationinterface} - Muss mindestens einmal und kann
+  mehrfach vorhanden sein. Hier werden die Kommunikationsmedien definiert.
+\end{itemize}
+
+\subsubsection{<communicationprotocol>}
+In \autoref{lst:cmsdtd:communicationprotocol} auf
+\autopageref{lst:cmsdtd:communicationprotocol} ist die
+Definition des Elements \texttt{<communicationprotocol>} zu sehen.
+
+\begin{xml}[caption=DTD: Definition von \texttt{<communicationprotocol>},
+label=lst:cmsdtd:communicationprotocol]
+<!ELEMENT communicationprotocol (class,messagehandler,datum*)>
+
+<!ELEMENT class (#PCDATA)>
+
+<!ELEMENT messagehandler (#PCDATA)>
+
+<!ELEMENT datum (option*,receiveformat,datapoolkey)>
+
+<!ELEMENT option (#PCDATA)>
+<!ATTLIST option name CDATA #REQUIRED>
+
+<!ELEMENT receiveformat (#PCDATA)>
+
+<!ELEMENT datapoolkey (#PCDATA)>
+\end{xml}
+
+Das \texttt{<communicationprotocol>}-Element definiert die zu benutzenden
+Roboter-Protokolle und \seegls{Handler} an. Es beinhaltet bis zu drei weitere Elemente:
+\index{Kommunikation!Handler}
+\index{Kommunikation!Protokoll}
+\begin{itemize}
+  \item \texttt{<class>} - Dieses Element muss genau einmal vorhanden sein. Es
+  gibt den kompletten Klassennamen des Roboter-Protokolls an.
+  \item \texttt{<messagehandler>} - Dieses Element muss genau einmal vorhanden
+  sein. Es gibt den kompletten Klassennamen des \seegls{Handlers} an.
+  \item \texttt{<datum>} - Dieses Element muss nicht oder kann mehrfach
+  vorhanden sein. Hiermit können zusätzliche Informationen über Datensätze bei
+  z.B. bytestreamorientierten Protokollen angegeben werden. Es wird das Format
+  eines Datensatzes von einem bestimmen Schlüssel angegeben. Diese information
+  wird dann vom Formatparser (siehe \autoref{sec:format} auf
+  \autopageref{sec:format}) verarbeitet.
+\end{itemize}
+
+Das \texttt{<datum>}-Element kann bis zu drei weitere Elemente enthalten:
+
+\begin{itemize}
+  \item \texttt{<option>} - Das Element kann garnicht oder mehrfach vorhanden
+  sein. Es gibt eine zusätzliche Option an die dem Datum übergeben werden kann.
+  Eine Option wird folgendermaßen angegeben:\\
+  \texttt{<option name="Name der Option''>Wert der Option</option>}.
+  \item \texttt{<receiveformat>} - Hier wird ein String angegeben, dieser
+  definiert das Format des empfangenen Datums eins spezifizierten Schlüssels
+  (siehe \autoref{sec:format} auf \autopageref{sec:format}).
+  \item \texttt{<datapoolkey>} - Der Schlüssel für den das Format gilt.
+\end{itemize}
+
+In \autoref{lst:cmsdtd:communicationprotocol:valid} auf
+\autopageref{lst:cmsdtd:communicationprotocol:valid} ist ein valider
+\texttt{<communicationprotocol>}-Bereich zu sehen.
+
+\begin{xml}[caption=Ein valides \texttt{<communicationprotocol>-Element},
+label=lst:cmsdtd:communicationprotocol:valid] 
+<communicationprotocol>
+    <class>de.unibremen.rr.plugins.protocols.testerbot.TesterBotCommunication</class>
+    <messagehandler>de.unibremen.rr.plugins.handler.testerbot.TesterBotHandler</messagehandler>
+    <datum>
+        <option name="name">Hokoyu</option>
+        <receiveformat>\%f\%f\%f\%f\%f\%f</receiveformat>
+        <datapoolkey>laser\_unique</datapoolkey>
+    </datum>
+</communicationprotocol>
+\end{xml}
+
+\subsubsection{<communicationinterface>}
+In \autoref{lst:cmsdtd:communicationinterface} auf
+\autopageref{lst:cmsdtd:communicationinterface} ist die
+Definition des Elements \texttt{<communicationinterface>} zu sehen.
+
+\begin{xml}[caption=DTD: Definition von \texttt{<communicationinterface>},
+label=lst:cmsdtd:communicationinterface]
+<!ELEMENT communicationinterface (class,option*)>
+
+<!ELEMENT class (#PCDATA)>
+
+<!ELEMENT option (#PCDATA)>
+<!ATTLIST option name CDATA #REQUIRED>
+\end{xml}
+
+Das \texttt{<communicationinterface>}-Element definiert die Kommunikationsmedien
+die genutzt werden sollen und kann bis zu zwei weitere Elemente beinhalten:
+\index{Kommunikation!Lowlevel}
+\begin{itemize}
+  \item \texttt{<class>} - Dieses Element muss genau einmal vorhanden sein. Es
+  gibt den kompletten Klassennamen des Kommunikationsmediums an.
+  \item \texttt{<option>} - Das Element kann garnicht oder mehrfach vorhanden
+  sein. Es gibt eine zusätzliche Option an die dem Kommunikationsmedium
+  übergeben werden kann. Eine Option wird folgendermaßen angegeben:\\
+  \texttt{<option name="Name der Option''>Wert der Option</option>}.
+\end{itemize}
+
+In \autoref{lst:cmsdtd:communicationinterface:valid} auf
+\autopageref{lst:cmsdtd:communicationinterface:valid} ist ein valider
+\texttt{<communicationinterface>}-Bereich zu sehen.
+
+\begin{xml}[caption=Ein valides \texttt{<communicationinterface>-Element},
+label=lst:cmsdtd:communicationinterface:valid] 
+<communicationinterface>
+    <class>de.unibremen.rr.plugins.communication.ip.IPCommunication</class>
+    <option name="port">4567</option>
+</communicationinterface>
+<communicationinterface>
+    <class>de.unibremen.rr.plugins.communication.serial.SerialCommunication</class>
+</communicationinterface>
+\end{xml}
+
+\subsection{Valide Kommunikationsspezifikationsdatei}
+Fügt man alle besprochenen Teile zu dem \texttt{<specification>}-Element hinzu
+erhält man die in \autoref{lst:cmsdtd:valid} auf \autopageref{lst:cmsdtd:valid}
+zu sehende valide Kommunikationsspezifikationsdatei.
+
+\begin{xml}[caption=Eine valide Kommunikationsspezifikationsdatei,
+label=lst:cmsdtd:valid] 
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<specification completed="true">
+	<communicationprotocol>
+	    <class>de.unibremen.rr.plugins.protocols.testerbot.TesterBotCommunication</class>
+	    <messagehandler>de.unibremen.rr.plugins.handler.testerbot.TesterBotHandler</messagehandler>
+	    <datum>
+	        <option name="name">Hokoyu</option>
+	        <receiveformat>\%f\%f\%f\%f\%f\%f</receiveformat>
+	        <datapoolkey>laser\_unique</datapoolkey>
+	    </datum>
+	</communicationprotocol>
+	<communicationinterface>
+	    <class>de.unibremen.rr.plugins.communication.ip.IPCommunication</class>
+	    <option name="port">4567</option>
+	</communicationinterface>
+	<communicationinterface>
+	    <class>de.unibremen.rr.plugins.communication.serial.SerialCommunication</class>
+	</communicationinterface>
+</specification>
+\end{xml}
+
+\section{Repräsentation in Java-Klassen}
+Die erläuterte \seegls{XML}-Struktur wird, wenn die Dateien valide sind, in eine
+Java-Bean-Struktur überführt. In dieser Struktur finden sich alle erwähnten
+Elemente wieder. In \autoref{tab:profile:gegenueberstellung} auf
+\autopageref{tab:profile:gegenueberstellung} werden die \seegls{XML}-Elemente und Attribute
+ihren Repräsentationen in den Java-Klassen gegenübergestellt. 
+
+\begin{tiny}
+\begin{center}
+\begin{longtable}{l|l|l|l}
+\bf{XML-Element} & \bf{XML-Attribut} & \bf{Java-Klasse} & \bf{Java-Methode}\\
+\hline\endhead
+\multicolumn{4}{|c|}{Profildatei (\texttt{pro})}\\
+\hline
+<profile>		& 				& Profile					& ProfileManager.getProfiles( )\\
+				& complete 		& 							& profile.isComplete( )\\
+				& name			& 							& profile.getName( )\\
+\hline
+<externaltools>	&				& ExternalTools				& profile.getExternalTools( )\\
+\hline
+<tool>			&				& Tool						& externaltools.getTools( )\\
+				& name			&							& tool.getName( )\\
+\hline
+<executable>	&				& Executable				& tool.getExecutables( )\\
+				& wait			&							& executable.getWaitTime( )\\
+				& path			&							& executable.getPath( )\\
+				& name			& 							& executable.getName( )\\
+\hline
+<args>			&				& String					& executable.getArguments( )\\
+\hline
+<robot>			& 				& String					& profile.getRobotFileNames( )\\
+\hline
+\multicolumn{4}{|c|}{Roboterdatei (\texttt{bot})}\\
+\hline
+<robot>			&				& Robot						& profile.getRobots( )\\
+				& type			& Robot.RobotType 			& robot.getType( )\\
+				& name			& 							& robot.getName( )\\
+				& complete		&							& robot.isComplete( )\\
+\hline
+<robotspecs>	&				& RobotSpecs				& robot.getRobotSpecs( )\\
+\hline
+<height>		&				& Height					& robotspecs.getHeight( )\\
+				& unit			& Units.DistanceUnit		& height.getUnit( )\\
+\hline
+<width>			&				& Width						& robotspecs.getWidth( )\\
+				& unit			& Units.DistanceUnit		& width.getUnit( )\\
+\hline
+<length>		&				& Length					& robotspecs.getLength( )\\
+				& unit			& Units.DistanceUnit		& length.getUnit( )\\
+\hline
+<weight>		&				& Weight					& robotspecs.getWeight( )\\
+				& unit			& Units.MassUnit			& weight.getUnit( )\\
+\hline
+<actuators>		&				& Actuators					& robot.getActuators( )\\
+				& count			&							& actuators.getCount( )\\
+\hline
+<actuatorgroup> &				& ActuatorGroup				& actuators.getActuatorGroups( )\\
+				& name			&							& actuatorgroup.getName( )\\
+\hline
+<actuator>		&				& Actuator					& actuatorgroup.getActuators( )\\
+				& name			&							& actuator.getName( )\\
+				& unit			& Units.ActuatorValueUnit 	& actuator.getUnit( )\\
+				& id			& 							& actuator.getId( )\\
+\hline
+<minimum>		&				& Minimum					& actuator.getMinimum( )\\
+\hline
+<maximum>		&				& Maximum					& actuator.getMaximum()\\
+\hline
+<powersource>	&				& PowerSource				& robot.getPowerSources( )\\
+				& datapoolKey 	& 							& powersource.getDatapoolKey( )\\
+				& unit			& Units.PowerSourceUnit		& powersource.getUnit( )\\
+				& max			& 							& powersource.getMax( )\\
+				& warningValue	& 							& powersource.getWarningValue( )\\
+\hline
+<sensorgroup>	& 				& Sensorgroup				& robot.getSensorgroups( )\\
+				& datapoolKey	& 							& sensorgroup.getDatapoolKey( )\\
+				& longName		&							& sensorgroup.getLongName( )\\
+				& visible		&							& sensorgroup.isVisible( )\\
+\hline
+<sensor>		&				& Sensor					& sensorgroup.getSensors( )\\
+				& subKey		& 							& sensor.getSubKey( )\\
+				& unit			& Units.SensorValueUnit		& sensor.getUnit( )\\
+				& id			& 							& sensor.getId( )\\
+\hline
+<sensorspecs>	&				& SensorSpecs				& sensor.getSpecs( )\\
+\hline
+<position>		&				& Position					& sensorspecs.getPosition( )\\
+				& attached		& Position.Attached			& position.getAttached( )\\
+				& side			& Position.Side				& position.getSide( )\\
+				& x				& 							& position.getX( )\\
+				& y				&							& position.getY( )\\
+\hline
+<minimum>		&				& Minimum					& sensorspecs.getMinimum( )\\
+\hline
+<maximum>		&				& Maximum					& sensorspecs.getMaximum( )\\
+\hline
+<option>		&				& Option					& sensorspecs.getOptions( )\\
+				& name			&							& option.getName( )\\
+\hline
+<communicationspecification> & 	& String					& robot.getCommSpecFileName( )\\
+\hline
+<multimedia>	&				& Multimedia				& robot.getMultimedia( )\\
+\hline
+<video>			&				& Video						& multimedia.getVideo( )\\
+				& simultaneous	&							& video.isSimultaneous( )\\
+\hline
+<camera>		&				& Camera					& video.getCameras( )\\
+\hline
+<display>		&				& Display					& video.getDisplays( )\\
+\hline
+<audio>			&				& Audio						& multimedia.getAudio( )\\
+\hline
+<microphone>	&				& Microphone				& audio.getMicrophones( )\\
+\hline
+<speaker>		&				& Speaker					& audio.getSpeakers( )\\
+\hline
+<plugins>		&				& Plugins					& robot.getPlugins( )\\
+\hline
+<plugin>		&				& Plugin					& plugins.getPlugins( )\\
+				& name			& 							& plugin.getName( )\\
+\hline
+<class>			&				& String					& plugin.getClassName( )\\
+\hline
+<sensorname>	&				& String					& plugin.getSensornames( )\\
+\hline
+<usemultimedia> &				& boolean					& plugin.isMultimedia( )\\
+\hline
+<option>		& 				& Option					& plugin.getOptions( )\\
+\hline
+\multicolumn{4}{|c|}{Kommunikationsspezifikationsdatei (\texttt{cms})}\\
+\hline
+<specification>	&				& CommunicationSpecification& robot.getCommunicationSpecification( )\\
+				& complete		& 							& specification.isComplete( )\\
+\hline
+<communicationprotocol>&		& CommunicationProtocol		& specification.getCommunicationProtocols( )\\
+\hline
+<class>			&				& String					& communicationprotocol.getClassName( )\\
+\hline
+<messagehandler>&				& String 					& communicationprotocol.getMessageHandler( )\\ 
+\hline
+<datum>			&				& CommunicationDatum		& communicationprotocol.getDates( )\\
+\hline
+<option>		&				& Option					& datum.getOptions( )\\
+				& name			&							& option.getName( )\\
+\hline
+<receiveformat>	&				& String					& datum.getReceiveFormat( )\\
+\hline
+<datapoolkey>	&				& String					& datum.getDatapoolKey( )\\
+\hline
+<communicationinterface>&		& CommunicationInterface	& specification.getInterfaces( )\\
+\hline
+<class>			&				& String					& communicationinterface.getClassName( )\\
+\hline
+<option>		&				& Option					& communicationinterface.getOptions( )\\
+				& name			&							& option.getName( )\label{tab:profile:gegenueberstellung}\\
+\hline
+\caption{Gegenüberstellung der XML-Elemente und -Attribute zu ihrer 
+Repräsentation in den Java-Klassen}\\
+\end{longtable}
+\end{center}
+\end{tiny}
+\index{Manager!ProfileManager}
+Um Zugriff auf die oben beschriebenen Datenstrukturen zu erhalten bietet der
+\texttt{ProfileManager} diverse statische Methoden. Daher muss der
+\texttt{ProfileManager} für diesen Zweck benutzt werden. Einen Einblick in die
+Möglichkeiten des \texttt{ProfileManager} bietet die \autoref{lst:pm} auf
+\autopageref{lst:pm}.
+
+\begin{java}[caption=Codebeispiel zur Verwendung des \texttt{ProfileManager},
+label=lst:pm]
+/* Ziel: Alle Profilnamen holen. */
+// 1. Alle Profile holen.
+List<Profile> profiles = ProfileManager.getProfiles( );
+
+// 2. Alle Namen einer Liste hinzufügen.
+List<String> names = new ArrayList<String>( );
+for (Profile p : profile) {
+	names.add(p.getName( ));
+}
+
+/* Das Ziel kann wesentlich einfacher erreicht werden: */
+// 1. Ein Ziel-Set deklarieren.
+Set<String> namesBetter;
+
+// 2. Alle Profilnamen vom ProfileManager holen.
+namesBetter = ProfileManager.getProfileNames( );
+\end{java}
+
+Für weitergehende Informationen sollte im Java-Doc des \texttt{ProfileManager}
+nachgelesen werden.

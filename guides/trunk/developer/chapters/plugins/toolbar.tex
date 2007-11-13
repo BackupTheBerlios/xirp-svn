@@ -1,0 +1,121 @@
+\section{Die Toolbar}
+\label{sec:plugin:toolbar}
+\index{Toolbar}
+Ein \seegls{Plugin} kann Funktionen auf die Toolbar des Roboters legen. Dazu 
+muss der \seegls{Plugin} Typ auf 
+\index{Plugin!PluginType}\codeQuote{PluginType.TOOLBAR} und der Darstellungstyp 
+auf 
+\index{Plugin!VisualizationType}\codeQuote{VisualizationType.ROBOT\_TOOLBAR} 
+geändert werden und die Methode 
+\index{Plugin!IPlugable!getToolbar()}\codeQuote{getToolbar} überschrieben 
+werden.
+
+Als Beispiel wird nun ein Button erstellt, welcher beim klicken einen Text
+ausgibt.
+
+Der Button soll ein \index{Bild!Icon}\seegls{Icon} statt Text haben. Dafür wird ein neuer Ordner 
+Namens \index{Plugin!Ordnerstruktur!images}\fileQuote{images} neben dem Ordner 
+\index{Plugin!Ordnerstruktur!lib}\codeQuote{lib} im Plugin Paket angelegt in 
+welchen ein \index{Bild!im Plugin}Bild \fileQuote{hallowelt.png} gelegt wird.
+\index{Manager!ImageManager}
+\begin{java}[caption=Eine Plugin Toolbar,
+				 label=lst:smplplug:toolbar_plugin_getToolBar]
+	@Override
+	public XToolBar getToolBar(CoolItem parent) {
+		XToolBar tools = new XToolBar(parent.getParent( ), SWT.FLAT);
+		// Übersetzungshandler dieses Plugins mit übergeben
+		XToolItem helloWorld = new XToolItem(tools,
+				SWT.FLAT | SWT.PUSH,
+				handler);
+		// Bild vom ImageManager holen
+		helloWorld.setImage(ImageManager.getPluginImage(this, "helloworld.png")); //$NON-NLS-1$
+		// Key für den Tooltip setzen
+		helloWorld.setToolTipTextForLocaleKey("MyPlugin.toolbar.helloworld"); //$NON-NLS-1$
+		helloWorld.addSelectionListener(new SelectionAdapter( ) {
+
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+			 */
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				// Übersetzte Logausgabe mit einer Variablen
+				LOGGER.info(robotName,
+						getI18nString("MyPlugin.print.helloworld",
+								MyPlugin.this.getRobotName( ))
+								+ Constants.LINE_SEPARATOR);
+			}
+		});
+
+		return tools;
+	}
+\end{java}
+
+Wichtig ist das nicht die original \index{Widget}\seegls{SWT} Widgets benutzt 
+werden sondern die aus dem Paket 
+\newline\index{Widget!Custom}\codeQuote{de.unibremen.rr.xirp.ui.widgets.custom}. Sie 
+bieten alle die Methoden 
+\newline\index{Widget!Custom!setToolTipTextForLocaleKey()}\codeQuote{setToolTipTextForLocaleKey} 
+und \index{Widget!Custom!setTextForLocaleKey()}\codeQuote{setTextForLocaleKey} 
+(oder ähnliche) und einen Konstruktor der einen 
+\index{Internationalisierung}Übersetzungshandler bekommen kann, mit welchem die 
+\index{Internationalisierung!Schlüssel}Schlüssel letztendlich übersetzt werden. 
+Weiterhin übernehmen all diese Custom Widgets immer die \index{Farbe}aktuellen 
+Farb- und \index{Internationalisierung}Spracheinstellung auch bei einer 
+Änderung im laufenden Betrieb.
+
+Das hinzugefügte Bild kann vom
+\index{Manager!ImageManager}\codeQuote{de.unibremen.rr.xirp.
+ui.util.ressource.ImageManager} abgerufen
+werden. Dieser handelt auch das eigentlich nötige \index{SWT!dispose}\seegls{disposen} des Bildes nach der
+Benutzung und \seegls{cached} die Bilder, so dass von jedem nur eine Instanz existiert
+die mehrfach genutzt werden kann.
+
+\kfig{plugin_toolbar}{.7}{Toolbar Icon eines Plugins}{toolbar}
+
+Auch der Text der beim klicken auf den Button ausgegeben wird, wird übersetzt.
+Dazu dient die Methode \codeQuote{getI18nString()} welche einen Schlüssel und optional
+noch mehrere Parameter zur Ersetzung von Variablen erhalten kann. Wichtig ist
+ auch das abschließende \codeQuote{Constants.LINE\_SEPARATOR} welches einen
+Zeilenumbruch für das aktuelle Betriebssystem enthält.
+
+So sehen die veränderten \index{Internationalisierung!Plugin}\fileQuote{properties}-Dateien aus:\\
+\textbf{de}
+
+\begin{properties}[caption=Deutsche Übersetzungen,
+				 label=lst:smplplug:toolbar_props_de]
+MyPlugin.plugin.name=Mein Plugin
+MyPlugin.plugin.description=Ein Testplugin
+
+MyPlugin.toolbar.helloworld=Hallo Welt ausgeben
+MyPlugin.print.helloworld={0} sagt: "Hallo Welt!"
+\end{properties}
+
+\newpage
+\textbf{en}
+\begin{properties}[caption=Englische Übersetzungen,
+				 label=lst:smplplug:toolbar_props_en]
+MyPlugin.plugin.name=My Plugin
+MyPlugin.plugin.description=A test plugin
+
+MyPlugin.toolbar.helloworld=Print out Hello World
+MyPlugin.print.helloworld={0} says: "Hello World!"
+\end{properties}
+
+Das \seegls{Plugin} kann nun wiederum mit der 
+\index{Ant!build.xml}\fileQuote{build.xml} erstellt und in den Ordner 
+\fileQuote{plugins} des \xirp~Installationsordners kopiert werden.
+
+
+
+Bei der Ausführung erscheint dann für den \robotQuote{TesterBot} ein \index{Bild!Icon}\seegls{Icon} auf der
+Toolbar welches eine Weltkugel zeigt (\refFig{toolbar}). Dieses gibt bei einem Klick
+\begin{lstlisting}
+TesterBot: TesterBot sagt: "Hallo Welt!"
+\end{lstlisting}
+
+bzw.
+\begin{lstlisting}
+TesterBot: TesterBot says: "Hello World!"
+\end{lstlisting}

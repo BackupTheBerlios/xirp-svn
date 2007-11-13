@@ -1,0 +1,7 @@
+delim_0 "\\indexdelim"
+delim_1 "\\indexdelimi"
+delim_2 "\\indexdelimii"
+heading_prefix   "\\indexsection{"
+heading_suffix   "}\n"
+headings_flag    1
+symhead_positive ""

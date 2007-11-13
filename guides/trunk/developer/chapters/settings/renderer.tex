@@ -1,0 +1,145 @@
+\section{Eigener Renderer}
+\index{Einstellungen!Renderer!eigener}
+Um die \index{Einstellungen!Werte}Werte von \codeQuote{PersonNameValue} (siehe
+\autoref{code:settings:ownvalue} auf \autopageref{code:settings:ownvalue}) so 
+anzuzeigen,
+dass der Name auch geändert werden kann ist ein eigener Renderer nötig.
+
+Eigene \seegls{Renderer} müssen \codeQuote{IOptionRenderer} implementieren. Diese bietet
+auch die Möglichkeit eingegebenen Strings auf \index{Einstellungen!Validierung}Korrektheit (siehe
+\autoref{sec:settings:valid} auf \autopageref{sec:settings:valid}) zu prüfen. In der
+abstrakten Implementierung \codeQuote{AbstractOptionRenderer} ist die Behandlung
+eines Validierers schon implementiert. Daher wird hier auf die Erweiterung von
+\codeQuote{AbstractOptionRenderer} zurückgegriffen:
+
+\begin{java}[caption=Eigener Renderer für Einstellungen,label=code:settings:renderer]
+import java.util.Observable;
+
+import org.apache.log4j.Logger;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+
+import de.unibremen.rr.xirp.settings.IValue;
+import de.unibremen.rr.xirp.settings.Option;
+import de.unibremen.rr.xirp.ui.util.SWTUtil;
+import de.unibremen.rr.xirp.ui.widgets.custom.XComposite;
+import de.unibremen.rr.xirp.ui.widgets.custom.XLabel;
+import de.unibremen.rr.xirp.ui.widgets.custom.XText;
+import de.unibremen.rr.xirp.ui.widgets.dialogs.preferences.renderer.AbstractOptionRenderer;
+import de.unibremen.rr.xirp.util.Constants;
+
+public class PersonNameRenderer extends AbstractOptionRenderer {
+
+	private static Logger logClass = Logger.getLogger(PersonNameRenderer.class);
+
+	private XText forename;
+	private XText surename;
+
+	public void render(Composite parent, Option option) {
+		// parent ist nur zweispaltig, daher dreispaltiges Composite
+		// selbst erstellen
+		XComposite optionComp = new XComposite(parent, SWT.NONE);
+		final GridLayout gridLayout = SWTUtil.setGridLayout(optionComp, 3, true);
+		SWTUtil.resetMargins(gridLayout);
+		SWTUtil.setGridData(optionComp, true, false, SWT.FILL, SWT.TOP, 2, 1);
+
+		XLabel l = new XLabel(optionComp, SWT.NONE, option.getI18n( ));
+		l.setTextForLocaleKey(option.getNameKey( ), option.getNameKeyArgs( ));
+		SWTUtil.setGridData(l, true, false, SWT.LEFT, SWT.TOP, 1, 1);
+
+		// Nur ein Wert kann dargestellt werden
+		PersonNameValue last = null;
+		for (IValue value : option.getValues( )) {
+			if (value instanceof PersonNameValue) {
+				last = (PersonNameValue) value;
+			}
+		}
+
+		// Textfelder für Vor- und Nachname
+		forename = new XText(optionComp, SWT.BORDER, true);
+		SWTUtil.setGridData(forename, true, false, SWT.FILL, SWT.TOP, 1, 1);
+		surename = new XText(optionComp, SWT.BORDER, true);
+		SWTUtil.setGridData(surename, true, false, SWT.FILL, SWT.TOP, 1, 1);
+
+		if (last != null) {
+			final PersonNameValue currentSelection = last;
+			// Observer auf den Wert hinzufügen
+			currentSelection.addObserverToValue(this);
+
+			// Wert darstellen
+			final PersonName displayPerson = currentSelection.getDisplayPerson( );
+			forename.setText(displayPerson.getForename( ));
+			surename.setText(displayPerson.getSurename( ));
+
+			// Änderungen in der Oberfläche an den Wert übertragen
+			final ModifyListener modifyListener = new ModifyListener( ) {
+
+				public void modifyText(@SuppressWarnings("unused")
+				ModifyEvent e) {
+					PersonName person = new PersonName(forename.getText( ),
+							surename.getText( ));
+					currentSelection.setCurrentPerson(person, true);
+				}
+
+			};
+			forename.addModifyListener(modifyListener);
+			surename.addModifyListener(modifyListener);
+
+		}
+		else {
+			forename.setEnabled(false);
+			surename.setEnabled(false);
+			logClass.warn("Der PersonNameRenderer kann nur Werte vom Typ PersonNameValue darstellen." +
+					Constants.LINE_SEPARATOR);
+		}
+	}
+
+	public void update(Observable observable, @SuppressWarnings("unused")
+	Object obj) {
+		// Änderungen des Wertes in der Oberfläche darstellen
+		// z.B. bei Reset
+		if (observable instanceof PersonNameValue) {
+			PersonNameValue val = (PersonNameValue) observable;
+			final PersonName displayPerson = val.getDisplayPerson( );
+			this.forename.setText(displayPerson.getForename( ));
+			this.surename.setText(displayPerson.getSurename( ));
+		}
+	}
+}
+\end{java}
+
+\kfig{settings_renderer}{1}{Ein eigener Renderer für Einstellungen}{img:settings:renderer}
+
+Es ist nur möglich einen \index{Einstellungen!Werte}Wert für diese
+\index{Einstellungen!Optionen}Option darzustellen. Dabei wird der Name 
+der Person in zwei Textfeldern zur Eingabe bereitgestellt.
+
+Nutzt man den \seegls{Renderer} für die Darstellung erhält man die Ansicht aus
+\autoref{img:settings:renderer}: 
+\index{Manager!PluginManager}
+\begin{java}[caption=Den eigenen Renderer zur Darstellung nutzen,label=code:renderer:use]
+@Override
+public Settings getSettings() {
+	if (settings == null) {
+		settings = new Settings(PluginManager.getProperties( ),
+				handler,
+				"Example.settings.main",
+				getRealKey( ));
+
+		SettingsPage settingsPage = settings.addPage("page",
+				"shortdescription",
+				"description");
+
+		Option option = settingsPage.addOption("person", OptionType.UNKNOWN);
+		PersonNameValue value = new PersonNameValue("personkey",
+				"Max",
+				"Musterman");
+		option.addValue(value);
+		option.setRenderer(new PersonNameRenderer( ));
+	}
+	return settings;
+}
+\end{java}
